@@ -1,0 +1,48 @@
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // --- USERS COLLECTION ---
+    match /users/{userId} {
+      // Users can only read and write their own profile
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // --- PRODUCTS COLLECTION ---
+    match /products/{productId} {
+      
+      // --- Anyone can read products (for customer browsing) ---
+      allow read: if true;
+
+      // --- Only authenticated farmers can create products with valid data ---
+      allow create: if request.auth != null &&
+                    request.resource.data.imageUrl is string &&
+                    request.resource.data.imageUrl !="" &&
+                    request.resource.data.price is number &&
+                    request.resource.data.price >= 0 &&
+                    request.resource.data.quantity is number &&
+                    request.resource.data.quantity >= 0 &&
+                    request.resource.data.farmerId == request.auth.uid; // Farmer ID must match creator
+
+      // --- Only product owner can update their products with valid data ---
+      allow update: if request.auth != null &&
+                    request.auth.uid == resource.data.farmerId &&
+                    request.resource.data.imageUrl is string &&
+                    request.resource.data.imageUrl !="" &&
+                    request.resource.data.price is number &&
+                    request.resource.data.price >= 0 &&
+                    request.resource.data.quantity is number &&
+                    request.resource.data.quantity >= 0;
+
+      // --- Only product owner can delete their product ---
+      allow delete: if request.auth != null && request.auth.uid == resource.data.farmerId;
+    }
+
+    // --- ORDERS COLLECTION ---
+    match /orders/{orderId} {
+      // Customers can read/write only their own orders
+     allow create: if request.auth != null && request.resource.data.customerId == request.auth.uid;
+allow read, update, delete: if request.auth != null && resource.data.customerId == request.auth.uid;
+
+    }
+  }
+}

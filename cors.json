@@ -1,0 +1,15 @@
+[
+  {
+    "origin": [
+      "http://localhost",
+      "http://localhost:*",
+      "http://127.0.0.1",
+      "http://127.0.0.1:*",
+      "https://farmer-connect-8d0ea.web.app",
+      "https://farmer-connect-8d0ea.firebaseapp.com"
+    ],
+    "method": ["GET", "PUT", "POST", "HEAD", "DELETE", "OPTIONS"],
+    "responseHeader": ["*"],
+    "maxAgeSeconds": 3600
+  }
+]

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">  
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Farmer Connect</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/sidebar.css">
+  <link rel="stylesheet" href="css/market.css">
+  <link rel="stylesheet" href="css/modal.css">
+  <link rel="stylesheet" href="css/customer-cart.css">
+</head>
+<body>
+  <!-- Loading Indicator -->
+  <div id="loading">Loading...</div>
+
+  <!-- Top Navigation -->
+  <div class="top-nav">
+    <span class="logo-text">🌾 Farmer Connect</span>
+  </div>
+
+  <!-- Logout Modal -->
+  <div id="logoutModal" class="logout-modal">
+    <div class="logout-modal-content">
+      <span class="close">&times;</span>
+      <p>Are you sure you want to log out?</p>
+      <button id="confirmLogout">Yes</button>
+      <button id="cancelLogout">No</button>
+    </div>
+  </div>
+
+  <!-- Hero Section -->
+  <div class="hero">
+    <div class="hero-content">
+ <h1>Empowering Customers with Fresh, Local Produce</h1>
+<p>Connecting you directly with trusted farmers, real-time crop availability, and seamless shopping experiences.</p>
+    </div>
+  </div>
+
+  <!-- Market Ticker -->
+  <div class="ticker-container">
+    <div class="ticker" id="market-ticker">Loading market prices...</div>
+  </div>
+  <!-- Footer -->
+  <div class="footer">
+    <p>
+      <a href="contact.html">Contact us</a> | 
+      <a href="faq.html">FAQs</a> | 
+      <a href="https://facebook.com" target="_blank">Social Media</a>
+    </p>
+  </div>
+
+  <!-- Sidebar -->
+  <div class="sidebar" id="sidebar">
+<ul>
+  <li><a href="customer-profile.html">Profile</a></li>
+  <li><a href="customer-orders.html">My Orders</a></li>
+  <li><a href="customer-cart.html">My Cart</a></li>
+  <li><a href="customer-marketplace.html">Marketplace</a></li> <!-- Add marketplace here -->
+  <li><a href="#" id="logoutBtn">Log out</a></li>
+</ul>
+
+  </div>
+  <!-- Main Content -->
+<div class="main-content" id="main-content">
+    <!-- Your content here -->
+</div>
+
+  <!-- Overlay -->
+  <div class="overlay"></div>
+
+  <!-- Menu Toggle -->
+  <button class="menu-toggle" id="menu-toggle"><i class="fas fa-bars"></i></button>
+
+  <!-- Scripts -->
+   <script type="module" src="config.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+<script type="module" src="js/auth.js"></script>
+  <script type="module" src="js/market.js"></script>
+<script type="module" src="js/main.js"></script>
+  <script src="js/sidebar.js"></script>  
+  <script>
+  </script>
+</body>
+</html>

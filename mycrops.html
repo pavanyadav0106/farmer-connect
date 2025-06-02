@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Crops | Farmer Connect</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/mycrops.css">
+</head>
+<head>
+  <!-- Add this with your other scripts -->
+  <script src="https://upload-widget.cloudinary.com/global/all.js"></script>
+</head>
+<body>
+  <!-- Back Button -->
+  <button id="backBtn" class="back-button" aria-label="Back to Dashboard">
+    <i class="fas fa-arrow-left"></i> Back
+  </button>  
+  <div class="top-nav">
+    <a href="farmer4.html" class="logo-text">🌾 FARMER CONNECT</a>
+  </div>
+  ...
+</body>
+
+
+  <div class="app-container">
+    <!-- Navigation Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h2><i class="fas fa-leaf"></i> My Crops</h2>
+        <button class="btn btn-primary" id="addNewCropBtn">
+          <i class="fas fa-plus"></i> Add New
+        </button>
+      </div>
+      
+      <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Search crops...">
+        <i class="fas fa-search search-icon"></i>
+      </div>
+      
+      <div class="filter-controls">
+        <select id="statusFilter" class="filter-select">
+          <option value="all">All Statuses</option>
+          <option value="available">Available</option>
+          <option value="sold out">Sold Out</option>
+        </select>
+        
+        <select id="sortBy" class="filter-select">
+          <option value="newest">Newest First</option>
+          <option value="oldest">Oldest First</option>
+          <option value="price-high">Price (High-Low)</option>
+          <option value="price-low">Price (Low-High)</option>
+        </select>
+      </div>
+      
+      <div class="crops-list" id="myCrops"></div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <div class="content-header">
+        <h2 id="formTitle">Add New Crop</h2>
+        <div class="action-buttons">
+          <button class="btn btn-secondary" id="cancelEdit" style="display:none;">
+            <i class="fas fa-times"></i> Cancel
+          </button>
+        </div>
+      </div>
+      
+      <form id="cropForm">
+        <div class="form-group">
+          <label for="cropName">Crop Name</label>
+          <input type="text" id="cropName" placeholder="Enter crop name" required>
+          <div class="error-message" id="nameError"></div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="cropPrice">Price (₹)</label>
+            <input type="number" id="cropPrice" placeholder="Price per kg" min="1" required>
+            <div class="error-message" id="priceError"></div>
+          </div>
+          
+          <div class="form-group">
+            <label for="cropQuantity">Quantity (kg)</label>
+            <input type="number" id="cropQuantity" placeholder="Available quantity" min="1" required>
+            <div class="error-message" id="quantityError"></div>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="cropCategory">Category</label>
+          <select id="cropCategory" required>
+            <option value="">Select category</option>
+            <option value="vegetables">Vegetables</option>
+            <option value="fruits">Fruits</option>
+            <option value="grains">Grains</option>
+            <option value="spices">Spices</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="cropDescription">Description</label>
+          <textarea id="cropDescription" placeholder="Add details about your crop (optional)"></textarea>
+        </div>
+        
+        <div class="form-group">
+          <label for="cropImage">Crop Image</label>
+          <div class="image-upload-container">
+            <input type="file" id="cropImage" accept="image/*" hidden>
+            <div class="upload-area" id="uploadArea">
+              <i class="fas fa-cloud-upload-alt"></i>
+              <p>Click to upload image</p>
+              <img id="imagePreview" style="display:none;">
+            </div>
+            <button type="button" class="btn btn-small btn-secondary" id="removeImageBtn" style="display:none;">
+              <i class="fas fa-trash"></i> Remove
+            </button>
+          </div>
+          <div class="error-message" id="imageError"></div>
+        </div>
+        
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary" id="submitBtn">
+            <span id="submitText">Save Crop</span>
+            <i class="fas fa-spinner fa-spin" id="submitSpinner" style="display:none;"></i>
+          </button>
+        </div>
+      </form>
+    </main>
+  </div>
+
+  <!-- Confirmation Modal -->
+  <div class="modal" id="confirmationModal">
+    <div class="modal-content">
+      <h3 id="modalTitle">Confirm Action</h3>
+      <p id="modalMessage">Are you sure you want to perform this action?</p>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" id="modalCancelBtn">Cancel</button>
+        <button class="btn btn-danger" id="modalConfirmBtn">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notification Toast -->
+  <div class="toast" id="notificationToast"></div>
+
+  <script type="module" src="js/mycrops.js"></script>
+</body>
+</html>

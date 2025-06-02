@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Cart - FarmerConnect</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="css/customer-cart.css"/>
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <a href="customer-dashboard.html" class="back-btn">
+        <i class="fas fa-arrow-left"></i>
+      </a>
+      <h1>My Cart</h1>
+        <div class="profile-menu-container">
+    <button id="profileBtn" class="profile-circle" aria-label="Profile Menu">
+        <i class="fas fa-user-circle"></i>
+    </button>
+    <div id="profileDropdown" class="profile-dropdown hidden">
+    <a href="customer-dashboard.html" id="homeBtn">Home</a>
+    <a href="customer-profile.html">Profile</a>
+    <a href="#" id="logoutBtn">Logout</a>
+    </div>
+</div>
+
+    </div>
+  </header>
+
+  <main class="main-content">
+    <div class="container">
+      <div class="cart-items" id="cartItems">
+        <!-- Cart items will be dynamically inserted here -->
+        <div class="empty-cart">
+          <i class="fas fa-shopping-cart"></i>
+          <p>Your cart is empty</p>
+          <a href="customer-marketplace.html" class="btn btn-primary">Browse Crops</a>
+        </div>
+      </div>
+
+      <div class="cart-summary" id="cartSummary">
+        <h2>Order Summary</h2>
+        <div class="summary-row">
+          <span>Subtotal (<span id="itemCount">0</span> items)</span>
+          <span id="subtotal">₹0</span>
+        </div>
+        <div class="summary-row">
+          <span>Delivery</span>
+          <span>FREE</span>
+        </div>
+        <div class="summary-row total">
+          <span>Total</span>
+          <span id="cartTotal">₹0</span>
+        </div>
+        <button class="btn btn-primary btn-block" id="checkoutBtn" disabled>
+          Proceed to Checkout
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Checkout Modal -->
+  <div class="modal" id="checkoutModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Checkout</h2>
+        <span class="close-btn">&times;</span>
+      </div>
+      <div class="modal-body">
+        <form id="checkoutForm">
+          <div class="form-group">
+            <label for="deliveryAddress">Delivery Address</label>
+            <textarea id="deliveryAddress" required placeholder="House No, Street, City, State, Pincode"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="contactNumber">Contact Number</label>
+            <input type="tel" id="contactNumber" placeholder="Enter your phone number" required pattern="[0-9]{10}"/>
+          </div>
+
+          <div class="form-group">
+            <label for="deliveryDate">Delivery Date</label>
+            <input type="date" id="deliveryDate" required min="" />
+          </div>
+
+          <div class="form-group">
+            <label for="paymentMethod">Payment Method</label>
+            <select id="paymentMethod" required>
+              <option value="">Select payment method</option>
+              <option value="cod">Cash on Delivery</option>
+              <option value="upi">UPI</option>
+              <option value="card">Credit/Debit Card</option>
+              <option value="wallet">Wallet</option>
+            </select>
+          </div>
+
+          <div class="form-group upi-field hidden">
+            <label for="upiId">UPI ID</label>
+            <input type="text" id="upiId" placeholder="example@upi" />
+          </div>
+
+          <div class="form-group card-fields hidden">
+            <label for="cardNumber">Card Number</label>
+            <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" />
+            <label for="expiry">Expiry Date</label>
+            <input type="month" id="expiry" />
+            <label for="cvv">CVV</label>
+            <input type="password" id="cvv" maxlength="3" />
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="cancelCheckout">Cancel</button>
+        <button type="submit" class="btn btn-primary" id="confirmOrderBtn">Place Order</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Order Confirmation Modal -->
+  <div class="modal" id="orderConfirmationModal">
+    <div class="modal-content confirmation">
+      <div class="confirmation-icon">
+        <i class="fas fa-check-circle"></i>
+      </div>
+      <h2>Order Placed Successfully!</h2>
+      <p id="orderConfirmationText">Thank you for shopping with us.</p>
+      <div class="confirmation-buttons">
+        <a href="customer-marketplace.html" class="btn btn-secondary">Continue Shopping</a>
+        <a href="customer-orders.html" class="btn btn-primary" id="viewOrderBtn">View Order</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="js/customer-cart.js"></script>
+</body>
+</html>

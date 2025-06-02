@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fresh Crops - FarmerConnect</title>
+<!-- Then load your config -->
+<script type="module" src="config.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/customer-marketplace.css">
+</head>
+
+<body>
+    <header class="header">
+        <div class="container">
+            <a href="customer-dashboard.html" class="back-btn">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            <h1>Fresh Crops</h1>
+            <div class="header-icons">
+                <a href="customer-cart.html" class="cart-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count">0</span>
+                </a>
+                <div class="profile-icon">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <div class="marketplace-filters">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchCrops" placeholder="Search crops...">
+                </div>
+                <select id="categoryFilter">
+                    <option value="all">All Categories</option>
+                    <option value="vegetables">Vegetables</option>
+                    <option value="fruits">Fruits</option>
+                    <option value="grains">Grains</option>
+                </select>
+            </div>
+
+            <div class="crops-grid" id="cropsGrid">
+                <div class="loading-skeleton">
+                    <div class="skeleton-img"></div>
+                    <div class="skeleton-line"></div>
+                    <div class="skeleton-line short"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div class="modal" id="addToCartModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalCropName">Add to Cart</h2>
+                <span class="close-btn">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="crop-modal-image">
+                    <img id="modalCropImage" src="" alt="Crop Image">
+                </div>
+                <div class="crop-modal-details">
+                    <p class="crop-price" id="modalCropPrice">₹50/kg</p>
+                    <p class="crop-stock" id="modalCropStock">10 kg available</p>
+                    
+                    <div class="quantity-selector">
+                        <button class="quantity-btn" id="decrementQty">-</button>
+                        <input type="number" id="quantityInput" value="1" min="1">
+                        <button class="quantity-btn" id="incrementQty">+</button>
+                        <span class="unit">kg</span>
+                    </div>
+                    
+                    <div class="total-price">
+                        <span>Total:</span>
+                        <span id="modalTotalPrice">₹50</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="addToCartBtn">
+                    <i class="fas fa-cart-plus"></i> Add to Cart
+                </button>
+            </div>
+        </div>
+    </div>
+<div class="pagination-container container" id="pagination"></div>
+  <div class="toast" id="toast"></div>
+  <script type="module" src="js/customer-marketplace.js"></script>
+  </body>
+</html>

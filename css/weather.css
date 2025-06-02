@@ -1,0 +1,137 @@
+.popup {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 25px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  width: 85%;
+  max-width: 700px;
+  z-index: 2000;
+}
+
+.popup.active {
+  display: block;
+}
+
+.popup-content {
+  text-align: center;
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+/* Input Field */
+#locationInput {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  margin-top: 10px;
+  box-sizing: border-box;
+}
+
+/* Suggestion Box */
+.suggestion-box {
+  border: 1px solid #ccc;
+  background: #fff;
+  max-height: 180px;
+  overflow-y: auto;
+  position: absolute;
+  width: 100%;
+  margin-top: 4px;
+  z-index: 1002;
+  display: none;
+  font-size: 15px;
+  border-radius: 6px;
+}
+
+.suggestion {
+  padding: 8px;
+  cursor: pointer;
+}
+
+.suggestion:hover {
+  background: #f0f0f0;
+}
+
+/* Get Weather Button */
+#getWeatherBtn {
+  margin-top: 12px;
+  padding: 10px 22px;
+  font-size: 15px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#getWeatherBtn:hover {
+  background-color: #419645;
+}
+
+/* Weather Cards */
+.weather-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.weather-card {
+  background: #f0f8ff;
+  padding: 15px;
+  border-radius: 16px;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+  min-width: 140px;
+  text-align: center;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.6s ease forwards;
+  cursor: pointer;
+}
+
+.weather-card h3 {
+  margin: 8px 0;
+  font-size: 16px;
+}
+
+.weather-card p {
+  margin: 4px 0;
+  font-size: 13px;
+  color: #333;
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 600px) {
+  .popup {
+    padding: 20px;
+  }
+
+  .weather-card {
+    width: 100%;
+  }
+
+  .suggestion-box {
+    width: 100%;
+  }
+}

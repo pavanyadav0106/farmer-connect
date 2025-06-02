@@ -1,0 +1,12 @@
+.testimonial {
+  display: none;
+  font-size: 18px;
+  color: #333;
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+}
+
+.testimonial.active {
+  display: block;
+  opacity: 1;
+}

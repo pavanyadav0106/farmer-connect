@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">  
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Farmer Connect</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/sidebar.css">
+  <link rel="stylesheet" href="css/weather.css">
+  <link rel="stylesheet" href="css/market.css">
+  <link rel="stylesheet" href="css/testimonials.css">
+  <link rel="stylesheet" href="css/modal.css">
+</head>
+<body>
+  <!-- Loading Indicator -->
+  <div id="loading">Loading...</div>
+
+  <!-- Top Navigation -->
+  <div class="top-nav">
+    <span class="logo-text">🌾 Farmer Connect</span>
+  </div>
+
+  <!-- Logout Modal -->
+  <div id="logoutModal" class="logout-modal">
+    <div class="logout-modal-content">
+      <span class="close">&times;</span>
+      <p>Are you sure you want to log out?</p>
+      <button id="confirmLogout">Yes</button>
+      <button id="cancelLogout">No</button>
+    </div>
+  </div>
+
+  <!-- Hero Section -->
+  <div class="hero">
+    <div class="hero-content">
+      <h1>Empowering Farmers with Real-Time Market Insights</h1>
+      <p>Connecting farmers directly with markets, real-time updates, and expert insights.</p>
+    </div>
+  </div>
+
+  <!-- Market Ticker -->
+  <div class="ticker-container">
+    <div class="ticker" id="market-ticker">Loading market prices...</div>
+  </div>
+
+  <!-- Features Section -->
+  <div class="features">
+    <div class="feature">
+      <i class="fas fa-chart-line"></i>
+      <h3>Live Market Prices</h3>
+      <p>Stay updated with real-time crop rates.</p>
+    </div>
+    <div class="feature">
+      <i class="fas fa-cloud-sun"></i>
+      <h3>Weather Forecast</h3>
+      <p>Plan your farming with accurate weather data.</p>
+    </div>
+    <div class="feature">
+      <i class="fas fa-newspaper"></i>
+      <h3>Latest News</h3>
+      <p>Get farming tips & industry updates.</p>
+    </div>
+    <div class="feature">
+      <i class="fas fa-handshake"></i>
+      <h3>Seamless Transactions</h3>
+      <p>Sell crops easily with secure payments.</p>
+    </div>
+  </div>
+
+  <!-- Testimonials -->
+  <div class="testimonials">
+    <h2>Farmers' Success Stories</h2>
+    <div class="testimonial active">
+      <p>"Farmer Connect helped me get better prices for my crops. Highly recommend!"</p>
+      <h4>- Ramesh Patel, Gujarat</h4>
+    </div>
+    <div class="testimonial">
+      <p>"With real-time weather updates, I planned my farming better and avoided losses."</p>
+      <h4>- Sita Devi, Maharashtra</h4>
+    </div>
+    <div class="testimonial">
+      <p>"Selling crops online has never been easier. The best platform for farmers!"</p>
+      <h4>- Arjun Kumar, Punjab</h4>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <p>
+      <a href="contact.html">Contact us</a> | 
+      <a href="faq.html">FAQs</a> | 
+      <a href="https://facebook.com" target="_blank">Social Media</a>
+    </p>
+  </div>
+
+  <!-- Sidebar -->
+  <div class="sidebar" id="sidebar">
+    <ul>
+<li><a href="profile.html" id="profileLink">Profile</a></li>
+      <li><a href="mycrops.html">My Crops</a></li>
+      <li><a href="order.html">My Orders</a></li>
+      <li><a href="#" id="weatherButton">Weather</a></li>
+      <li><a href="#" id="logoutBtn">Log out</a></li>
+    </ul>
+  </div>
+  <!-- Main Content -->
+<div class="main-content" id="main-content">
+    <!-- Your content here -->
+</div>
+
+  <!-- Weather Popup -->
+  <div id="weatherPopup" class="popup">
+    <div class="popup-content">
+      <span class="close-btn">&times;</span>
+      <h2>Weather Forecast</h2>
+      <div style="position: relative;">
+        <input type="text" id="locationInput" placeholder="Enter city name">
+        <div id="suggestionBox" class="suggestion-box"></div>
+      </div>
+      <button id="getWeatherBtn">Get Weather</button>
+      <div id="weatherData"></div>
+    </div>
+  </div>
+
+  <!-- Overlay -->
+  <div class="overlay"></div>
+
+  <!-- Menu Toggle -->
+  <button class="menu-toggle" id="menu-toggle"><i class="fas fa-bars"></i></button>
+
+  <!-- Scripts -->
+   <script type="module" src="config.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <!-- Add these SDKs in farmer4.html -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+<script type="module" src="js/auth.js"></script>
+  <script type="module" src="js/market.js"></script>
+<script type="module" src="js/main.js"></script>
+  <script src="js/testimonials.js"></script>
+  <script src="js/sidebar.js"></script>
+<script type="module" src="js/weather.js"></script>
+  <script>
+  </script>
+</body>
+</html>
