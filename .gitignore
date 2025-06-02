@@ -67,7 +67,7 @@ node_modules/
 
 # dataconnect generated files
 .dataconnect
-
+init.js
 config.js
 .env
 node_modules/
