@@ -69,37 +69,47 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    async function fetchOrders(farmerId) {
-        try {
-            showLoadingState();
-            
-            const q = query(
-                collection(db, 'orders'),
-                where('farmerIds', 'array-contains', farmerId)
-            );
-            
-            const querySnapshot = await getDocs(q);
-            orders = querySnapshot.docs.map(doc => ({
-                id: doc.id,
-                ...doc.data(),
-                // Ensure createdAt exists for sorting
-                createdAt: doc.data().createdAt || serverTimestamp()
-            }));
-            
-            // Sort by date (newest first)
-            orders.sort((a, b) => b.createdAt?.toDate() - a.createdAt?.toDate());
-            
-            filterOrders();
-        } catch (error) {
-            console.error("Error loading orders:", error);
-            showToast('Failed to load orders', 'error');
-        }
+
+async function updateOrderWithFarmerIds(orderData, orderId) {
+    const farmerIds = [...new Set(orderData.items.map(item => item.farmerId))];
+    await setDoc(doc(db, 'orders', orderId), {
+        ...orderData,
+        farmerIds
+    });
+}
+
+async function fetchOrders(farmerId) {
+    try {
+        showLoadingState();
+
+        const q = query(
+            collection(db, 'orders'),
+            where('farmerIds', 'array-contains', farmerId)
+        );
+
+        const querySnapshot = await getDocs(q);
+        orders = querySnapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data(),
+            createdAt: doc.data().createdAt || serverTimestamp()
+        }));
+
+        orders.sort((a, b) => b.createdAt?.toDate() - a.createdAt?.toDate());
+
+        filterOrders();
+
+    } catch (error) {
+        console.error("Error loading orders:", error);
+        showToast('Failed to load orders', 'error');
     }
+}
+
+
 
     function setupRealTimeListener(farmerId) {
         const q = query(
             collection(db, 'orders'),
-            where('farmerIds', 'array-contains', farmerId)
+where('farmerIds', 'array-contains', farmerId)
         );
         
         unsubscribeOrders = onSnapshot(q, (snapshot) => {
@@ -666,7 +676,9 @@ document.addEventListener('DOMContentLoaded', function() {
             currentPage = 1;
             renderOrders();
         });
-
+        document.getElementById('backBtn').addEventListener('click', () => {
+  window.location.href = 'farmer4.html'; // change to your dashboard URL if different
+});
         // Bulk actions
         selectAllCheckbox.addEventListener('change', (e) => {
             const checkboxes = document.querySelectorAll('.order-checkbox');

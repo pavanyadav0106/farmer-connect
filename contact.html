@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Contact Us - Farmer Connect</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+  /* Modern Contact Section Styling */
+  .contact-section {
+  padding-top: 80px; /* to avoid content hiding behind fixed nav */
+    background: linear-gradient(135deg, #f9f9f9 0%, #ffffff 100%);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .contact-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+  
+  .contact-header {
+    padding: 3rem 2rem;
+    text-align: center;
+    background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
+    color: white;
+    position: relative;
+  }
+  
+  .contact-header h2 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+  }
+  
+  .subtitle {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  .contact-decoration {
+    position: absolute;
+    bottom: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+  }
+  
+  .decoration-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: white;
+    position: relative;
+    z-index: 2;
+  }
+  
+  .decoration-line {
+    width: 120px;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.3);
+    margin: 0 -20px;
+  }
+  
+  .contact-content {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    padding: 3rem 2rem;
+  }
+  
+  @media (min-width: 992px) {
+    .contact-content {
+      grid-template-columns: 1fr 1.5fr;
+    }
+  }
+  
+  .contact-info {
+    display: grid;
+    gap: 1.5rem;
+  }
+  
+  .info-card {
+    padding: 1.5rem;
+    border-radius: 12px;
+    background: #f8f9fa;
+    transition: all 0.3s ease;
+  }
+  
+  .info-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  }
+  
+  .icon-circle {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: #4CAF50;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+  }
+  
+  .info-card h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    color: #2E7D32;
+  }
+  
+  .info-card p {
+    color: #555;
+    line-height: 1.6;
+  }
+  
+  .contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .form-group {
+    position: relative;
+  }
+  
+  .dual-inputs {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  .input-wrapper {
+    position: relative;
+  }
+  
+  .contact-form input,
+  .contact-form textarea {
+    width: 100%;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s;
+  }
+  
+  .contact-form input:focus,
+  .contact-form textarea:focus {
+    outline: none;
+    border-color: #4CAF50;
+    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+  }
+  
+  .contact-form label {
+    position: absolute;
+    left: 1rem;
+    top: 1rem;
+    color: #777;
+    transition: all 0.3s;
+    pointer-events: none;
+    background: white;
+    padding: 0 0.5rem;
+  }
+  
+  .contact-form input:focus + label,
+  .contact-form input:not(:placeholder-shown) + label,
+  .contact-form textarea:focus + label,
+  .contact-form textarea:not(:placeholder-shown) + label {
+    top: -0.6rem;
+    left: 0.8rem;
+    font-size: 0.8rem;
+    color: #4CAF50;
+  }
+  
+  .textarea-wrapper label {
+    top: 1rem;
+  }
+  
+  .submit-btn {
+    background: #4CAF50;
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: all 0.3s;
+    margin-top: 0.5rem;
+  }
+  
+  .submit-btn:hover {
+    background: #3d8b40;
+    transform: translateY(-2px);
+  }
+  
+  .submit-btn i {
+    transition: transform 0.3s;
+  }
+  
+  .submit-btn:hover i {
+    transform: translateX(3px);
+  }
+  
+  /* Success Message */
+  .success-message {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 3rem 2rem;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 500px;
+    width: 90%;
+    z-index: 1000;
+    display: none;
+  }
+  
+  .success-message i {
+    font-size: 4rem;
+    color: #4CAF50;
+    margin-bottom: 1rem;
+  }
+  
+  .success-message h3 {
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+    color: #2E7D32;
+  }
+  
+  .success-message p {
+    color: #555;
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+  }
+  
+  .success-message button {
+    background: #4CAF50;
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  
+  .success-message button:hover {
+    background: #3d8b40;
+  }
+  
+  /* Overlay for success message */
+  .success-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    display: none;
+  }
+.top-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* space between left, center, right */
+  padding: 20px 20px;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  left: 0;
+  background: #28a745;
+  color: white;
+  z-index: 1000;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  font-size: 20px;
+  user-select: none;
+    font-family: 'Poppins', sans-serif;
+    letter-spacing: 1px;
+}
+.logo-text {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  font-size: 24px;
+  color: white;
+  text-decoration: none;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  flex-grow: 1;
+  text-align: center;
+}
+
+.left, .right {
+  width: 50px; /* fixed width to reserve space */
+}
+
+.center {
+  flex: 1;
+  text-align: center;
+  user-select: none;
+  font-weight: 600;
+  font-size: 1.2rem;
+}
+.back-btn {
+    background: #4CAF50;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-right: 12px;
+  transition: background-color 0.3s ease;
+}
+
+.back-btn:hover {
+  background: #388E3C;
+}
+
+.icon-box i {
+  color: white;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.brand-name {
+  user-select: none;
+}
+
+
+
+</style>
+</head>
+<body>
+
+  <!-- CONTACT SECTION -->
+  <section class="contact-section" id="contact">
+<nav class="top-nav">
+  <div class="left">
+    <button id="backButton" class="back-btn" aria-label="Go back">
+      <span class="icon-box">
+        <i class="fas fa-arrow-left"></i>
+      </span>
+    </button>
+  </div>
+  <div class="center">
+      <a class="logo-text">🌾 Farmer Connect</a>
+  </div>
+  <div class="right"></div> <!-- empty spacer -->
+</nav>
+
+    <div class="contact-container">
+      <div class="contact-header">
+        <h2>Get in Touch</h2>
+        <p class="subtitle">We're here to help and answer any questions you might have</p>
+        <div class="contact-decoration">
+          <div class="decoration-circle"></div>
+          <div class="decoration-line"></div>
+        </div>
+      </div>
+      
+      <div class="contact-content">
+        <div class="contact-info">
+          <div class="info-card">
+            <div class="icon-circle"><i class="fas fa-map-marker-alt"></i></div>
+            <h3>Our Location</h3>
+            <p>123 Farm Lane, Agricultural District<br>Hyderabad, Telangana 500001</p>
+          </div>
+          <div class="info-card">
+            <div class="icon-circle"><i class="fas fa-phone-alt"></i></div>
+            <h3>Phone</h3>
+            <p>+91 95055-10127<br>Mon-Fri, 9am-6pm</p>
+          </div>
+          <div class="info-card">
+            <div class="icon-circle"><i class="fas fa-envelope"></i></div>
+            <h3>Email</h3>
+            <p>farmerconnect30@gmail.com<br>response within 24 hours</p>
+          </div>
+        </div>
+
+        <form id="contactForm" class="contact-form">
+          <div class="form-group dual-inputs">
+            <div class="input-wrapper">
+              <input type="text" id="name" required />
+              <label for="name">Your Name</label>
+            </div>
+            <div class="input-wrapper">
+              <input type="email" id="email" required />
+              <label for="email">Your Email</label>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="input-wrapper">
+              <input type="text" id="subject" required />
+              <label for="subject">Subject</label>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="input-wrapper textarea-wrapper">
+              <textarea id="message" rows="5" required></textarea>
+              <label for="message">Your Message</label>
+            </div>
+          </div>
+          <button type="submit" class="submit-btn">
+            <span>Send Message</span>
+            <i class="fas fa-paper-plane"></i>
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <div id="successMessage" class="success-message">
+      <i class="fas fa-check-circle"></i>
+      <h3>Thank You!</h3>
+      <p>Your message has been sent successfully. We'll get back to you soon.</p>
+      <button id="closeSuccess">Send Another</button>
+    </div>
+  </section>
+
+  <!-- JavaScript -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const contactForm = document.getElementById('contactForm');
+      const successMessage = document.getElementById('successMessage');
+      const closeSuccess = document.getElementById('closeSuccess');
+
+      const inputs = document.querySelectorAll('.contact-form input, .contact-form textarea');
+      inputs.forEach(input => {
+        if (!input.getAttribute('placeholder')) input.setAttribute('placeholder', ' ');
+        if (input.value) {
+          const label = input.nextElementSibling;
+          label.style.top = '-0.6rem';
+          label.style.left = '0.8rem';
+          label.style.fontSize = '0.8rem';
+          label.style.color = '#4CAF50';
+        }
+      });
+
+      contactForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        setTimeout(() => {
+          document.body.insertAdjacentHTML('beforeend', '<div class="success-overlay"></div>');
+          const overlay = document.querySelector('.success-overlay');
+          overlay.style.display = 'block';
+          successMessage.style.display = 'block';
+          contactForm.reset();
+
+          inputs.forEach(input => {
+            const label = input.nextElementSibling;
+            label.style.top = '1rem';
+            label.style.left = '1rem';
+            label.style.fontSize = '1rem';
+            label.style.color = '#777';
+          });
+        }, 1000);
+      });
+
+      closeSuccess.addEventListener('click', function () {
+        document.querySelector('.success-overlay').remove();
+        successMessage.style.display = 'none';
+      });
+    });
+    document.getElementById('backButton').addEventListener('click', () => {
+  window.history.back();
+});
+
+  </script>
+
+</body>
+</html>

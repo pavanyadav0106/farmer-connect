@@ -13,23 +13,39 @@
 </head>
 
 <body>
-    <header class="header">
+        <header class="header">
         <div class="container">
             <a href="customer-dashboard.html" class="back-btn">
-                <i class="fas fa-arrow-left"></i>
+            <i class="fas fa-arrow-left"></i>
             </a>
-            <h1>Fresh Crops</h1>
-            <div class="header-icons">
-                <a href="customer-cart.html" class="cart-icon">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span class="cart-count">0</span>
-                </a>
-                <div class="profile-icon">
-                    <i class="fas fa-user-circle"></i>
+            <h1>🌾 FARMER CONNECT</h1>
+
+            <div class="header-icons" style="position: relative;">
+            <a href="customer-cart.html" class="cart-icon">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart-count">0</span>
+            </a>
+            <div class="profile-wrapper">
+            <a href="#" class="profile-icon-link">
+                <i class="fas fa-user-circle profile-icon" id="profileIcon"></i>
+            </a>
+            <div id="profileDropdown" class="profile-dropdown">
+                <a href="customer-profile.html" class="dropdown-item">Profile</a>
+                <a href="#" id="logoutBtn" class="dropdown-item">Logout</a>
+            </div>
+            </div>
+            </div>
+            </div>
+            <div id="logoutConfirmModal" class="logout-modal hidden">
+            <div class="modal-content confirm-logout">
+                <p>Are you sure you want to logout?</p>
+                <div class="modal-actions">
+                <button id="confirmLogoutBtn" class="btn btn-primary">Yes, Logout</button>
+                <button id="cancelLogoutBtn" class="btn btn-secondary">Cancel</button>
                 </div>
             </div>
-        </div>
-    </header>
+            </div>
+        </header>
 
     <main class="main-content">
         <div class="container">
@@ -39,11 +55,13 @@
                     <input type="text" id="searchCrops" placeholder="Search crops...">
                 </div>
                 <select id="categoryFilter">
-                    <option value="all">All Categories</option>
-                    <option value="vegetables">Vegetables</option>
-                    <option value="fruits">Fruits</option>
-                    <option value="grains">Grains</option>
+                <option value="all">All Categories</option>
+                <option value="vegetables">Vegetables</option>
+                <option value="fruits">Fruits</option>
+                <option value="grains">Grains</option>
+                <option value="other">Others</option>
                 </select>
+
             </div>
 
             <div class="crops-grid" id="cropsGrid">

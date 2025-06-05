@@ -35,23 +35,21 @@ body {
 
 /* ======= Back Button ======= */
 .back-button {
-  position: fixed;
-  top: 70px; /* just below top-nav */
-  left: 20px;
-  z-index: 1001; /* below top-nav but above content */
-  background-color: var(--primary-color);
-  color: white;
-  border: none;
-  border-radius: var(--radius);
-  padding: 0.5rem 1rem;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 0.875rem;
-  box-shadow: var(--shadow);
-  transition: var(--transition);
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 9999;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 18px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    transition: background-color 0.3s ease;
+    user-select: none;
 }
 
 .back-button:hover {

@@ -1,13 +1,13 @@
 import { db, auth } from '../config.js';
 import { collection, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-
+import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 document.addEventListener('DOMContentLoaded', function () {
     const cropsGrid = document.getElementById('cropsGrid');
     const searchInput = document.getElementById('searchCrops');
     const categoryFilter = document.getElementById('categoryFilter');
     const cartCount = document.querySelector('.cart-count');
-
+const logoutBtn = document.getElementById("logoutBtn");
     const paginationContainer = document.getElementById('pagination');
 
     let crops = [];
@@ -250,3 +250,40 @@ function filterCrops() {
         }, 3000);
     }
 });
+const profileIcon = document.getElementById('profileIcon');
+const profileDropdown = document.getElementById('profileDropdown');
+
+profileIcon.addEventListener('click', (e) => {
+  e.stopPropagation();
+  profileDropdown.style.display = 
+    profileDropdown.style.display === 'block' ? 'none' : 'block';
+});
+
+// Hide dropdown when clicking outside
+document.addEventListener('click', (e) => {
+  if (!profileDropdown.contains(e.target) && e.target !== profileIcon) {
+    profileDropdown.style.display = 'none';
+  }
+});
+const logoutBtn = document.getElementById('logoutBtn');
+const logoutModal = document.getElementById('logoutConfirmModal');
+const confirmLogoutBtn = document.getElementById('confirmLogoutBtn');
+const cancelLogoutBtn = document.getElementById('cancelLogoutBtn');
+
+logoutBtn.addEventListener('click', e => {
+  e.preventDefault();
+  logoutModal.classList.remove('hidden');
+});
+
+cancelLogoutBtn.addEventListener('click', () => {
+  logoutModal.classList.add('hidden');
+});
+
+confirmLogoutBtn.addEventListener('click', () => {
+  // Your logout logic here, e.g.
+  window.location.href = "index.html";
+});
+
+
+
+

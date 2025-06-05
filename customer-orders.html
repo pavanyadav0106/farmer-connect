@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Orders</title>
+    <link rel="stylesheet" href="css/customer-orders.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header class="top-nav">
+      <button id="backBtn" class="btn-back" title="Go Back">
+        <i class="fas fa-arrow-left"></i>
+      </button>
+      <a href="customer-dashboard.html" class="logo-text">🌾 FARMER CONNECT</a>
+    </header>
+    <div class="orders-container">
+            <div class="order-filters">
+                <div class="filter-group">
+                    <label for="statusFilter">Status:</label>
+                    <select id="statusFilter">
+                        <option value="all">All Orders</option>
+                        <option value="processing">Pending</option>
+                        <option value="accepted">Accepted</option>
+                        <option value="completed">Completed</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="dateFilter">Date:</label>
+                    <select id="dateFilter">
+                        <option value="all">All Time</option>
+                        <option value="today">Today</option>
+                        <option value="week">This Week</option>
+                        <option value="month">This Month</option>
+                    </select>
+                </div>
+                <button id="resetFilters" class="btn-outline">
+                    <i class="fas fa-sync-alt"></i> Reset
+                </button>
+            </div>
+        </header>
+
+        <div class="orders-list">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Date</th>
+                        <th>Items</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="ordersTableBody">
+                    <!-- Orders will be inserted here by JavaScript -->
+                </tbody>
+            </table>
+
+            <div id="emptyState" class="empty-state">
+                <img src="https://cdn-icons-png.flaticon.com/512/4076/4076478.png" alt="No orders">
+                <h3>No orders found</h3>
+                <p>Try adjusting your filters or check back later</p>
+                <button id="refreshOrders" class="btn-primary">
+                    <i class="fas fa-sync-alt"></i> Refresh
+                </button>
+            </div>
+
+            <div class="pagination">
+                <button id="firstPageBtn" disabled><i class="fas fa-angle-double-left"></i></button>
+                <button id="prevPageBtn" disabled><i class="fas fa-angle-left"></i></button>
+                <div id="pageNumbers" class="page-numbers"></div>
+                <button id="nextPageBtn"><i class="fas fa-angle-right"></i></button>
+                <button id="lastPageBtn"><i class="fas fa-angle-double-right"></i></button>
+            </div>
+        </div>
+
+        <!-- Order Details Modal -->
+        <div id="orderModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Order Details</h2>
+                    <span class="close-btn">&times;</span>
+                </div>
+                <div id="modalBody" class="modal-body">
+                    <!-- Order details will be inserted here -->
+                </div>
+                <div class="modal-footer">
+                    <button id="cancelOrderBtn" class="btn-danger">Cancel Order</button>
+                    <button id="trackOrderBtn" class="btn-primary">Track Order</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="js/customer-orders.js"></script>
+</body>
+</html>

@@ -9,16 +9,19 @@
   <link rel="stylesheet" href="css/customer-cart.css"/>
 </head>
 <body>
+
   <header class="header">
-    <div class="container">
-      <a href="customer-dashboard.html" class="back-btn">
-        <i class="fas fa-arrow-left"></i>
-      </a>
-      <h1>My Cart</h1>
-        <div class="profile-menu-container">
-    <button id="profileBtn" class="profile-circle" aria-label="Profile Menu">
-        <i class="fas fa-user-circle"></i>
-    </button>
+  <header class="top-nav">
+  <a href="customer-dashboard.html" class="back-btn">
+    <i class="fas fa-arrow-left"></i>
+  </a>
+
+  <a class="logo-text">🌾 Farmer Connect</a>
+
+  <button id="profileBtn" class="profile-circle" aria-label="Profile Menu">
+    <i class="fas fa-user-circle"></i>
+  </button>
+</header>
     <div id="profileDropdown" class="profile-dropdown hidden">
     <a href="customer-dashboard.html" id="homeBtn">Home</a>
     <a href="customer-profile.html">Profile</a>
@@ -135,6 +138,6 @@
 
   <div class="toast" id="toast"></div>
 
-  <script src="js/customer-cart.js"></script>
+  <script type="module" src="js/customer-cart.js"></script>
 </body>
 </html>

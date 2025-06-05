@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+/>
+  <title>FAQ - Farmer Connect</title>
+  <style>
+    :root {
+      --primary-green: #28a745;
+      --primary-green-dark: #1e7e34;
+      --primary-green-light: #d4edda;
+      --gray-light: #f8f9fa;
+      --gray-medium: #6c757d;
+      --gray-dark: #343a40;
+      --border-radius: 8px;
+      --transition-speed: 0.3s;
+      --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      font-family: var(--font-family);
+      background-color: var(--gray-light);
+      margin: 0;
+      padding: 0;
+      color: var(--gray-dark);
+      line-height: 1.6;
+    }
+
+  /* Replace the existing .top-nav styles with your Farmer Connect style */
+.top-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  left: 0;
+  background: #28a745;
+  color: white;
+  z-index: 1000;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  font-size: 20px;
+  user-select: none;
+  font-family: 'Poppins', sans-serif;
+  letter-spacing: 1px;
+  height: 50px;
+}
+
+.logo-text {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  font-size: 24px;
+  color: white;
+  text-decoration: none;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  flex-grow: 1;
+  text-align: center;
+  user-select: none;
+  cursor:auto;
+}
+
+.btn-back {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.4rem;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;  /* keep consistent width */
+  height: 36px;
+  user-select: none;
+  transition: transform 0.3s ease;
+}
+
+.btn-back:hover {
+  transform: translateX(-3px);
+}
+
+    .faq-section {
+      padding: 40px 20px 60px;
+      display: flex;
+      justify-content: center;
+      min-height: calc(100vh - 130px);
+    }
+
+    .faq-container {
+      background: white;
+      max-width: 900px;
+      width: 100%;
+      padding: 40px;
+      border-radius: var(--border-radius);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .faq-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .faq-header h2 {
+      color: var(--primary-green);
+      margin-bottom: 10px;
+      font-size: 2.2rem;
+    }
+
+    .faq-header p {
+      color: var(--gray-medium);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .search-container {
+      margin: 0 auto 30px;
+      max-width: 600px;
+      position: relative;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 12px 20px;
+      border: 1px solid #ddd;
+      border-radius: 50px;
+      font-size: 1rem;
+      padding-left: 45px;
+      transition: all var(--transition-speed);
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: var(--primary-green);
+      box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.2);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--gray-medium);
+    }
+
+    .faq-categories {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .category-btn {
+      padding: 8px 16px;
+      background-color: var(--gray-light);
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all var(--transition-speed);
+      font-size: 0.9rem;
+    }
+
+    .category-btn.active, .category-btn:hover {
+      background-color: var(--primary-green);
+      color: white;
+    }
+
+    .faq-item {
+      border-bottom: 1px solid #eee;
+      margin-bottom: 5px;
+      transition: all var(--transition-speed);
+    }
+
+    .faq-question {
+      width: 100%;
+      background: none;
+      border: none;
+      padding: 18px 10px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      text-align: left;
+      color: var(--gray-dark);
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all var(--transition-speed);
+    }
+
+    .faq-question:hover {
+      color: var(--primary-green);
+      background-color: var(--primary-green-light);
+    }
+
+    .faq-question::after {
+      content: '+';
+      font-size: 1.5rem;
+      color: var(--gray-medium);
+      transition: transform var(--transition-speed);
+    }
+
+    .faq-item.active .faq-question::after {
+      content: '-';
+    }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      padding: 0 10px;
+      transition: max-height var(--transition-speed), padding var(--transition-speed);
+      color: var(--gray-medium);
+    }
+
+    .faq-item.active .faq-answer {
+      max-height: 500px;
+      padding: 0 10px 20px;
+    }
+
+    .contact-card {
+      background-color: var(--primary-green-light);
+      border-left: 4px solid var(--primary-green);
+      padding: 20px;
+      border-radius: var(--border-radius);
+      margin-top: 40px;
+    }
+
+    .contact-card h3 {
+      margin-top: 0;
+      color: var(--primary-green-dark);
+    }
+
+    .contact-methods {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .contact-method {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--gray-dark);
+      text-decoration: none;
+      transition: color var(--transition-speed);
+    }
+
+    .contact-method:hover {
+      color: var(--primary-green);
+    }
+
+    @media (max-width: 768px) {
+      .top-nav {
+        padding: 15px 20px;
+      }
+      
+      .faq-container {
+        padding: 25px 20px;
+      }
+      
+      .faq-header h2 {
+        font-size: 1.8rem;
+      }
+      
+      .contact-methods {
+        flex-direction: column;
+        gap: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="top-nav">
+    <button class="btn-back" onclick="history.back()">
+      <i class="fas fa-arrow-left"></i>
+    </button>
+    <a class="logo-text">🌾 Farmer Connect</a>
+    <div style="width: 36px;"></div> <!-- spacer to balance flex space since btn-back is on left -->
+  </nav>
+
+
+  <section class="faq-section">
+    <div class="faq-container">
+      <div class="faq-header">
+        <h2>Frequently Asked Questions</h2>
+        <p>Find answers to common questions about using Farmer Connect</p>
+      </div>
+
+      <div class="search-container">
+        <i class="fas fa-search search-icon"></i>
+        <input type="text" class="search-input" placeholder="Search FAQs...">
+      </div>
+
+      <div class="faq-categories">
+        <button class="category-btn active" data-category="all">All</button>
+        <button class="category-btn" data-category="account">Account</button>
+        <button class="category-btn" data-category="orders">Orders</button>
+        <button class="category-btn" data-category="payments">Payments</button>
+        <button class="category-btn" data-category="technical">Technical</button>
+      </div>
+
+      <div class="faq-list">
+        <!-- Account FAQs -->
+        <div class="faq-item" data-categories="account">
+          <button class="faq-question">How do I create an account?</button>
+          <div class="faq-answer">
+            <p>To create an account, click on the "Sign Up" button on the login page. You'll need to provide your email address, create a password, and select whether you're a farmer or buyer. After email verification, your account will be activated.</p>
+          </div>
+        </div>
+
+        <div class="faq-item" data-categories="account">
+          <button class="faq-question">I forgot my password. How can I reset it?</button>
+          <div class="faq-answer">
+            <p>Click the "Forgot Password" link on the login page. Enter your registered email address and we'll send you a password reset link. The link will expire in 24 hours for security reasons.</p>
+          </div>
+        </div>
+
+        <!-- Orders FAQs -->
+        <div class="faq-item" data-categories="orders">
+          <button class="faq-question">How do I place an order?</button>
+          <div class="faq-answer">
+            <p>Browse available products in the marketplace. When you find what you want, click "Add to Cart". Review your cart and proceed to checkout where you'll enter shipping details and payment information.</p>
+            <ul>
+              <li>Minimum order: ₹500</li>
+              <li>Delivery within 3-5 business days</li>
+              <li>Free shipping on orders over ₹2000</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="faq-item" data-categories="orders">
+          <button class="faq-question">Can I cancel or modify an order?</button>
+          <div class="faq-answer">
+            <p>You can cancel orders within 1 hour of placement from your Order History. For modifications, please contact our support team immediately. Once an order is processed for shipping, cancellations may not be possible.</p>
+          </div>
+        </div>
+
+        <!-- Payments FAQs -->
+        <div class="faq-item" data-categories="payments">
+          <button class="faq-question">What payment methods are accepted?</button>
+          <div class="faq-answer">
+            <p>We accept all major payment options:</p>
+            <ul>
+              <li>Credit/Debit Cards (Visa, MasterCard, RuPay)</li>
+              <li>UPI (PhonePe, Google Pay, Paytm)</li>
+              <li>Net Banking</li>
+              <li>Wallet Payments</li>
+              <li>Cash on Delivery (COD) - Additional ₹50 charge</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="faq-item" data-categories="payments">
+          <button class="faq-question">When will I get my refund?</button>
+          <div class="faq-answer">
+            <p>Refunds are processed within 3-5 business days after we receive the returned items. The time it takes for the refund to reflect in your account depends on your bank:</p>
+            <ul>
+              <li>UPI/Wallets: 1-2 hours</li>
+              <li>Cards: 5-7 business days</li>
+              <li>Net Banking: 3-5 business days</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Technical FAQs -->
+        <div class="faq-item" data-categories="technical">
+          <button class="faq-question">Is my data secure with Farmer Connect?</button>
+          <div class="faq-answer">
+            <p>Yes, we use industry-standard security measures:</p>
+            <ul>
+              <li>Firebase Authentication with email verification</li>
+              <li>Secure Firestore database with strict access rules</li>
+              <li>Payment processing through PCI-DSS compliant gateways</li>
+              <li>Regular security audits</li>
+            </ul>
+            <p>We never store your payment details on our servers.</p>
+          </div>
+        </div>
+
+        <div class="faq-item" data-categories="technical">
+          <button class="faq-question">The app isn't loading properly. What can I do?</button>
+          <div class="faq-answer">
+            <p>Try these troubleshooting steps:</p>
+            <ol>
+              <li>Refresh the page (Ctrl+F5 or Cmd+Shift+R)</li>
+              <li>Clear your browser cache and cookies</li>
+              <li>Check your internet connection</li>
+              <li>Try using a different browser (Chrome/Firefox recommended)</li>
+              <li>Disable any ad-blockers or extensions temporarily</li>
+            </ol>
+            <p>If problems persist, contact our technical support team.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="contact-card">
+        <h3>Still need help?</h3>
+        <p>Contact our support team through any of these methods:</p>
+        <div class="contact-methods">
+          <a href="mailto:farmerconnect30@gmail.com" class="contact-method">
+            <i class="fas fa-envelope"></i> farmerconnect30@gmail.com
+          </a>
+          <a href="tel:+919505510127" class="contact-method">
+            <i class="fas fa-phone-alt"></i> +91 95055 10127
+          </a>
+          <a href="https://wa.me/919505510127" class="contact-method">
+            <i class="fab fa-whatsapp"></i> WhatsApp Chat
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // FAQ Accordion Functionality
+      const faqItems = document.querySelectorAll('.faq-item');
+      
+      faqItems.forEach(item => {
+        const question = item.querySelector('.faq-question');
+        
+        question.addEventListener('click', () => {
+          // Close all other items first
+          faqItems.forEach(otherItem => {
+            if (otherItem !== item && otherItem.classList.contains('active')) {
+              otherItem.classList.remove('active');
+            }
+          });
+          
+          // Toggle current item
+          item.classList.toggle('active');
+        });
+      });
+
+      // FAQ Search Functionality
+      const searchInput = document.querySelector('.search-input');
+      searchInput.addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase();
+        
+        faqItems.forEach(item => {
+          const question = item.querySelector('.faq-question').textContent.toLowerCase();
+          const answer = item.querySelector('.faq-answer').textContent.toLowerCase();
+          
+          if (question.includes(searchTerm) || answer.includes(searchTerm)) {
+            item.style.display = 'block';
+          } else {
+            item.style.display = 'none';
+          }
+        });
+      });
+
+      // FAQ Category Filtering
+      const categoryBtns = document.querySelectorAll('.category-btn');
+      categoryBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+          // Update active category button
+          categoryBtns.forEach(b => b.classList.remove('active'));
+          this.classList.add('active');
+          
+          const category = this.dataset.category;
+          
+          // Filter FAQs
+          faqItems.forEach(item => {
+            if (category === 'all' || item.dataset.categories.includes(category)) {
+              item.style.display = 'block';
+            } else {
+              item.style.display = 'none';
+            }
+          });
+        });
+      });
+
+      // Open FAQ from URL hash
+      if (window.location.hash) {
+        const targetId = window.location.hash.substring(1);
+        const targetItem = document.querySelector(`.faq-item[data-id="${targetId}"]`);
+        if (targetItem) {
+          targetItem.classList.add('active');
+          targetItem.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }
+    });
+
+    // Print FAQ page
+    function printFAQs() {
+      window.print();
+    }
+  </script>
+
+  <!-- Font Awesome for icons -->
+</body>
+</html>

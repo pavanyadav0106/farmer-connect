@@ -1,3 +1,16 @@
+import { db, auth } from '../config.js';
+import { 
+  collection, 
+  query, 
+  where,
+  getDocs,
+  onSnapshot,
+  addDoc,
+  doc,
+  updateDoc,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 document.addEventListener('DOMContentLoaded', function() {
   // DOM Elements
   const cartItemsContainer = document.getElementById('cartItems');
@@ -164,51 +177,51 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
-  function placeOrder() {
-    if (!checkoutForm.checkValidity()) {
-      checkoutForm.reportValidity();
-      return;
-    }
-    
-    // Get form data
-    const formData = {
-      deliveryAddress: document.getElementById('deliveryAddress').value,
-      contactNumber: document.getElementById('contactNumber').value,
-      deliveryDate: document.getElementById('deliveryDate').value,
-      paymentMethod: document.getElementById('paymentMethod').value,
-      upiId: document.getElementById('upiId')?.value || null,
-      cardDetails: paymentMethodSelect.value === 'card' ? {
-        cardNumber: document.getElementById('cardNumber').value,
-        expiry: document.getElementById('expiry').value,
-        cvv: document.getElementById('cvv').value
-      } : null
-    };
-    
-    // Create order object
-    const order = {
-      id: Date.now().toString(),
-      date: new Date().toISOString(),
-      items: [...cart],
-      subtotal: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0),
-      delivery: 0,
-      total: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0),
-      status: 'processing',
-      ...formData
-    };
-    
-    // Save order to localStorage (in a real app, this would be an API call)
-    const orders = JSON.parse(localStorage.getItem('orders')) || [];
-    orders.unshift(order);
-    localStorage.setItem('orders', JSON.stringify(orders));
-    
-    // Clear the cart
+async function placeOrder() {
+  if (!checkoutForm.checkValidity()) {
+    checkoutForm.reportValidity();
+    return;
+  }
+
+  const formData = {
+    deliveryAddress: document.getElementById('deliveryAddress').value,
+    contactNumber: document.getElementById('contactNumber').value,
+    deliveryDate: document.getElementById('deliveryDate').value,
+    paymentMethod: document.getElementById('paymentMethod').value,
+    upiId: document.getElementById('upiId')?.value || null,
+    cardDetails: paymentMethodSelect.value === 'card' ? {
+      cardNumber: document.getElementById('cardNumber').value,
+      expiry: document.getElementById('expiry').value,
+      cvv: document.getElementById('cvv').value
+    } : null
+  };
+
+  const order = {
+    customerId: auth.currentUser.uid,
+    date: serverTimestamp(),
+    items: [...cart],
+    subtotal: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0),
+    delivery: 0,
+    total: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0),
+    status: 'processing',
+    ...formData
+  };
+
+  try {
+    await addDoc(collection(db, 'orders'), order);
+
+    // Clear the cart after successful order placement
     cart = [];
     localStorage.removeItem('cart');
-    
-    // Close checkout modal and show confirmation
+    renderCart();
+
     closeCheckoutModal();
     showOrderConfirmation(order);
+  } catch (error) {
+    console.error("Error placing order:", error);
+    showToast('Failed to place order. Please try again.');
   }
+}
 
   function showOrderConfirmation(order) {
     document.getElementById('orderConfirmationText').textContent = 

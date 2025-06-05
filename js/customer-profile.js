@@ -24,8 +24,6 @@ const elements = {
   cancelPasswordBtn: document.getElementById('cancel-password-change'),
   submitPasswordBtn: document.getElementById('submit-password-change'),
   backBtn: document.getElementById('backBtn'),
-  uploadBtn: document.getElementById('upload-btn'),
-  uploadOverlay: document.getElementById('upload-overlay'),
   
   // Forms and sections
   profileForm: document.getElementById('profile-form'),
@@ -34,23 +32,31 @@ const elements = {
   // Messages
   profileUpdateMessage: document.getElementById('profile-update-message'),
   passwordChangeMessage: document.getElementById('password-change-message'),
-  uploadStatus: document.getElementById('upload-status')
+  
+  // Photo upload
+  uploadBtn: document.getElementById('upload-btn'),
+  photoUpload: document.getElementById('photo-upload'),
+  uploadStatus: document.getElementById('upload-status'),
+  uploadOverlay: document.getElementById('upload-overlay')
 };
+
+// State
+let userData = {};
+let editMode = false;
 
 // Initialize Cloudinary
 const cloudinaryWidget = cloudinary.createUploadWidget({
-  cloudName: 'dtiast5hl', // Replace with your Cloudinary cloud name
-  uploadPreset: 'farmerconnect', // Replace with your upload preset
+  cloudName: 'dtiast5hl',
+  uploadPreset: 'farmerconnect',
   cropping: true,
   croppingAspectRatio: 1,
   croppingShowBackButton: true,
-  folder: 'farmer_profile_photos'
+  folder: 'farmer-connect/profiles'
 }, (error, result) => {
   if (!error && result && result.event === "success") {
     handleImageUpload(result.info.secure_url);
   }
 });
-
 // Initialize the app
 function init() {
   setupEventListeners();
@@ -60,38 +66,54 @@ function init() {
 // Set up event listeners
 function setupEventListeners() {
   // Back button
-  elements.backBtn.addEventListener('click', () => {
-    window.location.href = 'farmer4.html';
-  });
+  if (elements.backBtn) {
+    elements.backBtn.addEventListener('click', () => {
+      window.location.href = 'customer-dashboard.html';
+    });
+  }
 
   // Edit profile
-  elements.editProfileBtn.addEventListener('click', toggleEditMode);
+  if (elements.editProfileBtn) {
+    elements.editProfileBtn.addEventListener('click', toggleEditMode);
+  }
 
   // Save profile
-  elements.saveProfileBtn.addEventListener('click', saveProfile);
+  if (elements.saveProfileBtn) {
+    elements.saveProfileBtn.addEventListener('click', saveProfile);
+  }
 
   // Change password
-  elements.changePasswordBtn.addEventListener('click', () => {
-    elements.passwordChangeBox.style.display = 'block';
-  });
+  if (elements.changePasswordBtn) {
+    elements.changePasswordBtn.addEventListener('click', () => {
+      elements.passwordChangeBox.style.display = 'block';
+    });
+  }
 
   // Cancel password change
-  elements.cancelPasswordBtn.addEventListener('click', () => {
-    elements.passwordChangeBox.style.display = 'none';
-    clearPasswordFields();
-  });
+  if (elements.cancelPasswordBtn) {
+    elements.cancelPasswordBtn.addEventListener('click', () => {
+      elements.passwordChangeBox.style.display = 'none';
+      clearPasswordFields();
+    });
+  }
 
   // Submit password change
-  elements.submitPasswordBtn.addEventListener('click', changePassword);
+  if (elements.submitPasswordBtn) {
+    elements.submitPasswordBtn.addEventListener('click', changePassword);
+  }
 
   // Photo upload
-  elements.uploadBtn.addEventListener('click', () => {
-    cloudinaryWidget.open();
-  });
+  if (elements.uploadBtn) {
+    elements.uploadBtn.addEventListener('click', () => {
+      cloudinaryWidget.open();
+    });
+  }
 
-  elements.uploadOverlay.addEventListener('click', () => {
-    cloudinaryWidget.open();
-  });
+  if (elements.uploadOverlay) {
+    elements.uploadOverlay.addEventListener('click', () => {
+      cloudinaryWidget.open();
+    });
+  }
 
   // Toggle password visibility
   document.querySelectorAll('.toggle-password').forEach(toggle => {
@@ -113,24 +135,16 @@ function checkAuthState() {
     }
     
     // Set email
-    elements.profileEmail.textContent = user.email;
+    if (elements.profileEmail) {
+      elements.profileEmail.textContent = user.email;
+    }
 
     // Load user data
     const userRef = doc(db, 'users', user.uid);
     onSnapshot(userRef, (docSnap) => {
       if (docSnap.exists()) {
-        const data = docSnap.data();
-        updateProfileUI(data);
-        
-        // Store current data for comparison
-        userData = {
-          name: data.name || '',
-          phone: data.phone || '',
-          address: data.address || '',
-          gender: data.gender || '',
-          age: data.age || '',
-          profileImage: data.profileImage || 'assets/profile-placeholder.png'
-        };
+        userData = docSnap.data();
+        updateProfileUI(userData);
       }
     });
   });
@@ -138,28 +152,60 @@ function checkAuthState() {
 
 // Update profile UI with current data
 function updateProfileUI(data) {
-  elements.profileName.value = data.name || '';
-  elements.profilePhone.value = data.phone || '';
-  elements.profileAddress.value = data.address || '';
-  elements.profileGender.value = data.gender || '';
-  elements.profileAge.value = data.age || '';
-  elements.profileAvatar.src = data.profileImage || 'assets/profile-placeholder.png';
+  if (elements.profileName) {
+    elements.profileName.value = data.name || '';
+  }
+
+  if (elements.profilePhone) {
+    elements.profilePhone.value = data.phone || '';
+  }
+
+  if (elements.profileAddress) {
+    elements.profileAddress.value = data.address || '';
+  }
+
+  if (elements.profileGender) {
+    elements.profileGender.value = data.gender || '';
+  }
+
+  if (elements.profileAge) {
+    elements.profileAge.value = data.age || '';
+  }
+
+  if (elements.profileAvatar) {
+    elements.profileAvatar.src = data.profileImage || 'assets/profile-placeholder.png';
+  }
 }
 
 // Toggle edit mode
 function toggleEditMode() {
-  const isEditMode = elements.editProfileBtn.style.display === 'none';
+  editMode = !editMode;
   
   // Toggle disabled state on inputs
-  [elements.profileName, elements.profilePhone, elements.profileAddress, elements.profileGender, elements.profileAge]
-    .forEach(input => input.disabled = isEditMode);
+  const inputs = [
+    elements.profileName,
+    elements.profilePhone,
+    elements.profileAddress,
+    elements.profileGender,
+    elements.profileAge
+  ];
+  
+  inputs.forEach(input => {
+    if (input) {
+      input.disabled = !editMode;
+    }
+  });
 
   // Toggle button visibility
-  elements.editProfileBtn.style.display = isEditMode ? 'block' : 'none';
-  elements.saveProfileBtn.style.display = isEditMode ? 'none' : 'block';
+  if (elements.editProfileBtn && elements.saveProfileBtn) {
+    elements.editProfileBtn.style.display = editMode ? 'none' : 'block';
+    elements.saveProfileBtn.style.display = editMode ? 'block' : 'none';
+  }
   
   // Clear any existing messages
-  elements.profileUpdateMessage.textContent = '';
+  if (elements.profileUpdateMessage) {
+    elements.profileUpdateMessage.textContent = '';
+  }
 }
 
 // Save profile changes
@@ -243,26 +289,38 @@ function handleImageUpload(imageUrl) {
   const user = auth.currentUser;
   if (!user) return;
 
-  elements.uploadStatus.textContent = 'Uploading...';
+  if (elements.uploadStatus) {
+    elements.uploadStatus.textContent = 'Uploading...';
+  }
 
   updateDoc(doc(db, 'users', user.uid), {
     profileImage: imageUrl,
     lastUpdated: serverTimestamp()
   })
   .then(() => {
-    elements.uploadStatus.textContent = 'Profile photo updated!';
-    elements.profileAvatar.src = imageUrl;
+    if (elements.uploadStatus) {
+      elements.uploadStatus.textContent = 'Profile photo updated!';
+    }
+    if (elements.profileAvatar) {
+      elements.profileAvatar.src = imageUrl;
+    }
     setTimeout(() => {
-      elements.uploadStatus.textContent = '';
+      if (elements.uploadStatus) {
+        elements.uploadStatus.textContent = '';
+      }
     }, 3000);
   })
   .catch(error => {
-    elements.uploadStatus.textContent = 'Upload failed: ' + error.message;
+    if (elements.uploadStatus) {
+      elements.uploadStatus.textContent = 'Upload failed: ' + error.message;
+    }
   });
 }
 
 // Helper functions
 function showMessage(element, message, type) {
+  if (!element) return;
+  
   element.textContent = message;
   element.className = 'status-message ' + type;
   
@@ -276,7 +334,9 @@ function clearPasswordFields() {
   document.getElementById('current-password').value = '';
   document.getElementById('new-password').value = '';
   document.getElementById('confirm-password').value = '';
-  elements.passwordChangeMessage.textContent = '';
+  if (elements.passwordChangeMessage) {
+    elements.passwordChangeMessage.textContent = '';
+  }
 }
 
 // Initialize the application
