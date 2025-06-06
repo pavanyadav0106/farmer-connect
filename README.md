@@ -6,3 +6,5 @@
    - [OpenWeatherMap](https://openweathermap.org/api)
 4. Paste your keys in `config.js`
 5. Open `index.html` in your browser
+## License  
+This is proprietary software. [Read License](LICENSE)
