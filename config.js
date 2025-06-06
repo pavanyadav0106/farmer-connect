@@ -16,7 +16,8 @@ import {
   sendPasswordResetEmail, 
   GoogleAuthProvider, 
   signInWithPopup, 
-  signOut 
+  signOut,
+  fetchSignInMethodsForEmail
 } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 
 const firebaseConfig = {
@@ -47,5 +48,6 @@ export {
   doc,
   setDoc,
   getDoc,
-  deleteDoc
+  deleteDoc,
+  fetchSignInMethodsForEmail
 };
