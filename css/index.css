@@ -157,3 +157,40 @@
         font-size: 12px;
       }
     }
+    /* Add to your existing styles */
+.modal-select-role {
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 15px;
+  padding: 20px;
+  width: 300px;
+  max-width: 90%;
+  text-align: center;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.modal-select-role h3 {
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.modal-select-role select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+.modal-select-role button {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #42e695, #3bb2b8);
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.modal-select-role button:hover {
+  opacity: 0.9;
+}
