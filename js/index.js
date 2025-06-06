@@ -33,7 +33,20 @@ const translations = {
     signUp: "Sign Up",
     toggleToSignUp: "Don't have an account?",
     toggleToSignIn: "Already have an account?",
-    orDivider: "or"
+    orDivider: "or",
+    verificationSent: "Verification email sent! Please check your inbox.",
+    verificationSentAgain: "Verification email sent again!",
+    enterEmailReset: "Enter your email to reset password.",
+    invalidEmailFormat: "Invalid email format.",
+    passwordRequirements: "Password must be 8+ chars, include uppercase, number & special char.",
+    passwordsMismatch: "Passwords do not match.",
+    selectRole: "Please select a role.",
+    noAccountFound: "No account found. Please sign up first.",
+    accountExistsGoogle: "This email is registered with Google Sign-In. Please use the 'Sign in with Google' option.",
+    incorrectPassword: "Incorrect password. Please try again.",
+    accountAlreadyExists: "Account already exists. Please sign in.",
+    accountDoesNotExist: "Account does not exist. Please sign up first.",
+    emailNotVerified: 'Email not verified. <a onclick="resendVerification()" style="cursor:pointer;color:#42e695;text-decoration:underline;">Resend Verification</a>'
   },
   te: {
     appTitle: "ఫార్మర్ కనెక్ట్",
@@ -48,28 +61,71 @@ const translations = {
     signUp: "సైన్ అప్",
     toggleToSignUp: "ఖాతా లేదు?",
     toggleToSignIn: "ఖాతా ఇప్పటికే ఉందా?",
-    orDivider: "లేదా"
+    orDivider: "లేదా",
+    verificationSent: "సమర్పించిన ఇమెయిల్‌లో ధృవీకరణ ఇమెయిల్ పంపబడింది!",
+    verificationSentAgain: "ధృవీకరణ ఇమెయిల్ మళ్లీ పంపబడింది!",
+    enterEmailReset: "పాస్వర్డ్ రీసెట్ కోసం మీ ఇమెయిల్ నమోదు చేయండి.",
+    invalidEmailFormat: "చెల్లని ఇమెయిల్ ఫార్మాట్.",
+    passwordRequirements: "పాస్వర్డ్ కనీసం 8 అక్షరాలు, పెద్ద అక్షరం, సంఖ్య & ప్రత్యేక చిహ్నం కలిగి ఉండాలి.",
+    passwordsMismatch: "పాస్వర్డ్‌లు సరిపోలలేదు.",
+    selectRole: "దయచేసి పాత్రను ఎంచుకోండి.",
+    noAccountFound: "ఖాతా కనుగొనబడలేదు. ముందుగా సైన్ అప్ చేయండి.",
+    accountExistsGoogle: "ఈ ఇమెయిల్ గూగుల్ సైన్-ఇన్‌తో నమోదు చేయబడింది. దయచేసి 'గూగుల్ తో సైన్ ఇన్' ను ఉపయోగించండి.",
+    incorrectPassword: "తప్పు పాస్వర్డ్. దయచేసి మళ్లీ ప్రయత్నించండి.",
+    accountAlreadyExists: "ఖాతా ఇప్పటికే ఉంది. దయచేసి సైన్ ఇన్ చేయండి.",
+    accountDoesNotExist: "ఖాతా లేదు. దయచేసి ముందుగా సైన్ అప్ చేయండి.",
+    emailNotVerified: 'ఇమెయిల్ ధృవీకరించబడలేదు. <a onclick="resendVerification()" style="cursor:pointer;color:#42e695;text-decoration:underline;">మళ్ళీ ధృవీకరణ పంపండి</a>'
   }
 };
 
 const showError = (id, message) => {
   const el = document.getElementById(id);
-  if (el) el.innerText = message;
+  if (el) {
+    el.innerHTML = `<div class="error-message"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg> ${message}</div>`;
+  }
+};
+
+const showGeneralError = (message) => {
+  const el = document.getElementById("generalError");
+  if (el) {
+    el.className = "general-error error";
+    el.innerHTML = `<div class="error-message-banner"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg> ${message}</div>`;
+    setTimeout(() => {
+      el.innerHTML = '';
+      el.className = "general-error";
+    }, 7000);
+  }
+};
+
+const showSuccess = (message) => {
+  const el = document.getElementById("generalError");
+  if (el) {
+    el.className = "general-error success";
+    el.innerHTML = `<div class="success-message-banner"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg> ${message}</div>`;
+    setTimeout(() => {
+      el.innerHTML = '';
+      el.className = "general-error";
+    }, 5000);
+  }
 };
 
 const clearErrors = () => {
-  document.querySelectorAll('.error-message, .error-msg').forEach(el => el.textContent = '');
+  document.querySelectorAll('.error-message, .error-message-banner').forEach(el => el.remove());
 };
-
 
 const addInputListeners = () => {
   ['email', 'password', 'confirmPassword'].forEach(id => {
     const el = document.getElementById(id);
-    if (el) el.addEventListener('input', () => showError(`${id}Error`, ''));
+    if (el) el.addEventListener('input', () => {
+      document.getElementById(`${id}Error`)?.querySelector('.error-message')?.remove();
+    });
   });
   const roleEl = document.getElementById('role');
-  if(roleEl) roleEl.addEventListener('change', () => showError('roleError', ''));
+  if (roleEl) roleEl.addEventListener('change', () => {
+    document.getElementById('roleError')?.querySelector('.error-message')?.remove();
+  });
 };
+
 const toggleForm = () => {
   isSignUp = !isSignUp;
   renderForm();
@@ -91,24 +147,24 @@ const renderForm = () => {
     </button>
     <div class="or-divider">${t.orDivider}</div>
     <input type="email" id="email" placeholder="${t.emailPlaceholder}">
-    <div id="emailError" class="error-message"></div>
+    <div id="emailError"></div>
     <div class="input-wrapper">
       <input type="password" id="password" placeholder="${t.passwordPlaceholder}">
       <span class="toggle-password" onclick="togglePassword('password')">👁️</span>
     </div>
-    <div id="passwordError" class="error-message"></div>
+    <div id="passwordError"></div>
     ${isSignUp ? `
       <div class="input-wrapper">
         <input type="password" id="confirmPassword" placeholder="${t.confirmPasswordPlaceholder}">
         <span class="toggle-password" onclick="togglePassword('confirmPassword')">👁️</span>
       </div>
-      <div id="confirmPasswordError" class="error-message"></div>
+      <div id="confirmPasswordError"></div>
       <select id="role">
-        <option value="">Select Role</option>
+        <option value="">${t.selectRole}</option>
         <option value="farmer">Farmer</option>
         <option value="buyer">Buyer</option>
       </select>
-      <div id="roleError" class="error-message"></div>
+      <div id="roleError"></div>
     ` : ''}
     ${!isSignUp ? `<p class="forgot-password" onclick="forgotPassword()">${t.forgotPassword}</p>` : ''}
     <button class="button" id="submitBtn">${isSignUp ? t.signUp : t.logIn}</button>
@@ -117,8 +173,6 @@ const renderForm = () => {
   `;
 
   document.getElementById('submitBtn').onclick = isSignUp ? signUp : signIn;
-  
-  // Change Google button behavior based on sign up or sign in mode
   document.getElementById('googleBtn').onclick = () => {
     if (isSignUp) {
       googleSignUp();
@@ -126,12 +180,10 @@ const renderForm = () => {
       googleSignIn();
     }
   };
-
   document.getElementById('toggleForm').onclick = toggleForm;
   document.getElementById('languageSelect').addEventListener('change', changeLanguage);
   addInputListeners();
 };
-
 
 const changeLanguage = (event) => {
   currentLang = event.target.value;
@@ -147,11 +199,16 @@ window.togglePassword = (fieldId) => {
 window.forgotPassword = async () => {
   clearErrors();
   const email = document.getElementById('email')?.value.trim();
-  if (!email) return showError('emailError', 'Enter your email to reset password.');
+  const t = translations[currentLang];
+  
+  if (!email) {
+    showError('emailError', t.enterEmailReset);
+    return;
+  }
 
   try {
     await sendPasswordResetEmail(auth, email);
-    alert("Password reset email sent! Check your inbox.");
+    showSuccess(t.verificationSent);
   } catch (error) {
     console.error("Password Reset Error:", error);
     showError('emailError', error.message);
@@ -169,7 +226,7 @@ const validatePassword = (password) => {
 
 const setLoadingState = (button, loading, text) => {
   if (loading) {
-    button.innerHTML = `<span class="loading">⏳</span> ${text}`;
+    button.innerHTML = `<span class="loading-spinner"></span> ${text}`;
     button.disabled = true;
   } else {
     button.innerHTML = text;
@@ -181,22 +238,32 @@ const signIn = async () => {
   clearErrors();
   const email = document.getElementById('email')?.value.trim();
   const password = document.getElementById('password')?.value.trim();
+  const t = translations[currentLang];
 
-  if (!email) return showError('emailError', 'Email is required.');
-  if (!password) return showError('passwordError', 'Password is required.');
+  if (!email) {
+    showError('emailError', t.emailPlaceholder + ' is required.');
+    return;
+  }
+  if (!password) {
+    showError('passwordError', t.passwordPlaceholder + ' is required.');
+    return;
+  }
+
+  const submitBtn = document.getElementById('submitBtn');
+  setLoadingState(submitBtn, true, t.logIn);
 
   try {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
 
     if (!userCredential.user.emailVerified) {
-      showError('generalError', 'Email not verified. <a onclick="resendVerification()">Resend Verification</a>');
+      showGeneralError(t.emailNotVerified);
       await signOut(auth);
       return;
     }
 
     const userDoc = await getDoc(doc(db, "users", userCredential.user.uid));
     if (!userDoc.exists()) {
-      showError('generalError', "No account found. Please sign up and try again.");
+      showGeneralError(t.noAccountFound);
       await signOut(auth);
       return;
     }
@@ -204,36 +271,30 @@ const signIn = async () => {
     await handleUserRedirect(userCredential.user.uid);
 
   } catch (err) {
-  console.error("Sign In Error:", err);
+    console.error("Sign In Error:", err);
 
-  if (err.code === "auth/invalid-login-credentials") {
-    // This error covers wrong-password, user-not-found, etc.
+    if (err.code === "auth/wrong-password" || err.code === "auth/user-not-found") {
+      try {
+        const methods = await fetchSignInMethodsForEmail(auth, email);
 
-    try {
-      const methods = await auth.fetchSignInMethodsForEmail(email);
-
-      if (methods.length === 0) {
-        // No account with this email
-        showError("generalError", "No account found. Please sign up first.");
-      } else if (methods.includes("google.com")) {
-        // Email registered with Google
-        showError("generalError", "This email is registered with Google Sign-In. Please use the 'Sign in with Google' option.");
-      } else {
-        // Other sign-in methods exist, so password is probably wrong
-        showError("generalError", "Incorrect password. Please try again.");
+        if (methods.length === 0) {
+          showGeneralError(t.noAccountFound);
+        } else if (methods.includes("google.com")) {
+          showGeneralError(t.accountExistsGoogle);
+        } else {
+          showGeneralError(t.incorrectPassword);
+        }
+      } catch (fetchErr) {
+        console.error("Error fetching sign-in methods:", fetchErr);
+        showGeneralError("Invalid login credentials.");
       }
-    } catch (fetchErr) {
-      console.error("Error fetching sign-in methods:", fetchErr);
-      showError("generalError", "Invalid login credentials.");
+    } else {
+      showGeneralError(err.message);
     }
-
-  } else {
-    showError("generalError", err.message);
+  } finally {
+    setLoadingState(submitBtn, false, t.logIn);
   }
-}
-
 };
-
 
 const signUp = async () => {
   clearErrors();
@@ -241,20 +302,37 @@ const signUp = async () => {
   const password = document.getElementById('password').value.trim();
   const confirmPassword = document.getElementById('confirmPassword').value.trim();
   const role = document.getElementById('role')?.value;
+  const t = translations[currentLang];
 
-  if (!validateEmail(email)) return showError('emailError', 'Invalid email format.');
-  if (!validatePassword(password)) return showError('passwordError', 'Password does not meet requirements.');
-  if (password !== confirmPassword) return showError('confirmPasswordError', 'Passwords do not match.');
-  if (!role) return showError('roleError', 'Please select a role.');
+  let isValid = true;
+
+  if (!validateEmail(email)) {
+    showError('emailError', t.invalidEmailFormat);
+    isValid = false;
+  }
+  if (!validatePassword(password)) {
+    showError('passwordError', t.passwordRequirements);
+    isValid = false;
+  }
+  if (password !== confirmPassword) {
+    showError('confirmPasswordError', t.passwordsMismatch);
+    isValid = false;
+  }
+  if (!role) {
+    showError('roleError', t.selectRole);
+    isValid = false;
+  }
+
+  if (!isValid) return;
 
   const submitBtn = document.getElementById('submitBtn');
-  setLoadingState(submitBtn, true, translations[currentLang].signUp);
+  setLoadingState(submitBtn, true, t.signUp);
 
   try {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
 
     await sendEmailVerification(userCredential.user);
-    alert("Verification email sent! Please check your inbox.");
+    showSuccess(t.verificationSent);
 
     await setDoc(doc(db, "users", userCredential.user.uid), {
       email,
@@ -268,19 +346,23 @@ const signUp = async () => {
     renderForm();
   } catch (error) {
     console.error("Error during sign up:", error);
-    showError('emailError', error.message);
+    if (error.code === 'auth/email-already-in-use') {
+      showError('emailError', t.accountAlreadyExists);
+    } else {
+      showError('emailError', error.message);
+    }
   } finally {
-    setLoadingState(submitBtn, false, translations[currentLang].signUp);
+    setLoadingState(submitBtn, false, t.signUp);
   }
 };
 
-const resendVerification = async () => {
+window.resendVerification = async () => {
   try {
     await sendEmailVerification(auth.currentUser);
-    alert("Verification email sent again!");
+    showSuccess(translations[currentLang].verificationSentAgain);
   } catch (error) {
     console.error("Resend Error:", error);
-    showError('generalError', error.message);
+    showGeneralError(error.message);
   }
 };
 
@@ -297,14 +379,15 @@ const googleSignIn = async () => {
     if (userDoc.exists()) {
       await handleUserRedirect(uid);
     } else {
-      showError('generalError', "Account does not exist. Please sign up first.");
+      showGeneralError(translations[currentLang].accountDoesNotExist);
       await signOut(auth);
     }
   } catch (error) {
     console.error("Google Sign-In Error:", error.message);
-    showError('generalError', error.message);
+    showGeneralError(error.message);
   }
 };
+
 const googleSignUp = async () => {
   try {
     const provider = new GoogleAuthProvider();
@@ -316,12 +399,11 @@ const googleSignUp = async () => {
     const userDoc = await getDoc(userRef);
 
     if (userDoc.exists()) {
-      showError('generalError', "Account already exists. Please sign in.");
+      showGeneralError(translations[currentLang].accountAlreadyExists);
       await signOut(auth);
       return;
     }
 
-    // Show the modal for role selection
     const role = await showRoleSelectionModal();
     if (!role) {
       await signOut(auth);
@@ -334,7 +416,6 @@ const googleSignUp = async () => {
       createdAt: new Date(),
     });
 
-    // Redirect based on role
     if (role === "farmer") {
       window.location.href = "farmer4.html";
     } else {
@@ -342,42 +423,29 @@ const googleSignUp = async () => {
     }
   } catch (error) {
     console.error("Google Sign-Up Error:", error.message);
-    showError('generalError', error.message);
+    showGeneralError(error.message);
   }
 };
-
-
 
 const showRoleSelectionModal = () => {
   return new Promise((resolve) => {
     const overlay = document.createElement('div');
-    overlay.style.position = 'fixed';
-    overlay.style.top = '0';
-    overlay.style.left = '0';
-    overlay.style.width = '100%';
-    overlay.style.height = '100%';
-    overlay.style.backgroundColor = 'rgba(0,0,0,0.5)';
-    overlay.style.display = 'flex';
-    overlay.style.justifyContent = 'center';
-    overlay.style.alignItems = 'center';
-    overlay.style.zIndex = '1000';
+    overlay.className = 'modal-overlay';
 
     const modal = document.createElement('div');
-    modal.style.backgroundColor = 'white';
-    modal.style.padding = '20px';
-    modal.style.borderRadius = '10px';
-    modal.style.width = '300px';
-    modal.style.maxWidth = '90%';
+    modal.className = 'role-selection-modal';
 
+    const t = translations[currentLang];
+    
     modal.innerHTML = `
-      <h3 style="margin-bottom: 15px;">Select Your Role</h3>
-      <select id="googleRoleSelect" style="width: 100%; padding: 10px; margin-bottom: 15px;">
-        <option value="">-- Select Role --</option>
+      <h3>${t.selectRole}</h3>
+      <select id="googleRoleSelect">
+        <option value="">-- ${t.selectRole} --</option>
         <option value="farmer">Farmer</option>
         <option value="buyer">Buyer</option>
       </select>
-      <div id="googleRoleError" style="color: red; margin-bottom: 10px;"></div>
-      <button id="confirmRoleBtn" style="width: 100%; padding: 10px; background: #42e695; color: white; border: none; border-radius: 5px;">
+      <div id="googleRoleError" class="modal-error"></div>
+      <button id="confirmRoleBtn" class="modal-confirm-btn">
         Continue
       </button>
     `;
@@ -392,7 +460,7 @@ const showRoleSelectionModal = () => {
     confirmBtn.addEventListener('click', () => {
       const selectedRole = roleSelect.value;
       if (!selectedRole) {
-        roleError.textContent = 'Please select a role';
+        roleError.textContent = t.selectRole;
         return;
       }
       document.body.removeChild(overlay);
@@ -415,19 +483,28 @@ const handleUserRedirect = async (uid) => {
   try {
     const userDoc = await getDoc(doc(db, "users", uid));
     if (!userDoc.exists()) {
-      alert("Error: User data missing in Firestore. Contact support.");
+      showGeneralError("Error: User data missing in Firestore. Contact admin.");
+      await signOut(auth);
       return;
     }
-    const role = userDoc.data().role;
-    window.location.href = role === "farmer" ? "farmer4.html" : "customer-dashboard.html";
+
+    const userData = userDoc.data();
+
+    if (userData.role === "farmer") {
+      window.location.href = "farmer4.html";
+    } else if (userData.role === "buyer") {
+      window.location.href = "customer-dashboard.html";
+    } else {
+      showGeneralError("Invalid user role. Contact admin.");
+      await signOut(auth);
+    }
   } catch (error) {
-    console.error("Redirection error:", error);
-    alert("Error retrieving user role.");
+    console.error("Redirect Error:", error);
+    showGeneralError("An error occurred during redirection.");
+    await signOut(auth);
   } finally {
     if (loadingElement) loadingElement.style.display = "none";
   }
 };
 
-document.addEventListener("DOMContentLoaded", () => {
-  renderForm();
-});
+renderForm();
