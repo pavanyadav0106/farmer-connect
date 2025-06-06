@@ -11,96 +11,71 @@ import {
   doc,
   setDoc,
   getDoc,
-  deleteDoc
+  deleteDoc,
+  fetchSignInMethodsForEmail
 } from "../config.js";
 
-    async function resendVerification() {
-  try {
-    await sendEmailVerification(auth.currentUser);
-    alert("Verification email sent again!");
-  } catch (error) {
-    console.error("Resend Error:", error);
-    showError('generalError', error.message);
+let isSignUp = false;
+let currentLang = localStorage.getItem("selectedLang") || 'en';
+const container = document.getElementById('authContainer');
+
+const translations = {
+  en: {
+    appTitle: "Farmer Connect",
+    welcomeBack: "Welcome Back",
+    createAccount: "Create Account",
+    googleButton: "Sign in / Sign up with Google",
+    emailPlaceholder: "Email",
+    passwordPlaceholder: "Password",
+    confirmPasswordPlaceholder: "Confirm Password",
+    forgotPassword: "Forgot Password?",
+    logIn: "Log In",
+    signUp: "Sign Up",
+    toggleToSignUp: "Don't have an account?",
+    toggleToSignIn: "Already have an account?",
+    orDivider: "or"
+  },
+  te: {
+    appTitle: "ఫార్మర్ కనెక్ట్",
+    welcomeBack: "స్వాగతం",
+    createAccount: "ఖాతా సృష్టించండి",
+    googleButton: "గూగుల్ తో సైన్ ఇన్ / సైన్ అప్ చేయండి",
+    emailPlaceholder: "ఇమెయిల్",
+    passwordPlaceholder: "పాస్వర్డ్",
+    confirmPasswordPlaceholder: "పాస్వర్డ్ నిర్ధారించండి",
+    forgotPassword: "పాస్వర్డ్ మర్చిపోయారా?",
+    logIn: "లాగిన్",
+    signUp: "సైన్ అప్",
+    toggleToSignUp: "ఖాతా లేదు?",
+    toggleToSignIn: "ఖాతా ఇప్పటికే ఉందా?",
+    orDivider: "లేదా"
   }
-}
+};
 
-    async function verifyOtp(email, enteredOtp) {
-  const docRef = doc(db, "otps", email);
-  const docSnap = await getDoc(docRef);
+const showError = (id, message) => {
+  const el = document.getElementById(id);
+  if (el) el.innerText = message;
+};
 
-  if (!docSnap.exists()) return "OTP expired or invalid!";
+const clearErrors = () => {
+  document.querySelectorAll('.error-message, .error-msg').forEach(el => el.textContent = '');
+};
 
-  const { otp, expiresAt } = docSnap.data();
-  if (Date.now() > expiresAt) return "OTP expired!";
 
-  if (enteredOtp == otp) {
-    await deleteDoc(docRef); // Delete OTP after successful verification
-    return "OTP verified!";
-  } else {
-    return "Incorrect OTP!";
-  }
-}
-    
-    let isSignUp = false;
-    let currentLang = 'en';
-    const container = document.getElementById('authContainer');
-    
-    // Translation dictionary (English and Telugu)
-    const translations = {
-      en: {
-        appTitle: "Farmer Connect",
-        welcomeBack: "Welcome Back",
-        createAccount: "Create Account",
-        googleButton: "Sign in / Sign up with Google",
-        emailPlaceholder: "Email",
-        passwordPlaceholder: "Password",
-        confirmPasswordPlaceholder: "Confirm Password",
-        forgotPassword: "Forgot Password?",
-        logIn: "Log In",
-        signUp: "Sign Up",
-        toggleToSignUp: "Don't have an account?",
-        toggleToSignIn: "Already have an account?",
-        orDivider: "or"
-      },
-      te: {
-        appTitle: "ఫార్మర్ కనెక్ట్",
-        welcomeBack: "స్వాగతం",
-        createAccount: "ఖాతా సృష్టించండి",
-        googleButton: "గూగుల్ తో సైన్ ఇన్ / సైన్ అప్ చేయండి",
-        emailPlaceholder: "ఇమెయిల్",
-        passwordPlaceholder: "పాస్వర్డ్",
-        confirmPasswordPlaceholder: "పాస్వర్డ్ నిర్ధారించండి",
-        forgotPassword: "పాస్వర్డ్ మర్చిపోయారా?",
-        logIn: "లాగిన్",
-        signUp: "సైన్ అప్",
-        toggleToSignUp: "ఖాతా లేదు?",
-        toggleToSignIn: "ఖాతా ఇప్పటికే ఉందా?",
-        orDivider: "లేదా"
-      }
-    };
-    
-    // Helper function to display error messages
-    const showError = (id, message) => {
-      const el = document.getElementById(id);
-      if (el) el.innerText = message;
-    };
-    
-    const clearErrors = () => {
-      showError('emailError', '');
-      showError('passwordError', '');
-      showError('confirmPasswordError', '');
-      showError('generalError', '');
-    };
-    
-    // Attach input listeners to clear errors on change
-    const addInputListeners = () => {
-      document.getElementById("email")?.addEventListener("input", () => showError("emailError", ""));
-      document.getElementById("password")?.addEventListener("input", () => showError("passwordError", ""));
-      document.getElementById("confirmPassword")?.addEventListener("input", () => showError("confirmPasswordError", ""));
-    };
-    
-    // Render the login form using the current language texts
-    const renderForm = () => {
+const addInputListeners = () => {
+  ['email', 'password', 'confirmPassword'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('input', () => showError(`${id}Error`, ''));
+  });
+  const roleEl = document.getElementById('role');
+  if(roleEl) roleEl.addEventListener('change', () => showError('roleError', ''));
+};
+const toggleForm = () => {
+  isSignUp = !isSignUp;
+  renderForm();
+};
+
+const renderForm = () => {
   const t = translations[currentLang];
   container.innerHTML = `
     <div class="lang-selector">
@@ -140,122 +115,123 @@ import {
     <div class="toggle">${isSignUp ? t.toggleToSignIn : t.toggleToSignUp} <a id="toggleForm">${isSignUp ? t.logIn : t.signUp}</a></div>
     <div id="generalError" class="general-error"></div>
   `;
+
   document.getElementById('submitBtn').onclick = isSignUp ? signUp : signIn;
-  document.getElementById('googleBtn').onclick = googleSignIn;
+  
+  // Change Google button behavior based on sign up or sign in mode
+  document.getElementById('googleBtn').onclick = () => {
+    if (isSignUp) {
+      googleSignUp();
+    } else {
+      googleSignIn();
+    }
+  };
+
   document.getElementById('toggleForm').onclick = toggleForm;
   document.getElementById('languageSelect').addEventListener('change', changeLanguage);
   addInputListeners();
 };
 
-    
-    // Language change handler (only affects the login page)
-    const changeLanguage = (event) => {
-      currentLang = event.target.value;
-      localStorage.setItem("selectedLang", currentLang);
-      renderForm();
-    };
 
-    document.addEventListener("DOMContentLoaded", () => {
-      currentLang = localStorage.getItem("selectedLang") || 'en';
-      renderForm();
-    });
+const changeLanguage = (event) => {
+  currentLang = event.target.value;
+  localStorage.setItem("selectedLang", currentLang);
+  renderForm();
+};
 
-    window.forgotPassword = async () => {
-      const email = document.getElementById('email')?.value.trim();
-      if (!email) {
-        showError('emailError', 'Enter your email to reset password.');
-        return;
-      }
-      try {
-        await sendPasswordResetEmail(auth, email);
-        alert("Password reset email sent! Check your inbox.");
-      } catch (error) {
-        console.error("Password Reset Error:", error);
-        showError('emailError', error.message);
-      }
-    };
+window.togglePassword = (fieldId) => {
+  const input = document.getElementById(fieldId);
+  if (input) input.type = input.type === 'password' ? 'text' : 'password';
+};
 
-    // Toggle password visibility
-    window.togglePassword = (fieldId) => {
-      const input = document.getElementById(fieldId);
-      if (input) {
-        input.type = input.type === 'password' ? 'text' : 'password';
-      }
-    };
+window.forgotPassword = async () => {
+  clearErrors();
+  const email = document.getElementById('email')?.value.trim();
+  if (!email) return showError('emailError', 'Enter your email to reset password.');
 
-    const toggleForm = () => {
-      isSignUp = !isSignUp;
-      renderForm();
-    };
+  try {
+    await sendPasswordResetEmail(auth, email);
+    alert("Password reset email sent! Check your inbox.");
+  } catch (error) {
+    console.error("Password Reset Error:", error);
+    showError('emailError', error.message);
+  }
+};
 
-    const validateEmail = (email) => {
-      const re = /^[a-zA-Z0-9._%+-]+@[gG][mM][aA][iI][lL]\.com$/;
-      return re.test(email.toLowerCase());
-    };
+const validateEmail = (email) => /^[a-zA-Z0-9._%+-]+@[gG][mM][aA][iI][lL]\.com$/.test(email.toLowerCase());
 
-    const validatePassword = (password) => {
+const validatePassword = (password) => {
   return password.length >= 8 &&
          /[A-Z]/.test(password) &&
          /\d/.test(password) &&
-         /[!@#$%^&*(),.?":{}|<>]/.test(password); // Enforce special character
+         /[!@#$%^&*(),.?":{}|<>]/.test(password);
 };
 
+const setLoadingState = (button, loading, text) => {
+  if (loading) {
+    button.innerHTML = `<span class="loading">⏳</span> ${text}`;
+    button.disabled = true;
+  } else {
+    button.innerHTML = text;
+    button.disabled = false;
+  }
+};
 
-    const setLoadingState = (button, loading, text) => {
-      if (loading) {
-        button.innerHTML = `<span class="loading">⏳</span> ${text}`;
-        button.disabled = true;
-      } else {
-        button.innerHTML = text;
-        button.disabled = false;
-      }
-    };
-
-    const signIn = async () => {
+const signIn = async () => {
   clearErrors();
-  const email = document.getElementById('email')?.value.trim() || "";
-  const password = document.getElementById('password')?.value.trim() || "";
-  
+  const email = document.getElementById('email')?.value.trim();
+  const password = document.getElementById('password')?.value.trim();
+
   if (!email) return showError('emailError', 'Email is required.');
   if (!password) return showError('passwordError', 'Password is required.');
-  if (!validateEmail(email)) return showError('emailError', 'Invalid email format.');
-  
-  const submitBtn = document.getElementById('submitBtn');
-  setLoadingState(submitBtn, true, "Logging in...");
-  
+
   try {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
-    
-    // Check if email is verified
+
     if (!userCredential.user.emailVerified) {
       showError('generalError', 'Email not verified. <a onclick="resendVerification()">Resend Verification</a>');
-      await auth.signOut();
+      await signOut(auth);
       return;
     }
-    
+
+    const userDoc = await getDoc(doc(db, "users", userCredential.user.uid));
+    if (!userDoc.exists()) {
+      showError('generalError', "No account found. Please sign up and try again.");
+      await signOut(auth);
+      return;
+    }
+
     await handleUserRedirect(userCredential.user.uid);
+
   } catch (err) {
-    console.error("Error during sign in:", err);
-    switch (err.code) {
-  case 'auth/invalid-email':
-    showError('emailError', 'Invalid email address.');
-    break;
-  case 'auth/user-disabled':
-    showError('generalError', 'User account is disabled.');
-    break;
-  case 'auth/user-not-found':
-    showError('emailError', 'No account found with this email.');
-    break;
-  case 'auth/wrong-password':
-    showError('passwordError', 'Incorrect password.');
-    break;
-  default:
-    showError('generalError', err.message || 'Login failed.');
+  console.error("Sign In Error:", err);
+
+  if (err.code === "auth/invalid-login-credentials") {
+    // This error covers wrong-password, user-not-found, etc.
+
+    try {
+      const methods = await auth.fetchSignInMethodsForEmail(email);
+
+      if (methods.length === 0) {
+        // No account with this email
+        showError("generalError", "No account found. Please sign up first.");
+      } else if (methods.includes("google.com")) {
+        // Email registered with Google
+        showError("generalError", "This email is registered with Google Sign-In. Please use the 'Sign in with Google' option.");
+      } else {
+        // Other sign-in methods exist, so password is probably wrong
+        showError("generalError", "Incorrect password. Please try again.");
+      }
+    } catch (fetchErr) {
+      console.error("Error fetching sign-in methods:", fetchErr);
+      showError("generalError", "Invalid login credentials.");
+    }
+
+  } else {
+    showError("generalError", err.message);
+  }
 }
 
-  } finally {
-    setLoadingState(submitBtn, false, translations[currentLang].logIn);
-  }
 };
 
 
@@ -264,38 +240,30 @@ const signUp = async () => {
   const email = document.getElementById('email').value.trim();
   const password = document.getElementById('password').value.trim();
   const confirmPassword = document.getElementById('confirmPassword').value.trim();
-  const role = document.getElementById('role')?.value; // Get role selection
+  const role = document.getElementById('role')?.value;
 
-  if (!validateEmail(email))
-    return showError('emailError', 'Invalid email format.');
-  if (!validatePassword(password))
-    return showError('passwordError', 'Password does not meet requirements.');
-  if (password !== confirmPassword)
-    return showError('confirmPasswordError', 'Passwords do not match.');
-  if (!role)
-    return showError('roleError', 'Please select a role.');
+  if (!validateEmail(email)) return showError('emailError', 'Invalid email format.');
+  if (!validatePassword(password)) return showError('passwordError', 'Password does not meet requirements.');
+  if (password !== confirmPassword) return showError('confirmPasswordError', 'Passwords do not match.');
+  if (!role) return showError('roleError', 'Please select a role.');
 
   const submitBtn = document.getElementById('submitBtn');
-  setLoadingState(submitBtn, true, "Creating account...");
+  setLoadingState(submitBtn, true, translations[currentLang].signUp);
 
   try {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-    
-    // Send verification email
+
     await sendEmailVerification(userCredential.user);
     alert("Verification email sent! Please check your inbox.");
-    
-    // Save user details along with selected role to Firestore
+
     await setDoc(doc(db, "users", userCredential.user.uid), {
       email,
-      role, // Store role
+      role,
       createdAt: new Date().toISOString()
     });
-    
-    // Sign out the user so that they must verify their email
-    await auth.signOut();
-    
-    // Switch the form to sign-in mode (on index.html)
+
+    await signOut(auth);
+
     isSignUp = false;
     renderForm();
   } catch (error) {
@@ -306,85 +274,160 @@ const signUp = async () => {
   }
 };
 
-
-
-
+const resendVerification = async () => {
+  try {
+    await sendEmailVerification(auth.currentUser);
+    alert("Verification email sent again!");
+  } catch (error) {
+    console.error("Resend Error:", error);
+    showError('generalError', error.message);
+  }
+};
 
 const googleSignIn = async () => {
-    const loadingElement = document.getElementById("loading");
-    if (loadingElement) {
-        loadingElement.style.display = "block"; // Show loading indicator
+  try {
+    const provider = new GoogleAuthProvider();
+    const result = await signInWithPopup(auth, provider);
+    const user = result.user;
+    const uid = user.uid;
+
+    const userRef = doc(db, "users", uid);
+    const userDoc = await getDoc(userRef);
+
+    if (userDoc.exists()) {
+      await handleUserRedirect(uid);
+    } else {
+      showError('generalError', "Account does not exist. Please sign up first.");
+      await signOut(auth);
+    }
+  } catch (error) {
+    console.error("Google Sign-In Error:", error.message);
+    showError('generalError', error.message);
+  }
+};
+const googleSignUp = async () => {
+  try {
+    const provider = new GoogleAuthProvider();
+    const result = await signInWithPopup(auth, provider);
+    const user = result.user;
+    const uid = user.uid;
+
+    const userRef = doc(db, "users", uid);
+    const userDoc = await getDoc(userRef);
+
+    if (userDoc.exists()) {
+      showError('generalError', "Account already exists. Please sign in.");
+      await signOut(auth);
+      return;
     }
 
-    try {
-        const provider = new GoogleAuthProvider();
-        const result = await signInWithPopup(auth, provider);
-        const userRef = doc(db, "users", result.user.uid);
-        const userDoc = await getDoc(userRef);
-        if (!userDoc.exists()) {
-            await setDoc(userRef, {
-                email: result.user.email,
-                role: 'customer', // Assign default role
-                createdAt: new Date().toISOString()
-            });
-        }
-
-        await handleUserRedirect(result.user.uid);
-    } catch (error) {
-        console.error("Google Sign-In Error:", error.message);
-        if (error.code === 'auth/popup-closed-by-user') {
-            showError('generalError', "Sign-in popup closed by user.");
-        } else {
-            showError('generalError', error.message);
-        }
-    } finally {
-        if (loadingElement) {
-            loadingElement.style.display = "none"; // Hide loading indicator
-        }
+    // Show the modal for role selection
+    const role = await showRoleSelectionModal();
+    if (!role) {
+      await signOut(auth);
+      return;
     }
+
+    await setDoc(userRef, {
+      email: user.email,
+      role,
+      createdAt: new Date(),
+    });
+
+    // Redirect based on role
+    if (role === "farmer") {
+      window.location.href = "farmer4.html";
+    } else {
+      window.location.href = "customer-dashboard.html";
+    }
+  } catch (error) {
+    console.error("Google Sign-Up Error:", error.message);
+    showError('generalError', error.message);
+  }
 };
 
-    const handleUserRedirect = async (uid) => {
-    const loadingElement = document.getElementById("loading");
-    if (loadingElement) {
-        loadingElement.style.display = "block"; // Show loading indicator
-    }
 
-    try {
-        const userRef = doc(db, "users", uid);
-        const userDoc = await getDoc(userRef);
 
-        if (userDoc.exists()) {
-            const role = userDoc.data().role;
+const showRoleSelectionModal = () => {
+  return new Promise((resolve) => {
+    const overlay = document.createElement('div');
+    overlay.style.position = 'fixed';
+    overlay.style.top = '0';
+    overlay.style.left = '0';
+    overlay.style.width = '100%';
+    overlay.style.height = '100%';
+    overlay.style.backgroundColor = 'rgba(0,0,0,0.5)';
+    overlay.style.display = 'flex';
+    overlay.style.justifyContent = 'center';
+    overlay.style.alignItems = 'center';
+    overlay.style.zIndex = '1000';
 
-            // Redirect user based on role
-            window.location.href = role === "farmer" ? "farmer4.html" : "customer-dashboard.html";
-        } else {
-            console.error("User  document not found.");
-            alert("Error: User data missing in Firestore. Contact support.");
-        }
-    } catch (error) {
-        console.error("Redirection error:", error);
-        alert("Error retrieving user role.");
-    } finally {
-        if (loadingElement) {
-            loadingElement.style.display = "none"; // Hide loading indicator
-        }
-    }
+    const modal = document.createElement('div');
+    modal.style.backgroundColor = 'white';
+    modal.style.padding = '20px';
+    modal.style.borderRadius = '10px';
+    modal.style.width = '300px';
+    modal.style.maxWidth = '90%';
+
+    modal.innerHTML = `
+      <h3 style="margin-bottom: 15px;">Select Your Role</h3>
+      <select id="googleRoleSelect" style="width: 100%; padding: 10px; margin-bottom: 15px;">
+        <option value="">-- Select Role --</option>
+        <option value="farmer">Farmer</option>
+        <option value="buyer">Buyer</option>
+      </select>
+      <div id="googleRoleError" style="color: red; margin-bottom: 10px;"></div>
+      <button id="confirmRoleBtn" style="width: 100%; padding: 10px; background: #42e695; color: white; border: none; border-radius: 5px;">
+        Continue
+      </button>
+    `;
+
+    overlay.appendChild(modal);
+    document.body.appendChild(overlay);
+
+    const confirmBtn = modal.querySelector('#confirmRoleBtn');
+    const roleSelect = modal.querySelector('#googleRoleSelect');
+    const roleError = modal.querySelector('#googleRoleError');
+
+    confirmBtn.addEventListener('click', () => {
+      const selectedRole = roleSelect.value;
+      if (!selectedRole) {
+        roleError.textContent = 'Please select a role';
+        return;
+      }
+      document.body.removeChild(overlay);
+      resolve(selectedRole);
+    });
+
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) {
+        document.body.removeChild(overlay);
+        resolve(null);
+      }
+    });
+  });
 };
 
+const handleUserRedirect = async (uid) => {
+  const loadingElement = document.getElementById("loading");
+  if (loadingElement) loadingElement.style.display = "block";
 
-    document.addEventListener("DOMContentLoaded", () => {
-  const savedLang = localStorage.getItem("selectedLang");
-  if (savedLang) currentLang = savedLang; // Apply saved language
+  try {
+    const userDoc = await getDoc(doc(db, "users", uid));
+    if (!userDoc.exists()) {
+      alert("Error: User data missing in Firestore. Contact support.");
+      return;
+    }
+    const role = userDoc.data().role;
+    window.location.href = role === "farmer" ? "farmer4.html" : "customer-dashboard.html";
+  } catch (error) {
+    console.error("Redirection error:", error);
+    alert("Error retrieving user role.");
+  } finally {
+    if (loadingElement) loadingElement.style.display = "none";
+  }
+};
+
+document.addEventListener("DOMContentLoaded", () => {
   renderForm();
 });
-      
-    // Re-bind togglePassword in case of re-rendering
-    window.togglePassword = (fieldId) => {
-      const input = document.getElementById(fieldId);
-      if (input) {
-        input.type = input.type === 'password' ? 'text' : 'password';
-      }
-    };
-    
