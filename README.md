@@ -89,4 +89,3 @@ Read the full [LICENSE](License.html) for more details.
 
 **Developed by:** Mangadudla Pavan  
 📫 Email: mangadudlapavan@gmail.com 
-🌐 LinkedIn: [https://www.linkedin.com/in/pavan-mangadudla-91ab01288/](https://linkedin.com/in/pavanyadav0106)
