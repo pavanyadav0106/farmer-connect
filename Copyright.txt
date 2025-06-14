@@ -1,0 +1,34 @@
+Farmer Connect License Agreement
+================================
+
+Copyright © 2025 Mangadudla Pavan. All Rights Reserved.
+
+1. Proprietary Rights
+---------------------
+This software (Software), including all code, designs, and documentation, is the exclusive intellectual property of Mangadudla Pavan, protected under Indian copyright law and international treaties.
+
+2. Grant of License
+-------------------
+✔ Use the Software for personal or agricultural business purposes  
+✔ Modify for personal use (modifications remain governed by this license)
+
+3. Strict Prohibitions
+----------------------
+❌ Redistribute, sell, or commercialize the Software  
+❌ Reverse-engineer, decompile, or disassemble  
+❌ Removealter copyright notices or license files  
+❌ Use for unlawful purposes or competitive analysis
+
+4. Termination
+--------------
+Any violation automatically terminates all rights without notice.
+
+5. No Warranty
+--------------
+This Software is provided “as is,” without warranty of any kind, express or implied. The author is not liable for any damages arising from the use or inability to use this Software.
+
+Contact
+-------
+Mangadudla Pavan  
+Phone +91 95055 10127  
+Email farmerconnect30@gmail.com
