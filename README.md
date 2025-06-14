@@ -81,7 +81,7 @@ Farmer Connect/
 ## 🧾 License
 
 This project is proprietary and built for educational/hackathon purposes.  
-Read the full [LICENSE](License.html) for more details.
+Read the full [LICENSE](LICENSE.html) for more details.
 
 ---
 
