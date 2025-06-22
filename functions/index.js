@@ -35,5 +35,5 @@ exports.sendOtpEmail = functions.https.onCall(async (data, context) => {
   };
 
   await transporter.sendMail(mailOptions);
-  return { success: true, message: "OTP sent to email" };
+  return {success: true, message: "OTP sent to email"};
 });
