@@ -1,6 +1,5 @@
 /* ======= CSS Variables ======= */
 :root {
-  /* Colors */
   --primary-color: #28a745;
   --primary-dark: #1f4f1f;
   --primary-light: #d4edda;
@@ -13,43 +12,36 @@
   --gray-light: #e9ecef;
   --gray-medium: #dee2e6;
   --white: #ffffff;
-  
-  /* Text */
+
   --text-primary: #212529;
   --text-secondary: #495057;
   --text-light: #f8f9fa;
-  
-  /* Status */
+
   --success-bg: #d4edda;
   --success-text: #155724;
   --error-bg: #f8d7da;
   --error-text: #721c24;
   --info-bg: #cce5ff;
   --info-text: #004085;
-  
-  /* Shadows */
+
   --shadow-sm: 0 1px 3px rgba(0,0,0,0.12);
   --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
   --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
-  
-  /* Spacing */
+
   --space-xs: 0.25rem;
   --space-sm: 0.5rem;
   --space-md: 1rem;
   --space-lg: 1.5rem;
   --space-xl: 2rem;
-  
-  /* Borders */
+
   --border-radius-sm: 4px;
   --border-radius-md: 6px;
   --border-radius-lg: 8px;
   --border-radius-circle: 50%;
-  
-  /* Fonts */
+
   --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   --font-logo: 'Poppins', sans-serif;
-  
-  /* Transitions */
+
   --transition-fast: 0.15s ease;
   --transition-normal: 0.3s ease;
   --transition-slow: 0.5s ease;
@@ -64,12 +56,21 @@
   padding: 0;
 }
 
+html {
+  font-size: 100%;
+}
+
 body {
   font-family: var(--font-main);
   line-height: 1.6;
   color: var(--text-primary);
   background-color: var(--light-color);
-  padding-top: 60px; /* For fixed header */
+  padding-top: 60px;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
 }
 
 /* ======= Typography ======= */
@@ -83,25 +84,18 @@ h1 {
   color: var(--primary-dark);
 }
 
-/* ======= Layout ======= */
-.container {
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 var(--space-md);
-}
-
 /* ======= Header ======= */
 .top-nav {
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-wrap: wrap;
   padding: 15px 20px;
   position: fixed;
   width: 100%;
   top: 0;
   left: 0;
-  background: #28a745;
+  background: var(--primary-color);
   color: white;
   z-index: 1000;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
@@ -110,7 +104,7 @@ h1 {
 .logo-text {
   font-size: 24px;
   font-weight: bold;
-  font-family: 'Poppins', sans-serif;
+  font-family: var(--font-logo);
   letter-spacing: 1px;
   text-decoration: none;
   color: white;
@@ -123,10 +117,10 @@ h1 {
 /* ======= Back Button ======= */
 .back-button {
   position: fixed;
-  top: 70px; /* just below top-nav */
+  top: 70px;
   left: 20px;
-  z-index: 9999; /* very high to stay on top */
-  background-color: #28a745; /* matching theme */
+  z-index: 9999;
+  background-color: var(--primary-color);
   color: white;
   border: none;
   border-radius: 4px;
@@ -140,11 +134,12 @@ h1 {
 }
 
 .back-button:hover {
-  background-color: #1f4f1f;
+  background-color: var(--primary-dark);
 }
 
 /* ======= Profile Container ======= */
 .profile-container {
+  width: 90%;
   max-width: 600px;
   margin: var(--space-xl) auto;
   padding: var(--space-lg);
@@ -273,7 +268,9 @@ h1 {
   border: none;
   border-radius: var(--border-radius-md);
   font-weight: 600;
+  font-size: 1rem;
   cursor: pointer;
+  min-height: 44px;
   transition: all var(--transition-normal);
 }
 
@@ -318,7 +315,6 @@ h1 {
   padding: var(--space-md);
   background-color: var(--gray-light);
   border-radius: var(--border-radius-md);
-  display: none;
 }
 
 .password-change-box h3 {
@@ -385,36 +381,49 @@ h1 {
 /* ======= Responsive Design ======= */
 @media (max-width: 768px) {
   .profile-container {
-    margin: var(--space-md);
+    width: 95%;
+    margin: var(--space-md) auto;
     padding: var(--space-md);
   }
 
   .form-row {
     flex-direction: column;
-    gap: 0;
+    gap: var(--space-sm);
   }
 
   .profile-actions,
   .form-actions {
     flex-direction: column;
+    gap: var(--space-sm);
   }
 
   .btn {
     width: 100%;
+    font-size: 1rem;
+  }
+
+  .top-nav {
+    flex-direction: column;
+    text-align: center;
   }
 }
 
 @media (max-width: 480px) {
-  .logo-text {
-    font-size: 1rem;
-  }
-
   .profile-container h1 {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
   }
 
   .profile-pic-container {
-    width: 120px;
-    height: 120px;
+    width: 100px;
+    height: 100px;
+  }
+
+  .back-button {
+    font-size: 14px;
+    padding: 6px 10px;
+  }
+
+  .btn {
+    font-size: 0.9rem;
   }
 }
