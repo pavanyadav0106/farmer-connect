@@ -3,8 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#28a745">
+  <meta name="mobile-web-app-capable" content="yes">
   <title>Farmer Connect</title>
- <!-- Favicons -->
+  
+  <!-- Favicons -->
   <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="192x192" href="assets/android-chrome-192x192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="assets/android-chrome-512x512.png">
@@ -12,8 +15,12 @@
   <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
   <link rel="shortcut icon" href="assets/favicon.ico" type="image/x-icon">
   <link rel="manifest" href="assets/site.webmanifest">
-<link rel="shortcut icon" href="assets/favicon.ico" type="image/x-icon">
+  
+  <!-- Fonts & Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&display=swap" rel="stylesheet">
+  
+  <!-- Stylesheets -->
   <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="css/sidebar.css">
   <link rel="stylesheet" href="css/weather.css">
@@ -22,12 +29,15 @@
   <link rel="stylesheet" href="css/modal.css">
 </head>
 <body>
+  <!-- Skip Navigation -->
+  <a href="#main-content" class="skip-nav">Skip to main content</a>
+
   <!-- Loading Indicator -->
   <div id="loading">Loading...</div>
 
   <!-- Top Navigation -->
   <div class="top-nav">
-    <span class="logo-text">🌾 Farmer Connect</span>
+    <span class="logo-text">🌾 FARMER CONNECT</span>
   </div>
 
   <!-- Logout Modal -->
@@ -106,52 +116,51 @@
   <!-- Sidebar -->
   <div class="sidebar" id="sidebar">
     <ul>
-<li><a href="profile.html" id="profileLink">Profile</a></li>
+      <li><a href="profile.html" id="profileLink">Profile</a></li>
       <li><a href="mycrops.html">My Crops</a></li>
       <li><a href="order.html">My Orders</a></li>
       <li><a href="#" id="weatherButton">Weather</a></li>
       <li><a href="#" id="logoutBtn">Log out</a></li>
     </ul>
   </div>
-  <!-- Main Content -->
-<div class="main-content" id="main-content">
-    <!-- Your content here -->
-</div>
 
-  <!-- Weather Popup -->
-  <div id="weatherPopup" class="popup">
-    <div class="popup-content">
-      <span class="close-btn">&times;</span>
-      <h2>Weather Forecast</h2>
-      <div style="position: relative;">
-        <input type="text" id="locationInput" placeholder="Enter city name">
-        <div id="suggestionBox" class="suggestion-box"></div>
-      </div>
-      <button id="getWeatherBtn">Get Weather</button>
-      <div id="weatherData"></div>
-    </div>
+  <!-- Main Content -->
+  <div class="main-content" id="main-content">
+    <!-- Dynamic content will be loaded here -->
   </div>
 
   <!-- Overlay -->
   <div class="overlay"></div>
 
   <!-- Menu Toggle -->
-  <button class="menu-toggle" id="menu-toggle"><i class="fas fa-bars"></i></button>
-
+  <button class="menu-toggle" id="menu-toggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="sidebar">
+    <i class="fas fa-bars"></i>
+  </button>
+<!-- Weather Popup -->
+<div id="weatherPopup" class="popup">
+    <div class="popup-content">
+        <span class="close-btn">&times;</span>
+        <h2>Weather Forecast</h2>
+        <div style="position: relative;">
+            <input type="text" id="locationInput" placeholder="Enter city name">
+            <div id="suggestionBox" class="suggestion-box"></div>
+        </div>
+        <button id="getWeatherBtn">Get Weather</button>
+        <div id="weatherData"></div>
+    </div>
+</div>
   <!-- Scripts -->
-   <script type="module" src="config.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-  <!-- Add these SDKs in farmer4.html -->
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
-<script type="module" src="js/auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+  
+  <script type="module" src="js/config.js"></script>
+  <script type="module" src="js/auth.js"></script>
   <script type="module" src="js/market.js"></script>
-<script type="module" src="js/main.js"></script>
+  <script type="module" src="js/main.js"></script>
   <script src="js/testimonials.js"></script>
   <script src="js/sidebar.js"></script>
-<script type="module" src="js/weather.js"></script>
-  <script>
-  </script>
+  <script type="module" src="js/weather.js"></script>
 </body>
 </html>
