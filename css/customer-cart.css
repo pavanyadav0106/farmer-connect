@@ -433,5 +433,120 @@ body {
   letter-spacing: 1px;
   text-transform: uppercase;
 }
+/* Improve layout on smaller screens */
+@media (max-width: 767px) {
+  .main-content {
+    padding: 20px;
+  }
 
-/* If you want the logo clickable, remove pointer-events */
+  .main-content .container {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .cart-items,
+  .cart-summary {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .btn {
+    padding: 12px 18px;
+    font-size: 1rem;
+  }
+
+  .modal-content {
+    margin: 20px auto;
+    padding: 15px;
+  }
+
+  .modal-body {
+    max-height: 60vh;
+    overflow-y: auto;
+  }
+  .profile-circle {
+    margin-left: 0;
+  }
+}
+
+/* Extra small devices */
+@media (max-width: 480px) {
+  .quantity-btn,
+  .quantity-input {
+    width: 28px;
+    font-size: 0.9rem;
+  }
+
+  .cart-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .item-image {
+    margin-bottom: 10px;
+  }
+
+  .summary-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .btn-block {
+    font-size: 1rem;
+    padding: 12px;
+  }
+}
+@media (max-width: 767px) {
+  .cart-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .item-details {
+    width: 100%;
+  }
+
+  .item-quantity {
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  .remove-item {
+    align-self: flex-end;
+    margin-left: auto;
+    margin-top: -10px;
+    font-size: 1.2rem;
+  }
+}
+@media (max-width: 480px) {
+  .quantity-input {
+  width: 36px; /* ensure it's not too narrow */
+  font-size: 1rem;
+  padding: 4px;
+  text-align: center;
+  color: #333; /* make sure it's visible */
+  background-color: #fff;
+  border: 1px solid #ccc;
+}
+
+  .cart-item {
+    gap: 12px;
+  }
+
+  .item-quantity {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .quantity-btn, .quantity-input {
+    width: 30px;
+    font-size: 0.9rem;
+  }
+
+  .remove-item {
+    font-size: 1.1rem;
+    margin-top: 0;
+  }
+}
