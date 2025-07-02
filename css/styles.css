@@ -1,19 +1,63 @@
+/* ===== RESET & BASE STYLES ===== */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: Arial, sans-serif;
+  font-family: 'Arial', sans-serif;
+  -webkit-tap-highlight-color: transparent; /* Fix for black highlight */
+}
+
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 body {
   background-color: #f0f2f5;
+  line-height: 1.6;
+  color: #333;
+  -webkit-text-size-adjust: 100%; /* Prevent font scaling in landscape */
 }
 
+/* ===== ACCESSIBILITY ===== */
+.skip-nav {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: #28a745;
+  color: white;
+  padding: 8px 16px;
+  z-index: 2000;
+  transition: top 0.3s;
+}
+
+.skip-nav:focus {
+  top: 15px;
+}
+
+:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+
+/* Custom text selection */
+::selection {
+  background: #28a745;
+  color: white;
+}
+::-moz-selection {
+  background: #28a745;
+  color: white;
+}
+
+/* ===== LAYOUT COMPONENTS ===== */
+/* Top Navigation */
 .top-nav {
+  height: 70px;
+  padding: 0 20px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 15px 20px;
   position: fixed;
   width: 100%;
   top: 0;
@@ -21,22 +65,41 @@ body {
   background: #28a745;
   color: white;
   z-index: 1000;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  transition: height 0.3s ease;
 }
 
+.logo-text {
+  font-size: 1.5rem;
+  font-weight: 600;
+  font-family: 'Poppins', sans-serif;
+  letter-spacing: 0.8px;
+  text-transform: none; /* Keep "FarmerConnect" as-is */
+  color: white;
+  user-select: none;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+}
+
+
+/* ===== HERO SECTION ===== */
 .hero {
+  height: 60vh;
+  margin-top: 70px;
+  padding: 20px;
   background: url('https://i.ibb.co/fdw6Y2Xr/IMG-farmermobileinhand-HERO-L2-HRO-02-1440x400px-3.jpg') no-repeat center center/cover;
-  height: 80vh;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
   color: white;
-  padding: 20px;
   position: relative;
-  margin-top: 80px;
 }
 
+/* Remove the dark overlay or make it more subtle */
 .hero::before {
   content: "";
   position: absolute;
@@ -44,92 +107,227 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.3); /* Reduced opacity from 0.5 to 0.3 */
 }
 
+/* Hero content with transparent background */
 .hero-content {
-  max-width: 80%;
-  font-size: 1.2rem;
-  padding: 20px;
-  border-radius: 10px;
+  max-width: 90%;
+  padding: 25px;
+  background: rgba(255,255,255,0.1); /* Changed from rgba(0,0,0,0.6) to transparent */
+  backdrop-filter: blur(2px);
+  border-radius: 8px;
+  position: relative;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5); /* Added text shadow for better readability */
 }
 
+/* Text styles for better visibility */
 .hero-content h1 {
-  font-size: clamp(1.2rem,5vw,2rem);
+  font-size: clamp(1.5rem, 5vw, 2.2rem);
+  margin-bottom: 15px;
+  line-height: 1.3;
+  color: white;
 }
 
+.hero-content p {
+  color: white;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Features Section */
 .features {
   display: flex;
   justify-content: center;
   text-align: center;
-  padding: 50px 20px;
+  padding: 40px 20px;
   background: white;
-  cursor: pointer;
   flex-wrap: wrap;
-  gap: 20px;
+  gap: 25px;
 }
 
 .feature {
   flex: 1;
-  min-width: 250px;
+  min-width: 220px;
   max-width: 300px;
+  padding: 25px 20px;
+  background: #fff;
+  border-radius: 8px;
   transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
   cursor: pointer;
 }
 
 .feature:hover {
   transform: translateY(-5px);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .feature i {
   font-size: 40px;
   color: #28a745;
+  margin-bottom: 15px;
+  pointer-events: none; /* Prevent icon highlighting */
 }
 
+/* Testimonials */
 .testimonials {
   text-align: center;
   background: #fff;
-  padding: 40px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 40px 20px;
 }
 
+.testimonial {
+  padding: 20px;
+  margin: 15px auto;
+  max-width: 800px;
+  background: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* Footer */
 .footer {
   background: #28a745;
   color: white;
   text-align: center;
-  padding: 20px;
+  padding: 25px 20px;
 }
 
 .footer a {
   color: white;
   text-decoration: none;
+  padding: 5px 10px;
+  display: inline-block;
+  transition: opacity 0.3s;
 }
 
+.footer a:hover {
+  opacity: 0.9;
+}
+
+/* Loading Indicator */
 #loading {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 15px 25px;
+  border-radius: 8px;
+  z-index: 2000;
   display: none;
-  text-align: center;
-  opacity: 0;
-  transition: opacity 0.3s ease-in-out;
 }
 
 #loading.show {
-  opacity: 1;
+  display: block;
+}
+
+/* Market Ticker */
+.ticker-container {
+  background: #f8f9fa;
+  padding: 10px 0;
+  overflow: hidden;
+}
+
+.ticker {
+  white-space: nowrap;
+  animation: ticker 30s linear infinite;
+}
+
+@keyframes ticker {
+  0% { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
+}
+
+/* ===== TOUCH IMPROVEMENTS ===== */
+button, a {
+  min-width: 44px;
+  min-height: 44px;
+  transition: transform 0.2s, opacity 0.2s;
+}
+
+button:active, a:active {
+  transform: scale(0.98);
+  opacity: 0.9;
+}
+
+/* ===== RESPONSIVE ADJUSTMENTS ===== */
+@media (min-width: 768px) {
+  .top-nav {
+    height: 80px;
+  }
+  
+  .hero {
+    height: 70vh;
+    margin-top: 80px;
+  }
+  
+  .logo-text {
+    font-size: 1.6rem;
+  }
+}
+
+@media (min-width: 992px) {
+  .hero {
+    height: 80vh;
+  }
+  
+  .main-content.shift {
+    margin-left: 280px;
+  }
 }
 
 @media (max-width: 600px) {
+  .feature {
+    min-width: 100%;
+  }
+  
+  .footer a {
+    display: block;
+    margin: 5px 0;
+  }
+  
   .hero {
-    height: 60vh;
-    padding: 14px;
+    height: 50vh;
+    padding: 10px;
   }
   
   .hero-content {
-    background: rgba(0, 0, 0, 0.7);
-    padding: 10px;
-    border-radius: 10px;
+    padding: 15px;
   }
   
   .feature i {
-    font-size: 30px;
+    font-size: 32px;
   }
+}
+
+/* Print Styles */
+@media print {
+  .top-nav, .menu-toggle, .footer {
+    display: none;
+  }
+  
+  body {
+    background: white;
+    color: black;
+  }
+  
+  .hero {
+    height: auto;
+    margin-top: 0;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.4);
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: 0.3s ease;
 }
