@@ -8,18 +8,26 @@
   height: 100%;
   overflow: auto;
   background-color: rgba(0, 0, 0, 0.4);
+  z-index: 3000;
 }
 
 .logout-modal-content {
   background-color: #fefefe;
-  margin: 15% auto;
-  padding: 20px;
-  border: 1px solid #888;
-  width: 300px;
+  padding: 24px 20px;
+  border-radius: 10px;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+  width: 90%;
+  max-width: 320px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   text-align: center;
-  border-radius: 5px;
-  position: relative;
+  z-index: 3001;
+  animation: fadeInModal 0.3s ease-out;
+
 }
+
 
 .close {
   color: #aaa;
@@ -62,4 +70,26 @@
 
 #cancelLogout:hover {
   background-color: #45a049;
+}
+
+@media (max-width: 480px) {
+  .logout-modal-content {
+    padding: 20px 16px;
+    width: 92%;
+  }
+
+  #confirmLogout, #cancelLogout {
+    width: 100%;
+    margin-top: 10px;
+  }
+}
+@keyframes fadeInModal {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -60%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
 }
