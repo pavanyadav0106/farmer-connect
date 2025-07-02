@@ -2,17 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FarmConnect - Farmer Community</title>
- <!-- Favicons -->
-  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="192x192" href="assets/android-chrome-192x192.png">
-  <link rel="icon" type="image/png" sizes="512x512" href="assets/android-chrome-512x512.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
-  <link rel="shortcut icon" href="assets/favicon.ico" type="image/x-icon">
-  <link rel="manifest" href="assets/site.webmanifest">
-<link rel="shortcut icon" href="assets/favicon.ico" type="image/x-icon">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">    <title>FarmConnect - Farmer Community</title>
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="assets/android-chrome-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="assets/android-chrome-512x512.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
+    <link rel="shortcut icon" href="assets/favicon.ico" type="image/x-icon">
+    <link rel="manifest" href="assets/site.webmanifest">
     <style>
         :root {
             --primary: #4CAF50;
@@ -87,6 +85,11 @@
             transition: all 0.3s ease;
             padding: 0.5rem 1rem;
             border-radius: 4px;
+            min-height: 44px;
+            min-width: 44px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
         
         nav ul li a:hover {
@@ -141,6 +144,8 @@
             cursor: pointer;
             transition: all 0.3s ease;
             text-decoration: none;
+            min-height: 44px;
+            min-width: 44px;
         }
         
         .btn:hover {
@@ -203,6 +208,7 @@
             font-size: 3rem;
             color: var(--primary);
             margin-bottom: 1.5rem;
+            transition: transform 0.3s ease;
         }
         
         .feature-card h3 {
@@ -332,6 +338,7 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
             display: flex;
             align-items: center;
+            transition: all 0.3s ease;
         }
         
         .transaction-icon {
@@ -504,20 +511,72 @@
             }
         }
         
+        /* Mobile Menu Button */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--white);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            min-height: 44px;
+            min-width: 44px;
+        }
+        
         /* Responsive adjustments */
+        /* For tablets and small laptops (768px - 1024px) */
+        @media (max-width: 1024px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
+            }
+            
+            .feature-card {
+                padding: 1.5rem;
+            }
+            
+            .transaction-card {
+                padding: 1.2rem;
+            }
+            
+            .transaction-icon {
+                width: 50px;
+                height: 50px;
+                margin-right: 1rem;
+            }
+        }
+        
+        /* For large smartphones (576px - 768px) */
         @media (max-width: 768px) {
             .header-content {
                 flex-direction: column;
                 text-align: center;
             }
             
+            .mobile-menu-btn {
+                display: block;
+                position: absolute;
+                top: 1rem;
+                right: 1rem;
+            }
+            
             nav ul {
+                display: none;
                 margin-top: 1rem;
-                justify-content: center;
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            nav ul.show {
+                display: flex;
             }
             
             nav ul li {
-                margin: 0 0.5rem;
+                margin: 0.5rem 0;
             }
             
             .hero {
@@ -529,12 +588,66 @@
                 font-size: 2.2rem;
             }
             
+            .hero p {
+                font-size: 1rem;
+            }
+            
             .section-title h2 {
                 font-size: 1.8rem;
             }
+            
+            .features {
+                grid-template-columns: 1fr;
+            }
+            
+            .testimonial-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .security-badges {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .badge {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            
+            .footer-column h3::after {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+            
+            .social-links {
+                justify-content: center;
+            }
         }
         
-        @media (max-width: 480px) {
+        /* For small smartphones (up to 576px) */
+        @media (max-width: 576px) {
+            .logo {
+                font-size: 1.5rem;
+            }
+            
+            .hero {
+                height: 350px;
+            }
+            
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+            
+            .btn {
+                padding: 0.6rem 1.2rem;
+                font-size: 0.9rem;
+            }
+            
             .transaction-card {
                 flex-direction: column;
                 text-align: center;
@@ -546,22 +659,107 @@
             }
             
             .transaction-meta {
-                justify-content: center;
-                flex-wrap: wrap;
+                flex-direction: column;
+                gap: 0.5rem;
             }
             
             .transaction-amount {
                 margin-left: 0;
+                margin-top: 1rem;
+            }
+            
+            .cta-content h2 {
+                font-size: 1.8rem;
+            }
+            
+            .cta-content p {
+                font-size: 1rem;
+            }
+            
+            .cta-section .btn {
+                display: block;
+                margin-bottom: 0.5rem;
                 width: 100%;
-                margin-top: 0.5rem;
             }
         }
+        
+        /* For very small devices (up to 400px) */
+        @media (max-width: 400px) {
+            .logo {
+                font-size: 1.3rem;
+            }
+            
+            nav ul li a {
+                padding: 0.3rem 0.6rem;
+                font-size: 0.9rem;
+            }
+            
+            .hero h1 {
+                font-size: 1.5rem;
+            }
+            
+            .section-title h2 {
+                font-size: 1.5rem;
+            }
+            
+            .feature-card h3 {
+                font-size: 1.3rem;
+            }
+            
+            .testimonial-card {
+                padding: 1.5rem 1rem;
+            }
+        }
+        
+        /* For landscape orientation on mobile devices */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .hero {
+                height: 300px;
+            }
+            
+            .hero-content {
+                padding-top: 1rem;
+                padding-bottom: 1rem;
+            }
+        }
+        
+        /* Accessibility: Reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+        .back-btn {
+    background: none;
+    border: none;
+    color: var(--white);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    margin-right: 1rem;
+    min-height: 44px;
+    min-width: 44px;
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
     <header>
         <div class="container header-content">
+            <button class="mobile-menu-btn" aria-label="Toggle menu">
+                <i class="fas fa-bars"></i>
+            </button>
+            <button class="back-btn" onclick="window.history.back()" aria-label="Go back">
+    <i class="fas fa-arrow-left"></i>
+</button>
             <div class="logo">
                 <span>🌾 FARMER CONNECT</span>
             </div>
@@ -747,8 +945,8 @@
                         <h3>End-to-End Encryption</h3>
                     </div>
                     <div class="badge slide-up" style="animation-delay: 0.2s;">
-                        <i class="fas fa-fingerprint"></i>
-                        <h3>Biometric Authentication</h3>
+                        <i class="fas fa-key"></i>
+                        <h3>OTP Verification</h3>
                     </div>
                     <div class="badge slide-up" style="animation-delay: 0.4s;">
                         <i class="fas fa-shield-virus"></i>
@@ -766,7 +964,7 @@
             <div class="container cta-content">
                 <h2 class="fade-in">Ready to Transform Your Farming Business?</h2>
                 <p class="fade-in">Join thousands of farmers who are growing their income with secure, transparent transactions on FarmConnect.</p>
-                <div class="fade-in" style="display: flex; justify-content: center; gap: 1rem;">
+                <div class="fade-in" style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
                     <a href="#" class="btn btn-dark"><i class="fab fa-google-play"></i> Google Play</a>
                     <a href="#" class="btn btn-dark"><i class="fab fa-apple"></i> App Store</a>
                 </div>
@@ -781,10 +979,10 @@
                     <h3>FarmConnect</h3>
                     <p>Empowering farmers with secure digital transactions and community support since 2018.</p>
                     <div class="social-links">
-                        <a href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
                     </div>
                 </div>
                 <div class="footer-column">
@@ -858,8 +1056,16 @@
                             top: targetElement.offsetTop - 80,
                             behavior: 'smooth'
                         });
+                        
+                        // Close mobile menu if open
+                        document.querySelector('nav ul').classList.remove('show');
                     }
                 });
+            });
+            
+            // Mobile menu toggle
+            document.querySelector('.mobile-menu-btn').addEventListener('click', function() {
+                document.querySelector('nav ul').classList.toggle('show');
             });
             
             // Security badges animation on hover
@@ -895,6 +1101,15 @@
                 card.addEventListener('mouseleave', function() {
                     this.querySelector('i').style.transform = 'scale(1)';
                 });
+            });
+            
+            // Close menu when clicking outside
+            document.addEventListener('click', function(e) {
+                const nav = document.querySelector('nav ul');
+                const menuBtn = document.querySelector('.mobile-menu-btn');
+                if (!nav.contains(e.target) && !menuBtn.contains(e.target)) {
+                    nav.classList.remove('show');
+                }
             });
         });
     </script>
