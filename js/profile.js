@@ -1,14 +1,13 @@
 import { auth, db } from '../config.js';
 import {
-  doc, getDoc, updateDoc, onSnapshot, serverTimestamp
+  doc, getDoc, updateDoc, setDoc, onSnapshot, serverTimestamp
 } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 import {
-  EmailAuthProvider, reauthenticateWithCredential, updatePassword
+  EmailAuthProvider, reauthenticateWithCredential, updatePassword, onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 
 // DOM Elements
 const elements = {
-  // Profile elements
   profileAvatar: document.getElementById('profile-photo'),
   profileEmail: document.getElementById('user-email'),
   profileName: document.getElementById('user-name'),
@@ -16,8 +15,7 @@ const elements = {
   profileAddress: document.getElementById('user-location'),
   profileGender: document.getElementById('user-gender'),
   profileAge: document.getElementById('user-age'),
-  
-  // Buttons
+
   editProfileBtn: document.getElementById('edit-profile'),
   saveProfileBtn: document.getElementById('save-profile'),
   changePasswordBtn: document.getElementById('change-password'),
@@ -26,21 +24,19 @@ const elements = {
   backBtn: document.getElementById('backBtn'),
   uploadBtn: document.getElementById('upload-btn'),
   uploadOverlay: document.getElementById('upload-overlay'),
-  
-  // Forms and sections
+
   profileForm: document.getElementById('profile-form'),
   passwordChangeBox: document.getElementById('password-change-box'),
-  
-  // Messages
+
   profileUpdateMessage: document.getElementById('profile-update-message'),
   passwordChangeMessage: document.getElementById('password-change-message'),
   uploadStatus: document.getElementById('upload-status')
 };
 
-// Initialize Cloudinary
+// Cloudinary
 const cloudinaryWidget = cloudinary.createUploadWidget({
-  cloudName: 'dtiast5hl', // Replace with your Cloudinary cloud name
-  uploadPreset: 'farmerconnect', // Replace with your upload preset
+  cloudName: 'dtiast5hl',
+  uploadPreset: 'farmerconnect',
   cropping: true,
   croppingAspectRatio: 1,
   croppingShowBackButton: true,
@@ -51,51 +47,33 @@ const cloudinaryWidget = cloudinary.createUploadWidget({
   }
 });
 
-// Initialize the app
+// Init
 function init() {
   setupEventListeners();
   checkAuthState();
 }
 
-// Set up event listeners
+// Events
 function setupEventListeners() {
-  // Back button
   elements.backBtn.addEventListener('click', () => {
     window.location.href = 'farmer4.html';
   });
-
-  // Edit profile
   elements.editProfileBtn.addEventListener('click', toggleEditMode);
-
-  // Save profile
   elements.saveProfileBtn.addEventListener('click', saveProfile);
-
-  // Change password
   elements.changePasswordBtn.addEventListener('click', () => {
     elements.passwordChangeBox.style.display = 'block';
   });
-
-  // Cancel password change
   elements.cancelPasswordBtn.addEventListener('click', () => {
     elements.passwordChangeBox.style.display = 'none';
     clearPasswordFields();
   });
-
-  // Submit password change
   elements.submitPasswordBtn.addEventListener('click', changePassword);
-
-  // Photo upload
-  elements.uploadBtn.addEventListener('click', () => {
-    cloudinaryWidget.open();
-  });
-
-  elements.uploadOverlay.addEventListener('click', () => {
-    cloudinaryWidget.open();
-  });
+  elements.uploadBtn.addEventListener('click', () => cloudinaryWidget.open());
+  elements.uploadOverlay.addEventListener('click', () => cloudinaryWidget.open());
 
   // Toggle password visibility
   document.querySelectorAll('.toggle-password').forEach(toggle => {
-    toggle.addEventListener('click', function() {
+    toggle.addEventListener('click', function () {
       const input = this.previousElementSibling;
       const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
       input.setAttribute('type', type);
@@ -104,68 +82,69 @@ function setupEventListeners() {
   });
 }
 
-// Check auth state
+// Auth
 function checkAuthState() {
-  auth.onAuthStateChanged(async (user) => {
+  onAuthStateChanged(auth, async (user) => {
     if (!user) {
       window.location.href = 'index.html';
       return;
     }
-    
-    // Set email
-    elements.profileEmail.textContent = user.email;
 
-    // Load user data
+    // Show email + Google name/photo right away
+    elements.profileEmail.textContent = user.email;
+    elements.profileName.value = user.displayName || "";
+    elements.profileAvatar.src = user.photoURL || "assets/profile-placeholder.png";
+
     const userRef = doc(db, 'users', user.uid);
+    const docSnap = await getDoc(userRef);
+
+    if (!docSnap.exists()) {
+      await setDoc(userRef, {
+        uid: user.uid,
+        email: user.email,
+        name: user.displayName || "",
+        profileImage: user.photoURL || "assets/profile-placeholder.png",
+        createdAt: serverTimestamp()
+      });
+    }
+
+    // Realtime updates
     onSnapshot(userRef, (docSnap) => {
       if (docSnap.exists()) {
         const data = docSnap.data();
         updateProfileUI(data);
-        
-        // Store current data for comparison
-        userData = {
-          name: data.name || '',
-          phone: data.phone || '',
-          address: data.address || '',
-          gender: data.gender || '',
-          age: data.age || '',
-          profileImage: data.profileImage || 'assets/profile-placeholder.png'
-        };
       }
     });
   });
 }
 
-// Update profile UI with current data
+// UI Update
 function updateProfileUI(data) {
-  elements.profileName.value = data.name || '';
-  elements.profilePhone.value = data.phone || '';
-  elements.profileAddress.value = data.address || '';
-  elements.profileGender.value = data.gender || '';
-  elements.profileAge.value = data.age || '';
-  elements.profileAvatar.src = data.profileImage || 'assets/profile-placeholder.png';
+  const user = auth.currentUser;
+
+  elements.profileName.value = data.name || (user ? user.displayName : "") || "";
+  elements.profilePhone.value = data.phone || "";
+  elements.profileAddress.value = data.address || "";
+  elements.profileGender.value = data.gender || "";
+  elements.profileAge.value = data.age || "";
+  elements.profileAvatar.src =
+    data.profileImage || (user ? user.photoURL : "") || "assets/profile-placeholder.png";
 }
 
-// Toggle edit mode
+// Edit mode
 function toggleEditMode() {
   const isEditMode = elements.editProfileBtn.style.display === 'none';
-  
-  // Toggle disabled state on inputs
   [elements.profileName, elements.profilePhone, elements.profileAddress, elements.profileGender, elements.profileAge]
     .forEach(input => input.disabled = isEditMode);
 
-  // Toggle button visibility
   elements.editProfileBtn.style.display = isEditMode ? 'block' : 'none';
   elements.saveProfileBtn.style.display = isEditMode ? 'none' : 'block';
-  
-  // Clear any existing messages
   elements.profileUpdateMessage.textContent = '';
 }
 
-// Save profile changes
+// Save profile
 async function saveProfile(e) {
   e.preventDefault();
-  
   const user = auth.currentUser;
   if (!user) return;
 
@@ -178,7 +157,6 @@ async function saveProfile(e) {
     lastUpdated: serverTimestamp()
   };
 
-  // Validate phone number
   if (updates.phone && !/^\+?\d{7,15}$/.test(updates.phone)) {
     showMessage(elements.profileUpdateMessage, 'Invalid phone number format', 'error');
     return;
@@ -193,7 +171,7 @@ async function saveProfile(e) {
   }
 }
 
-// Change password
+// Password
 async function changePassword() {
   const user = auth.currentUser;
   if (!user) return;
@@ -202,22 +180,18 @@ async function changePassword() {
   const newPassword = document.getElementById('new-password').value;
   const confirmPassword = document.getElementById('confirm-password').value;
 
-  // Validation
   if (!currentPassword || !newPassword || !confirmPassword) {
     showMessage(elements.passwordChangeMessage, 'All fields are required', 'error');
     return;
   }
-
   if (newPassword !== confirmPassword) {
     showMessage(elements.passwordChangeMessage, 'New passwords do not match', 'error');
     return;
   }
-
   if (newPassword.length < 8) {
     showMessage(elements.passwordChangeMessage, 'Password must be at least 8 characters', 'error');
     return;
   }
-
   if (!/\d/.test(newPassword)) {
     showMessage(elements.passwordChangeMessage, 'Password must contain at least one number', 'error');
     return;
@@ -227,7 +201,6 @@ async function changePassword() {
     const credential = EmailAuthProvider.credential(user.email, currentPassword);
     await reauthenticateWithCredential(user, credential);
     await updatePassword(user, newPassword);
-    
     showMessage(elements.passwordChangeMessage, 'Password updated successfully!', 'success');
     clearPasswordFields();
     setTimeout(() => {
@@ -238,7 +211,7 @@ async function changePassword() {
   }
 }
 
-// Handle image upload
+// Image upload
 function handleImageUpload(imageUrl) {
   const user = auth.currentUser;
   if (!user) return;
@@ -249,29 +222,25 @@ function handleImageUpload(imageUrl) {
     profileImage: imageUrl,
     lastUpdated: serverTimestamp()
   })
-  .then(() => {
-    elements.uploadStatus.textContent = 'Profile photo updated!';
-    elements.profileAvatar.src = imageUrl;
-    setTimeout(() => {
-      elements.uploadStatus.textContent = '';
-    }, 3000);
-  })
-  .catch(error => {
-    elements.uploadStatus.textContent = 'Upload failed: ' + error.message;
-  });
+    .then(() => {
+      elements.uploadStatus.textContent = 'Profile photo updated!';
+      elements.profileAvatar.src = imageUrl;
+      setTimeout(() => { elements.uploadStatus.textContent = ''; }, 3000);
+    })
+    .catch(error => {
+      elements.uploadStatus.textContent = 'Upload failed: ' + error.message;
+    });
 }
 
-// Helper functions
+// Helpers
 function showMessage(element, message, type) {
   element.textContent = message;
   element.className = 'status-message ' + type;
-  
   setTimeout(() => {
     element.textContent = '';
     element.className = 'status-message';
   }, 5000);
 }
-
 function clearPasswordFields() {
   document.getElementById('current-password').value = '';
   document.getElementById('new-password').value = '';
@@ -279,5 +248,5 @@ function clearPasswordFields() {
   elements.passwordChangeMessage.textContent = '';
 }
 
-// Initialize the application
+// Init app
 init();
