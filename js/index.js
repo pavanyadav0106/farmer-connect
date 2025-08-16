@@ -173,13 +173,8 @@ const renderForm = () => {
   `;
 
   document.getElementById('submitBtn').onclick = isSignUp ? signUp : signIn;
-  document.getElementById('googleBtn').onclick = () => {
-    if (isSignUp) {
-      googleSignUp();
-    } else {
-      googleSignIn();
-    }
-  };
+ document.getElementById('googleBtn').onclick = googleAuth;
+
   document.getElementById('toggleForm').onclick = toggleForm;
   document.getElementById('languageSelect').addEventListener('change', changeLanguage);
   addInputListeners();
@@ -366,7 +361,7 @@ window.resendVerification = async () => {
   }
 };
 
-const googleSignIn = async () => {
+const googleAuth = async () => {
   try {
     const provider = new GoogleAuthProvider();
     const result = await signInWithPopup(auth, provider);
@@ -377,55 +372,37 @@ const googleSignIn = async () => {
     const userDoc = await getDoc(userRef);
 
     if (userDoc.exists()) {
+      // Existing user → redirect
       await handleUserRedirect(uid);
     } else {
-      showGeneralError(translations[currentLang].accountDoesNotExist);
-      await signOut(auth);
+      // New user → ask for role
+      const role = await showRoleSelectionModal();
+      if (!role) {
+        await signOut(auth);
+        return;
+      }
+
+      // Save user in Firestore
+      await setDoc(userRef, {
+        email: user.email,
+        role,
+        createdAt: new Date().toISOString(),
+      });
+
+      // Redirect based on role
+      if (role === "farmer") {
+        window.location.href = "farmer4.html";
+      } else {
+        window.location.href = "customer-dashboard.html";
+      }
     }
   } catch (error) {
-    console.error("Google Sign-In Error:", error.message);
+    console.error("Google Auth Error:", error.message);
     showGeneralError(error.message);
   }
 };
 
-const googleSignUp = async () => {
-  try {
-    const provider = new GoogleAuthProvider();
-    const result = await signInWithPopup(auth, provider);
-    const user = result.user;
-    const uid = user.uid;
 
-    const userRef = doc(db, "users", uid);
-    const userDoc = await getDoc(userRef);
-
-    if (userDoc.exists()) {
-      showGeneralError(translations[currentLang].accountAlreadyExists);
-      await signOut(auth);
-      return;
-    }
-
-    const role = await showRoleSelectionModal();
-    if (!role) {
-      await signOut(auth);
-      return;
-    }
-
-    await setDoc(userRef, {
-      email: user.email,
-      role,
-      createdAt: new Date(),
-    });
-
-    if (role === "farmer") {
-      window.location.href = "farmer4.html";
-    } else {
-      window.location.href = "customer-dashboard.html";
-    }
-  } catch (error) {
-    console.error("Google Sign-Up Error:", error.message);
-    showGeneralError(error.message);
-  }
-};
 
 const showRoleSelectionModal = () => {
   return new Promise((resolve) => {
