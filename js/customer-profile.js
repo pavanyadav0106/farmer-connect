@@ -1,14 +1,15 @@
+// customerProfile.js
+
 import { auth, db } from '../config.js';
 import {
   doc, getDoc, updateDoc, onSnapshot, serverTimestamp
 } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 import {
-  EmailAuthProvider, reauthenticateWithCredential, updatePassword
+  EmailAuthProvider, reauthenticateWithCredential, updatePassword, onAuthStateChanged, updateProfile
 } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 
 // DOM Elements
 const elements = {
-  // Profile elements
   profileAvatar: document.getElementById('profile-photo'),
   profileEmail: document.getElementById('user-email'),
   profileName: document.getElementById('user-name'),
@@ -17,7 +18,6 @@ const elements = {
   profileGender: document.getElementById('user-gender'),
   profileAge: document.getElementById('user-age'),
   
-  // Buttons
   editProfileBtn: document.getElementById('edit-profile'),
   saveProfileBtn: document.getElementById('save-profile'),
   changePasswordBtn: document.getElementById('change-password'),
@@ -25,15 +25,12 @@ const elements = {
   submitPasswordBtn: document.getElementById('submit-password-change'),
   backBtn: document.getElementById('backBtn'),
   
-  // Forms and sections
   profileForm: document.getElementById('profile-form'),
   passwordChangeBox: document.getElementById('password-change-box'),
   
-  // Messages
   profileUpdateMessage: document.getElementById('profile-update-message'),
   passwordChangeMessage: document.getElementById('password-change-message'),
   
-  // Photo upload
   uploadBtn: document.getElementById('upload-btn'),
   photoUpload: document.getElementById('photo-upload'),
   uploadStatus: document.getElementById('upload-status'),
@@ -44,7 +41,7 @@ const elements = {
 let userData = {};
 let editMode = false;
 
-// Initialize Cloudinary
+// Cloudinary upload widget
 const cloudinaryWidget = cloudinary.createUploadWidget({
   cloudName: 'dtiast5hl',
   uploadPreset: 'farmerconnect',
@@ -57,39 +54,35 @@ const cloudinaryWidget = cloudinary.createUploadWidget({
     handleImageUpload(result.info.secure_url);
   }
 });
-// Initialize the app
+
+// Initialize
 function init() {
   setupEventListeners();
   checkAuthState();
 }
 
-// Set up event listeners
+// Event listeners
 function setupEventListeners() {
-  // Back button
   if (elements.backBtn) {
     elements.backBtn.addEventListener('click', () => {
       window.location.href = 'customer-dashboard.html';
     });
   }
 
-  // Edit profile
   if (elements.editProfileBtn) {
     elements.editProfileBtn.addEventListener('click', toggleEditMode);
   }
 
-  // Save profile
   if (elements.saveProfileBtn) {
     elements.saveProfileBtn.addEventListener('click', saveProfile);
   }
 
-  // Change password
   if (elements.changePasswordBtn) {
     elements.changePasswordBtn.addEventListener('click', () => {
       elements.passwordChangeBox.style.display = 'block';
     });
   }
 
-  // Cancel password change
   if (elements.cancelPasswordBtn) {
     elements.cancelPasswordBtn.addEventListener('click', () => {
       elements.passwordChangeBox.style.display = 'none';
@@ -97,12 +90,10 @@ function setupEventListeners() {
     });
   }
 
-  // Submit password change
   if (elements.submitPasswordBtn) {
     elements.submitPasswordBtn.addEventListener('click', changePassword);
   }
 
-  // Photo upload
   if (elements.uploadBtn) {
     elements.uploadBtn.addEventListener('click', () => {
       cloudinaryWidget.open();
@@ -115,7 +106,6 @@ function setupEventListeners() {
     });
   }
 
-  // Toggle password visibility
   document.querySelectorAll('.toggle-password').forEach(toggle => {
     toggle.addEventListener('click', function() {
       const input = this.previousElementSibling;
@@ -126,92 +116,69 @@ function setupEventListeners() {
   });
 }
 
-// Check auth state
+// ✅ Auth check
 function checkAuthState() {
-  auth.onAuthStateChanged(async (user) => {
+  onAuthStateChanged(auth, async (user) => {
     if (!user) {
       window.location.href = 'index.html';
       return;
     }
-    
-    // Set email
+
+    console.log("Auth User:", user);
+
+    // Always from Auth
     if (elements.profileEmail) {
       elements.profileEmail.textContent = user.email;
     }
+    if (elements.profileName) {
+      elements.profileName.value = user.displayName || '';
+    }
+    if (elements.profileAvatar) {
+      elements.profileAvatar.src = user.photoURL || 'assets/profile-placeholder.png';
+    }
 
-    // Load user data
+    // Firestore user data
     const userRef = doc(db, 'users', user.uid);
     onSnapshot(userRef, (docSnap) => {
       if (docSnap.exists()) {
         userData = docSnap.data();
         updateProfileUI(userData);
+
+        // Override only if Firestore has these
+        if (userData.name) elements.profileName.value = userData.name;
+        if (userData.profileImage) elements.profileAvatar.src = userData.profileImage;
       }
     });
   });
 }
 
-// Update profile UI with current data
+// UI update
 function updateProfileUI(data) {
-  if (elements.profileName) {
-    elements.profileName.value = data.name || '';
-  }
-
-  if (elements.profilePhone) {
-    elements.profilePhone.value = data.phone || '';
-  }
-
-  if (elements.profileAddress) {
-    elements.profileAddress.value = data.address || '';
-  }
-
-  if (elements.profileGender) {
-    elements.profileGender.value = data.gender || '';
-  }
-
-  if (elements.profileAge) {
-    elements.profileAge.value = data.age || '';
-  }
-
+  if (elements.profileName) elements.profileName.value = data.name || elements.profileName.value;
+  if (elements.profilePhone) elements.profilePhone.value = data.phone || '';
+  if (elements.profileAddress) elements.profileAddress.value = data.address || '';
+  if (elements.profileGender) elements.profileGender.value = data.gender || '';
+  if (elements.profileAge) elements.profileAge.value = data.age || '';
   if (elements.profileAvatar) {
-    elements.profileAvatar.src = data.profileImage || 'assets/profile-placeholder.png';
+    elements.profileAvatar.src = data.profileImage || elements.profileAvatar.src;
   }
 }
 
-// Toggle edit mode
+// Toggle edit
 function toggleEditMode() {
   editMode = !editMode;
-  
-  // Toggle disabled state on inputs
-  const inputs = [
-    elements.profileName,
-    elements.profilePhone,
-    elements.profileAddress,
-    elements.profileGender,
-    elements.profileAge
-  ];
-  
-  inputs.forEach(input => {
-    if (input) {
-      input.disabled = !editMode;
-    }
-  });
-
-  // Toggle button visibility
+  const inputs = [elements.profileName, elements.profilePhone, elements.profileAddress, elements.profileGender, elements.profileAge];
+  inputs.forEach(input => { if (input) input.disabled = !editMode; });
   if (elements.editProfileBtn && elements.saveProfileBtn) {
     elements.editProfileBtn.style.display = editMode ? 'none' : 'block';
     elements.saveProfileBtn.style.display = editMode ? 'block' : 'none';
   }
-  
-  // Clear any existing messages
-  if (elements.profileUpdateMessage) {
-    elements.profileUpdateMessage.textContent = '';
-  }
+  if (elements.profileUpdateMessage) elements.profileUpdateMessage.textContent = '';
 }
 
-// Save profile changes
+// Save profile
 async function saveProfile(e) {
   e.preventDefault();
-  
   const user = auth.currentUser;
   if (!user) return;
 
@@ -224,13 +191,15 @@ async function saveProfile(e) {
     lastUpdated: serverTimestamp()
   };
 
-  // Validate phone number
   if (updates.phone && !/^\+?\d{7,15}$/.test(updates.phone)) {
     showMessage(elements.profileUpdateMessage, 'Invalid phone number format', 'error');
     return;
   }
 
   try {
+    if (updates.name) {
+      await updateProfile(user, { displayName: updates.name });
+    }
     await updateDoc(doc(db, 'users', user.uid), updates);
     toggleEditMode();
     showMessage(elements.profileUpdateMessage, 'Profile updated successfully!', 'success');
@@ -248,22 +217,18 @@ async function changePassword() {
   const newPassword = document.getElementById('new-password').value;
   const confirmPassword = document.getElementById('confirm-password').value;
 
-  // Validation
   if (!currentPassword || !newPassword || !confirmPassword) {
     showMessage(elements.passwordChangeMessage, 'All fields are required', 'error');
     return;
   }
-
   if (newPassword !== confirmPassword) {
     showMessage(elements.passwordChangeMessage, 'New passwords do not match', 'error');
     return;
   }
-
   if (newPassword.length < 8) {
     showMessage(elements.passwordChangeMessage, 'Password must be at least 8 characters', 'error');
     return;
   }
-
   if (!/\d/.test(newPassword)) {
     showMessage(elements.passwordChangeMessage, 'Password must contain at least one number', 'error');
     return;
@@ -273,57 +238,39 @@ async function changePassword() {
     const credential = EmailAuthProvider.credential(user.email, currentPassword);
     await reauthenticateWithCredential(user, credential);
     await updatePassword(user, newPassword);
-    
     showMessage(elements.passwordChangeMessage, 'Password updated successfully!', 'success');
     clearPasswordFields();
-    setTimeout(() => {
-      elements.passwordChangeBox.style.display = 'none';
-    }, 1500);
+    setTimeout(() => { elements.passwordChangeBox.style.display = 'none'; }, 1500);
   } catch (error) {
     showMessage(elements.passwordChangeMessage, 'Password change failed: ' + error.message, 'error');
   }
 }
 
-// Handle image upload
+// Image upload
 function handleImageUpload(imageUrl) {
   const user = auth.currentUser;
   if (!user) return;
 
-  if (elements.uploadStatus) {
-    elements.uploadStatus.textContent = 'Uploading...';
-  }
-
+  if (elements.uploadStatus) elements.uploadStatus.textContent = 'Uploading...';
   updateDoc(doc(db, 'users', user.uid), {
     profileImage: imageUrl,
     lastUpdated: serverTimestamp()
   })
   .then(() => {
-    if (elements.uploadStatus) {
-      elements.uploadStatus.textContent = 'Profile photo updated!';
-    }
-    if (elements.profileAvatar) {
-      elements.profileAvatar.src = imageUrl;
-    }
-    setTimeout(() => {
-      if (elements.uploadStatus) {
-        elements.uploadStatus.textContent = '';
-      }
-    }, 3000);
+    if (elements.uploadStatus) elements.uploadStatus.textContent = 'Profile photo updated!';
+    if (elements.profileAvatar) elements.profileAvatar.src = imageUrl;
+    setTimeout(() => { if (elements.uploadStatus) elements.uploadStatus.textContent = ''; }, 3000);
   })
   .catch(error => {
-    if (elements.uploadStatus) {
-      elements.uploadStatus.textContent = 'Upload failed: ' + error.message;
-    }
+    if (elements.uploadStatus) elements.uploadStatus.textContent = 'Upload failed: ' + error.message;
   });
 }
 
-// Helper functions
+// Helpers
 function showMessage(element, message, type) {
   if (!element) return;
-  
   element.textContent = message;
   element.className = 'status-message ' + type;
-  
   setTimeout(() => {
     element.textContent = '';
     element.className = 'status-message';
@@ -334,10 +281,8 @@ function clearPasswordFields() {
   document.getElementById('current-password').value = '';
   document.getElementById('new-password').value = '';
   document.getElementById('confirm-password').value = '';
-  if (elements.passwordChangeMessage) {
-    elements.passwordChangeMessage.textContent = '';
-  }
+  if (elements.passwordChangeMessage) elements.passwordChangeMessage.textContent = '';
 }
 
-// Initialize the application
+// Init
 init();
