@@ -217,7 +217,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (confirmLogout) {
       confirmLogout.addEventListener('click', () => {
         auth.signOut().then(() => {
-          window.location.href = 'index.html';
+          window.location.href = 'main.html';
         }).catch((error) => {
           console.error('Logout error:', error);
           showToast('Error logging out. Please try again.', 'error');

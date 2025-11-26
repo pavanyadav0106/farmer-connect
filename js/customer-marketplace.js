@@ -27,7 +27,7 @@ const logoutBtn = document.getElementById("logoutBtn");
     function checkAuthState() {
         onAuthStateChanged(auth, user => {
             if (!user) {
-                window.location.href = "index.html";
+                window.location.href = "main.html";
             } else {
                 loadCrops();
             }
@@ -278,5 +278,5 @@ cancelLogoutBtn.addEventListener('click', () => {
 
 confirmLogoutBtn.addEventListener('click', () => {
   // Your logout logic here, e.g.
-  window.location.href = "index.html";
+  window.location.href = "main.html";
 });

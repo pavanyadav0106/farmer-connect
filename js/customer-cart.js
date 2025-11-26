@@ -282,7 +282,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const confirmed = confirm('Are you sure you want to logout?');
     if (confirmed) {
       // Add your logout logic here (e.g., clearing auth tokens)
-      window.location.href = 'index.html'; // redirect to login
+      window.location.href = 'main.html'; // redirect to login
     }
   });
 

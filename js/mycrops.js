@@ -121,7 +121,7 @@ function resetForm() {
 function checkAuthState() {
   onAuthStateChanged(auth, user => {
     if (!user) {
-      window.location.href = "index.html";
+      window.location.href = "main.html";
       return;
     }
     loadCrops(user.uid);

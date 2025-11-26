@@ -357,7 +357,7 @@ function checkAuthState() {
   onAuthStateChanged(auth, async (user) => {
     if (!user) {
       console.log("❌ No user found, redirecting to login...");
-      window.location.href = 'index.html';
+      window.location.href = 'main.html';
       return;
     }
 

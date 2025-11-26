@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
   confirmLogout?.addEventListener('click', () => {
     auth.signOut()
       .then(() => {
-        window.location.href = "index.html";
+        window.location.href = "main.html";
       })
       .catch((error) => {
         console.error("Logout error:", error);
