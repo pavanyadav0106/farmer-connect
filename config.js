@@ -1,13 +1,23 @@
+// config.js - Complete Firebase Configuration
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-
 import { 
   getFirestore, 
+  collection,
+  query, 
+  where, 
+  onSnapshot, 
   doc, 
-  setDoc, 
-  getDoc, 
-  deleteDoc   // <-- from firestore only
+  updateDoc,
+  getDocs,
+  runTransaction,
+  serverTimestamp,
+  getDoc,
+  addDoc,
+  setDoc,
+  orderBy,
+  writeBatch,
+  deleteDoc
 } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
-
 import { 
   getAuth, 
   signInWithEmailAndPassword, 
@@ -17,7 +27,8 @@ import {
   GoogleAuthProvider, 
   signInWithPopup, 
   signOut,
-  fetchSignInMethodsForEmail
+  fetchSignInMethodsForEmail,
+  onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 
 const firebaseConfig = {
@@ -30,14 +41,21 @@ const firebaseConfig = {
   measurementId: "G-B5HJ84QDL6",
 };
 
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
+
+// Initialize Firestore
 const db = getFirestore(app);
+
+// Initialize Auth
 const auth = getAuth(app);
 
+// Export everything
 export {
   app,
   db,
   auth,
+  // Auth functions
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   sendEmailVerification,
@@ -45,9 +63,24 @@ export {
   GoogleAuthProvider,
   signInWithPopup,
   signOut,
-  doc,
-  setDoc,
+  fetchSignInMethodsForEmail,
+  onAuthStateChanged,
+  // Firestore functions
+  collection,
+  query, 
+  where, 
+  onSnapshot, 
+  doc, 
+  updateDoc,
+  getDocs,
+  runTransaction,
+  serverTimestamp,
   getDoc,
-  deleteDoc,
-  fetchSignInMethodsForEmail
+  addDoc,
+  setDoc,
+  orderBy,
+  writeBatch,
+  deleteDoc
 };
+
+console.log('Firebase configuration exported successfully');

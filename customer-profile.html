@@ -3,155 +3,291 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Farmer Profile | Farmer Connect</title>
-  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
-<link rel="manifest" href="assets/site.webmanifest">
-<link rel="shortcut icon" href="assets/favicon.ico" type="image/x-icon">
-  <!-- Font Awesome for icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  
-  <!-- Styles -->
-  <link rel="stylesheet" href="css/customer-profile.css" />
-  <!-- Cloudinary Upload Widget -->
-<script src="https://widget.cloudinary.com/v2.0/global/all.js" type="text/javascript"></script>
+  <title>Customer Profile | Farmer Connect</title>
 
+  <!-- Favicons -->
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/assets/android-chrome-192x192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="/assets/android-chrome-512x512.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="manifest" href="/assets/site.webmanifest">
+
+  <!-- Icons & CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="css/customer-profile.css" />
+  <link rel="stylesheet" href="css/customer-darkmode.css">
+
+  <!-- Cloudinary Upload Widget -->
+  <script src="https://widget.cloudinary.com/v2.0/global/all.js" type="text/javascript"></script>
 </head>
 <body>
   <!-- Back Button -->
   <button id="backBtn" class="back-button" aria-label="Back to Dashboard">
-    <i class="fas fa-arrow-left"></i> Back
+    <i class="fas fa-arrow-left"></i>
+    <span>Back</span>
   </button>
 
   <!-- Top Navigation -->
   <header class="top-nav">
-    <a href="customer-dashboard.html" class="logo-text">🌾 FARMER CONNECT</a>
+    <a href="customer-dashboard.html" class="logo-text" aria-label="Go to Customer Dashboard">
+      🌾 FARMER CONNECT
+    </a>
   </header>
+
+  <!-- Loading Overlay -->
+  <div id="loading-overlay" class="loading-overlay" aria-live="polite" aria-label="Loading" style="display: none;">
+    <div class="loading-spinner"></div>
+    <p>Loading your profile...</p>
+  </div>
 
   <!-- Main content -->
   <main class="main-content" id="main-content">
-    <!-- Status messages -->
-    <div id="status-message" class="status-message"></div>
+    <section class="profile-container" aria-live="polite">
+      
+      <!-- Skeleton Loader (shown during loading) -->
+      <div id="profile-skeleton" class="profile-skeleton">
+        <!-- Header Skeleton -->
+        <div class="skeleton-header">
+          <div class="skeleton-avatar"></div>
+          <div class="skeleton-line short"></div>
+          <div class="skeleton-line medium"></div>
+        </div>
 
-    <div class="profile-container">
-      <h1><i class="fas fa-user-circle"></i> Profile</h1>
-
-      <!-- Profile Photo Section -->
-      <div class="photo-section">
-        <div class="profile-pic-container">
-          <img src="assets/profile-placeholder.png" id="profile-photo" class="profile-pic" alt="Profile Photo" />
-          <div class="upload-overlay" id="upload-overlay">
-            <i class="fas fa-camera"></i>
+        <!-- Profile Photo Section Skeleton -->
+        <div class="skeleton-section">
+          <div class="skeleton-line full" style="height: 20px; margin-bottom: 16px;"></div>
+          <div class="skeleton-photo-container">
+            <div class="skeleton-photo"></div>
+            <div class="skeleton-line short" style="margin-top: 12px;"></div>
           </div>
         </div>
-        <input type="file" id="photo-upload" accept="image/*" style="display:none" />
-        <button id="upload-btn" class="btn btn-primary">
-          <i class="fas fa-cloud-upload-alt"></i> Change Photo
-        </button>
-        <div id="upload-status" class="upload-status"></div>
+
+        <!-- Form Fields Skeleton -->
+        <div class="skeleton-section">
+          <div class="skeleton-line full" style="height: 16px; margin-bottom: 8px;"></div>
+          <div class="skeleton-input"></div>
+        </div>
+
+        <div class="skeleton-section">
+          <div class="skeleton-line full" style="height: 16px; margin-bottom: 8px;"></div>
+          <div class="skeleton-input"></div>
+        </div>
+
+        <div class="skeleton-section">
+          <div class="skeleton-line full" style="height: 16px; margin-bottom: 8px;"></div>
+          <div class="skeleton-textarea"></div>
+        </div>
+
+        <!-- Two Column Grid Skeleton -->
+        <div class="skeleton-grid">
+          <div class="skeleton-grid-item">
+            <div class="skeleton-line full" style="height: 16px; margin-bottom: 8px;"></div>
+            <div class="skeleton-input"></div>
+          </div>
+          <div class="skeleton-grid-item">
+            <div class="skeleton-line full" style="height: 16px; margin-bottom: 8px;"></div>
+            <div class="skeleton-input"></div>
+          </div>
+        </div>
+
+        <!-- Buttons Skeleton -->
+        <div class="skeleton-buttons">
+          <div class="skeleton-button"></div>
+          <div class="skeleton-button"></div>
+        </div>
       </div>
 
-      <!-- Profile Fields -->
-      <form id="profile-form">
-        <div class="profile-field">
-            <label><i class="fas fa-envelope"></i> Email:</label>
+      <!-- Actual Profile Content (hidden during loading) -->
+      <div id="profile-content" class="profile-content">
+        <h1>
+          <i class="fas fa-user-circle" aria-hidden="true"></i>
+          Customer Profile
+        </h1>
+
+        <!-- Profile Photo Section -->
+        <section class="photo-section" aria-label="Profile photo">
+          <div class="profile-pic-container">
+            <img
+              src="assets/profile-placeholder.png"
+              id="profile-photo"
+              class="profile-pic"
+              alt="Profile photo" />
+            <button
+              type="button"
+              class="upload-overlay"
+              id="upload-overlay"
+              aria-label="Change profile photo">
+              <i class="fas fa-camera" aria-hidden="true"></i>
+            </button>
+          </div>
+
+          <input type="file" id="photo-upload" accept="image/*" style="display:none" />
+
+          <button id="upload-btn" class="btn btn-primary" type="button">
+            <i class="fas fa-cloud-upload-alt" aria-hidden="true"></i>
+            Change Photo
+          </button>
+          <div id="upload-status" class="upload-status" role="status"></div>
+        </section>
+
+        <!-- Profile Form -->
+        <form id="profile-form" novalidate>
+          <div class="profile-field">
+            <label>
+              <i class="fas fa-envelope" aria-hidden="true"></i>
+              Email:
+            </label>
             <p id="user-email" class="read-only"></p>
-        </div>
-
-        <div class="profile-field">
-          <label for="user-name"><i class="fas fa-user"></i> Full Name:</label>
-          <input type="text" id="user-name" disabled />
-        </div>
-
-        <div class="profile-field">
-          <label for="user-phone"><i class="fas fa-phone"></i> Phone:</label>
-          <input type="tel" id="user-phone" disabled />
-        </div>
-
-        <div class="profile-field">
-          <label for="user-location"><i class="fas fa-map-marker-alt"></i> Location:</label>
-          <input type="text" id="user-location" disabled />
-        </div>
-
-        <div class="form-row">
-          <div class="profile-field">
-            <label for="user-gender"><i class="fas fa-venus-mars"></i> Gender:</label>
-            <select id="user-gender" disabled>
-              <option value="">Select</option>
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-              <option value="Other">Other</option>
-              <option value="Prefer not to say">Prefer not to say</option>
-            </select>
           </div>
 
           <div class="profile-field">
-            <label for="user-age"><i class="fas fa-birthday-cake"></i> Age:</label>
-            <input type="number" id="user-age" min="18" max="100" disabled />
+            <label for="user-name">
+              <i class="fas fa-user" aria-hidden="true"></i>
+              Full Name:
+            </label>
+            <input
+              type="text"
+              id="user-name"
+              name="user-name"
+              autocomplete="name"
+              disabled />
           </div>
-        </div>
 
-        <!-- Profile Actions -->
-        <div class="profile-actions">
-          <button type="button" id="edit-profile" class="btn btn-secondary">
-            <i class="fas fa-edit"></i> Edit Profile
-          </button>
-          <button type="submit" id="save-profile" class="btn btn-primary" style="display:none;">
-            <i class="fas fa-save"></i> Save Changes
-          </button>
-          <button type="button" id="change-password" class="btn btn-warning">
-            <i class="fas fa-key"></i> Change Password
-          </button>
-        </div>
-        
-        <div id="profile-update-message" class="status-message"></div>
-      </form>
-
-      <!-- Password Change Section -->
-      <div id="password-change-box" class="password-change-box" style="display:none;">
-        <h3><i class="fas fa-lock"></i> Change Password</h3>
-        
-        <div class="profile-field">
-          <label for="current-password">Current Password:</label>
-          <div class="password-input">
-            <input type="password" id="current-password" />
-            <i class="fas fa-eye toggle-password"></i>
+          <div class="profile-field">
+            <label for="user-phone">
+              <i class="fas fa-phone" aria-hidden="true"></i>
+              Phone:
+            </label>
+            <input
+              type="tel"
+              id="user-phone"
+              name="user-phone"
+              autocomplete="tel"
+              placeholder="+91XXXXXXXXXX"
+              disabled />
           </div>
-        </div>
-        
-        <div class="profile-field">
-          <label for="new-password">New Password:</label>
-          <div class="password-input">
-            <input type="password" id="new-password" />
-            <i class="fas fa-eye toggle-password"></i>
+
+          <div class="profile-field">
+            <label for="user-address">
+              <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
+              Delivery Address:
+            </label>
+            <textarea
+              id="user-address"
+              name="user-address"
+              autocomplete="street-address"
+              placeholder="Enter your complete delivery address"
+              disabled
+              rows="3"></textarea>
           </div>
-          <small class="password-hint">Minimum 8 characters with at least one number</small>
-        </div>
 
-        <div class="profile-field">
-          <label for="confirm-password">Confirm New Password:</label>
-          <div class="password-input">
-            <input type="password" id="confirm-password" />
-            <i class="fas fa-eye toggle-password"></i>
+          <div class="form-row">
+            <div class="profile-field">
+              <label for="user-gender">
+                <i class="fas fa-venus-mars" aria-hidden="true"></i>
+                Gender:
+              </label>
+              <select id="user-gender" name="user-gender" disabled>
+                <option value="">Select</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+                <option value="Prefer not to say">Prefer not to say</option>
+              </select>
+            </div>
+
+            <div class="profile-field">
+              <label for="user-age">
+                <i class="fas fa-birthday-cake" aria-hidden="true"></i>
+                Age:
+              </label>
+              <input
+                type="number"
+                id="user-age"
+                name="user-age"
+                min="18"
+                max="100"
+                disabled />
+            </div>
           </div>
-        </div>
 
-        <div id="password-change-message" class="status-message"></div>
+          <!-- Profile Actions -->
+          <div class="profile-actions">
+            <button type="button" id="edit-profile" class="btn btn-secondary">
+              <i class="fas fa-edit" aria-hidden="true"></i>
+              Edit Profile
+            </button>
+            <button type="submit" id="save-profile" class="btn btn-primary" style="display:none;">
+              <i class="fas fa-save" aria-hidden="true"></i>
+              Save Changes
+            </button>
+            <button type="button" id="change-password" class="btn btn-warning">
+              <i class="fas fa-key" aria-hidden="true"></i>
+              Change Password
+            </button>
+          </div>
+          
+          <div id="profile-update-message" class="status-message" role="alert"></div>
+        </form>
 
-        <div class="form-actions">
-          <button type="button" id="submit-password-change" class="btn btn-danger">
-            <i class="fas fa-key"></i> Update Password
-          </button>
-          <button type="button" id="cancel-password-change" class="btn btn-secondary">
-            <i class="fas fa-times"></i> Cancel
-          </button>
-        </div>
+        <!-- Password Change Section -->
+        <section id="password-change-box" class="password-change-box" style="display:none;" aria-label="Change password">
+          <h3>
+            <i class="fas fa-lock" aria-hidden="true"></i>
+            Change Password
+          </h3>
+          
+          <div class="profile-field">
+            <label for="current-password">Current Password:</label>
+            <div class="password-input">
+              <input type="password" id="current-password" autocomplete="current-password" />
+              <i class="fas fa-eye toggle-password" aria-hidden="true"></i>
+            </div>
+          </div>
+          
+          <div class="profile-field">
+            <label for="new-password">New Password:</label>
+            <div class="password-input">
+              <input type="password" id="new-password" autocomplete="new-password" />
+              <i class="fas fa-eye toggle-password" aria-hidden="true"></i>
+            </div>
+            <small class="password-hint">
+              Minimum 8 characters with at least one number.
+            </small>
+          </div>
+
+          <div class="profile-field">
+            <label for="confirm-password">Confirm New Password:</label>
+            <div class="password-input">
+              <input type="password" id="confirm-password" autocomplete="new-password" />
+              <i class="fas fa-eye toggle-password" aria-hidden="true"></i>
+            </div>
+          </div>
+
+          <div id="password-change-message" class="status-message" role="alert"></div>
+
+          <div class="form-actions">
+            <button type="button" id="submit-password-change" class="btn btn-danger">
+              <i class="fas fa-key" aria-hidden="true"></i>
+              Update Password
+            </button>
+            <button type="button" id="cancel-password-change" class="btn btn-secondary">
+              <i class="fas fa-times" aria-hidden="true"></i>
+              Cancel
+            </button>
+          </div>
+        </section>
       </div>
-    </div>
+    </section>
   </main>
 
+  <!-- Toast Container -->
+  <div id="toast-container" aria-live="polite" aria-atomic="true"></div>
+
   <!-- Scripts -->
-<script type="module" src="js/customer-profile.js"></script>
+  <script type="module" src="js/customer-profile.js"></script>
+  <script type="module" src="js/customer-darkmode.js"></script>
 </body>
 </html>

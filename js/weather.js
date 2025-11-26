@@ -69,7 +69,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await response.json();
             displaySuggestions(data);
         } catch (error) {
-            console.error("Autocomplete error:", error);
             suggestionBox.style.display = "none";
         }
     }
@@ -132,34 +131,53 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function displayWeather(weatherData) {
-        const dailyForecast = weatherData.list.filter(forecast => 
-            forecast.dt_txt.includes("12:00:00")
-        );
+function displayWeather(weatherData) {
+    const forecasts = weatherData.list;
+    const groupedByDay = {};
 
-        const weatherHTML = dailyForecast.map(day => {
-            const date = new Date(day.dt * 1000).toLocaleDateString("en-US", {
-                weekday: 'long',
-                month: 'short',
-                day: 'numeric'
-            });
-            
-            return `
-                <div class="weather-card">
-                    <h3>${date}</h3>
-                    <img src="https://openweathermap.org/img/wn/${day.weather[0].icon}@2x.png" 
-                         alt="${day.weather[0].description}">
-                    <p>${Math.round(day.main.temp)}°C</p>
-                    <p>${day.weather[0].main}</p>
-                    <p>Humidity: ${day.main.humidity}%</p>
-                </div>
-            `;
-        }).join('');
+    forecasts.forEach(entry => {
+        const date = entry.dt_txt.split(' ')[0];
+        if (!groupedByDay[date]) {
+            groupedByDay[date] = [];
+        }
+        groupedByDay[date].push(entry);
+    });
 
-        document.getElementById("weatherData").innerHTML = `
-            <div class="weather-cards">${weatherHTML}</div>
-        `;
+    const today = new Date().toISOString().split('T')[0];
+    const dailyForecast = [];
+
+    for (const [date, entries] of Object.entries(groupedByDay)) {
+        // Always include today, even if it’s later than noon
+        const ideal = entries.find(e => e.dt_txt.includes("12:00:00")) || entries[Math.floor(entries.length / 2)];
+        if (ideal) {
+            dailyForecast.push(ideal);
+        }
     }
+
+    const weatherHTML = dailyForecast.map(day => {
+        const date = new Date(day.dt * 1000).toLocaleDateString("en-US", {
+            weekday: 'long',
+            month: 'short',
+            day: 'numeric'
+        });
+
+        return `
+            <div class="weather-card">
+                <h3>${date}</h3>
+                <img src="https://openweathermap.org/img/wn/${day.weather[0].icon}@2x.png" 
+                     alt="${day.weather[0].description}">
+                <p>${Math.round(day.main.temp)}°C</p>
+                <p>${day.weather[0].main}</p>
+                <p>Humidity: ${day.main.humidity}%</p>
+            </div>
+        `;
+    }).join('');
+
+    document.getElementById("weatherData").innerHTML = `
+        <div class="weather-cards">${weatherHTML}</div>
+    `;
+}
+
 
     function debounce(func, wait) {
         let timeout;

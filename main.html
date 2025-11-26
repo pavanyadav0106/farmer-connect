@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>FarmerConnect</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/social.css">
+</head>
+<body>
+    <!-- Splash Screen -->
+    <div id="splashScreen">
+        <div class="splash-bg-layer"></div>
+        <div class="splash-bg-layer2"></div>
+
+        <div class="splash-content">
+            <img src="assets/logo.png" class="splash-logo" alt="Farmer Connect Logo" 
+                 onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTMwIiBoZWlnaHQ9IjEzMCIgdmlld0JveD0iMCAwIDEzMCAxMzAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMzAiIGhlaWdodD0iMTMwIiByeD0iNjUiIGZpbGw9IiM0Q0FGNTAiLz4KPHBhdGggZD0iTTY1IDM1TDUwIDYwSDM1TDY1IDMwTDk1IDYwSDgwTDY1IDM1WiIgZmlsbD0id2hpdGUiLz4KPHBhdGggZD0iTTUwIDcwVjEwMEg4MFY3MEg1MFoiIGZpbGw9IndoaXRlIi8+Cjwvc3ZnPgo='">
+            <h1 class="splash-title">Farmer Connect</h1>
+            <p class="splash-tagline">Empowering Farmers. Enriching Lives.</p>
+            <div class="progress-container">
+                <div class="progress-bar"></div>
+            </div>
+        </div>
+    </div>
+
+    
+    <!-- Main Content (Hidden until splash screen is gone) -->
+    <div class="main-content" id="mainContent">
+        <!-- Dark Mode Toggle -->
+        <button class="dark-mode-toggle" id="darkModeToggle" aria-label="Toggle dark mode">
+            <i class="fas fa-moon"></i>
+        </button>
+
+        <header>
+            <div class="container header-content">
+                <div class="logo">
+                    <span>🌾 FARMER CONNECT</span>
+                </div>
+                
+                <button class="mobile-menu-btn" aria-label="Toggle menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+                
+                <nav>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#testimonials">Testimonials</a></li>
+                        <li><a href="#security">Security</a></li>
+                        <li><a href="index.html" class="btn">Get Started</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+
+        <section class="hero" id="home">
+            <div class="container hero-content">
+                <h1 class="slide-up">Connecting Farmers, Building Trust</h1>
+                <p class="slide-up">Join thousands of farmers who are transforming agriculture through secure digital transactions and community support.</p>
+                <a href="index.html" class="btn slide-up">Get Started</a>
+            </div>
+        </section>
+
+        <!-- HOW IT WORKS SECTION -->
+<section class="how-it-works" id="howItWorks">
+    <div class="container">
+        <div class="section-title">
+            <h2 class="fade-in">How It Works</h2>
+            <p class="fade-in" style="color: var(--gray); margin-top: 8px;">4 simple steps to start earning digitally</p>
+        </div>
+
+        <div class="workflow-steps">
+            <div class="step fade-in">
+                <i class="fas fa-user-plus"></i>
+                <h3>1. Create Your Account</h3>
+                <p>Sign up as a Farmer or Customer with OTP verification — 100% secure onboarding.</p>
+            </div>
+
+            <div class="step fade-in">
+                <i class="fas fa-leaf"></i>
+                <h3>2. List or Browse Crops</h3>
+                <p>Farmers add crop stock, customers browse products with filters and search.</p>
+            </div>
+
+            <div class="step fade-in">
+                <i class="fas fa-shopping-cart"></i>
+                <h3>3. Place and Receive Orders</h3>
+                <p>Customers order instantly. Farmers get real-time notifications and order tracking.</p>
+            </div>
+
+                    <div class="step fade-in">
+            <i class="fas fa-indian-rupee-sign"></i>
+            <h3>4. Secure Payment & Delivery</h3>
+            <p>Every transaction is protected — payment settlement only after successful delivery.</p>
+        </div>
+
+        </div>
+    </div>
+</section>
+
+        <main class="main">
+            <!-- Features Section -->
+            <section id="features">
+                <div class="container">
+                    <div class="section-title">
+                        <h2 class="fade-in">Why Farmers Choose Us</h2>
+                    </div>
+
+                    <div class="features-grid">
+                        <!-- 1 -->
+                        <div class="feature-card fade-in">
+                            <i class="fas fa-handshake"></i>
+                            <h3>Trusted Transactions</h3>
+                            <p>Secure payments with verified buyers and sellers. No more worries about payment defaults.</p>
+                        </div>
+
+                        <!-- 2 -->
+                        <div class="feature-card fade-in weather-feature">
+                            <i class="fas fa-cloud-sun"></i>
+                            <h3>Live Weather Updates</h3>
+                            <p>Real-time weather forecasts and alerts to help you plan your farming activities effectively.</p>
+                            <div class="weather-widget">
+                                <div id="weatherPlaceholder">Loading weather data...</div>
+                            </div>
+                        </div>
+
+                        <!-- 3 (AI Badge added) -->
+                        <div class="feature-card fade-in">
+                            <i class="fas fa-seedling"></i>
+                            <h3>Crop Recommendations</h3>
+                            <p>AI-based suggestions on the best crops to grow depending on climate, soil, and profitability.</p>
+                            <span style="
+                                background: #7e2cff; 
+                                color: white;
+                                padding: 4px 10px; 
+                                border-radius: 14px;
+                                font-size: 0.75rem;
+                                font-weight: 700;
+                                display: inline-block;
+                                margin-top: 10px;">
+                                AI Powered
+                            </span>
+                        </div>
+
+                        <!-- 4 -->
+                        <div class="feature-card fade-in">
+                            <i class="fas fa-chart-line"></i>
+                            <h3>Real-Time Market Prices</h3>
+                            <p>Stay updated with the latest market prices from verified government sources.</p>
+                        </div>
+
+                        <!-- 5 -->
+                        <div class="feature-card fade-in">
+                            <i class="fas fa-cart-arrow-down"></i>
+                            <h3>Direct Buyer Orders</h3>
+                            <p>Receive customer orders instantly and manage them with transparent, real-time updates.</p>
+                        </div>
+
+                        <!-- 6 -->
+                        <div class="feature-card fade-in">
+                            <i class="fas fa-shield-alt"></i>
+                            <h3>Bank-Level Security</h3>
+                            <p>Your transactions and data are protected with advanced encryption technology.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Testimonials Section with Indian Farmers -->
+            <section class="testimonials" id="testimonials">
+                <div class="container">
+                    <div class="section-title">
+                        <h2 class="fade-in">What Our Farmers Say</h2>
+                        <p class="fade-in" style="color: var(--gray); margin-top: 10px;">Real stories from real Indian farmers</p>
+                    </div>
+
+                    <div class="testimonial-slider">
+                        <button class="slider-btn prev" aria-label="Previous testimonial">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        
+                        <div class="testimonial-track">
+                            <!-- CARD 1 - Wheat Farmer from Punjab -->
+                            <div class="testimonial-card fade-in">
+                                <div class="testimonial-content">
+                                    <p>"FarmConnect ने मेरी जिंदगी बदल दी। पहले बिचौलिये 30% कमीशन लेते थे, अब सीधे ग्राहकों से जुड़कर मुझे बेहतर दाम मिल रहे हैं!"</p>
+                                    <p>"FarmConnect changed my life. Middlemen used to take 30% commission, now I get better prices by connecting directly with customers!"</p>
+                                </div>
+                                <div class="testimonial-author">
+                                    <div class="author-avatar">
+                                        <img src="https://www.mckinsey.com/~/media/mckinsey/industries/agriculture/our%20insights/indian%20farmers%20optimism%20is%20driving%20interest%20in%20new%20products/mck248245-1536x1536.jpg"
+                                 alt="Gurpreet Singh">
+                                    </div>
+                                    <div class="author-info">
+                                        <h4>Gurpreet Singh</h4>
+                                        <p>Wheat Farmer, Punjab</p>
+                                        <div class="stars">
+                                            ★★★★★
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- CARD 2 - Vegetable Farmer from Maharashtra -->
+                            <div class="testimonial-card fade-in">
+                                <div class="testimonial-content">
+                                    <p>"मौसम अपडेट ने मेरी फसल बचा ली। बारिश का अलर्ट मिलते ही मैंने समय पर फसल काट ली, वरना सब खराब हो जाता।"</p>
+                                    <p>"Weather updates saved my crop. I harvested just in time after getting rain alerts, otherwise everything would have been ruined."</p>
+                                </div>
+                                <div class="testimonial-author">
+                                    <div class="author-avatar">
+                                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS_tfbZ484Ks69qSmwTaIpZequNq0cOhvq79w&s"
+                                 alt="Rajendra Patil">
+
+                                    </div>
+                                    <div class="author-info">
+                                        <h4>Rajendra Patil</h4>
+                                        <p>Vegetable Farmer, Maharashtra</p>
+                                        <div class="stars">
+                                            ★★★★★
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- CARD 3 - Rice Farmer from West Bengal -->
+                            <div class="testimonial-card fade-in">
+                                <div class="testimonial-content">
+                                    <p>"AI क्रॉप सुझावों ने मेरी आमदनी दोगुनी कर दी। मुझे सही समय पर सही फसल उगाने का सुझाव मिला।"</p>
+                                    <p>"AI crop recommendations doubled my income. I got suggestions for the right crop at the right time."</p>
+                                </div>
+                                <div class="testimonial-author">
+                                    <div class="author-avatar">
+                                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQv3xAAjtENXAtjVcrYbuBhs44Tq-4IbRHqnQ&s"
+                                             alt="Amitava Das">
+                                    </div>
+                                    <div class="author-info">
+                                        <h4>Amitava Das</h4>
+                                        <p>Rice Farmer, West Bengal</p>
+                                        <div class="stars">
+                                            ★★★★★
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- CARD 4 - Woman Farmer from Tamil Nadu -->
+                            <div class="testimonial-card fade-in">
+                                <div class="testimonial-content">
+                                    <p>"एक महिला किसान के रूप में, मुझे हमेशा भुगतान की सुरक्षा की चिंता रहती थी। FarmConnect के साथ मेरा पैसा पूरी तरह सुरक्षित है।"</p>
+                                    <p>"As a woman farmer, I was always worried about payment security. With FarmConnect, my money is completely safe."</p>
+                                </div>
+                                <div class="testimonial-author">
+                                    <div class="author-avatar">
+                                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRGvkUMdfCitULrG2Q4J21d-Td8fVe4FSPmXw&s"
+                                             alt="Lakshmi Devi">
+                                    </div>
+                                    <div class="author-info">
+                                        <h4>Lakshmi Devi</h4>
+                                        <p>Floriculture Farmer, Tamil Nadu</p>
+                                        <div class="stars">
+                                            ★★★★★
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- CARD 5 - Organic Farmer from Kerala -->
+                            <div class="testimonial-card fade-in">
+                                <div class="testimonial-content">
+                                    <p>"मार्केट प्राइस फीचर ने मुझे सही समय पर सही दाम पर अपना ऑर्गेनिक उत्पाद बेचने में मदद की।"</p>
+                                    <p>"The market price feature helped me sell my organic products at the right time for the right price."</p>
+                                </div>
+                                <div class="testimonial-author">
+                                    <div class="author-avatar">
+                                                                        
+                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSafPYix1IljYPwqB3m9cpmPz_0e3csSVaTnA&s"
+                                                                alt="Priya Nair">
+                                    </div>
+                                    <div class="author-info">
+                                        <h4>Priya Nair</h4>
+                                        <p>Organic Farmer, Kerala</p>
+                                        <div class="stars">
+                                            ★★★★★
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- CARD 6 - Dairy Farmer from Gujarat -->
+                            <div class="testimonial-card fade-in">
+                                <div class="testimonial-content">
+                                    <p>"उपकरण शेयरिंग से मेरी लागत 60% कम हुई। पड़ोस के किसानों के साथ ट्रैक्टर और मशीनें शेयर कर रहा हूं।"</p>
+                                    <p>"Equipment sharing reduced my costs by 60%. I'm sharing tractors and machinery with neighboring farmers."</p>
+                                </div>
+                                <div class="testimonial-author">
+                                    <div class="author-avatar">                                      
+                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQ9KSArpjfrWzqacUp1YMdWFfBQ9TjcXXH0Q&s"
+                                                                    alt="Vikram Patel">
+                                    </div>
+                                    <div class="author-info">
+                                        <h4>Vikram Patel</h4>
+                                        <p>Dairy & Crop Farmer, Gujarat</p>
+                                        <div class="stars">
+                                            ★★★★★
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button class="slider-btn next" aria-label="Next testimonial">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+
+                    <!-- Progress Dots -->
+                    <div class="slider-dots">
+                        <span class="dot active" data-index="0"></span>
+                        <span class="dot" data-index="1"></span>
+                        <span class="dot" data-index="2"></span>
+                        <span class="dot" data-index="3"></span>
+                        <span class="dot" data-index="4"></span>
+                        <span class="dot" data-index="5"></span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Security Section -->
+            <section class="security-section" id="security">
+                <div class="container">
+                    <div class="section-title">
+                        <h2 class="fade-in">Your Security Is Our Priority</h2>
+                    </div>
+                    <p class="fade-in" style="max-width: 800px; margin: 0 auto 2rem;">We implement the highest security standards to protect your transactions and personal information.</p>
+                    
+                    <div class="security-badges">
+                        <div class="badge fade-in">
+                            <i class="fas fa-lock"></i>
+                            <h3>End-to-End Encryption</h3>
+                        </div>
+                        <div class="badge fade-in">
+                            <i class="fas fa-key"></i>
+                            <h3>OTP Verification</h3>
+                        </div>
+                        <div class="badge fade-in">
+                            <i class="fas fa-shield-virus"></i>
+                            <h3>Fraud Protection</h3>
+                        </div>
+                        <div class="badge fade-in">
+                            <i class="fas fa-user-shield"></i>
+                            <h3>Verified Users</h3>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CTA Section -->
+            <section class="cta-section" id="download">
+                <div class="container cta-content">
+                    <h2 class="fade-in">Ready to Transform Your Farming Business?</h2>
+                    <p class="fade-in">Join thousands of farmers who are growing their income with secure, transparent transactions.</p>
+                    <div class="app-buttons fade-in">
+                        <a href="index.html" class="btn btn-dark">Join as Farmer</a>
+                        <a href="index.html" class="btn btn-dark">Join as Customer</a>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-column">
+                        <h3>FarmConnect</h3>
+                        <p>Empowering farmers with secure digital transactions and community support.</p>
+                        <div class="social-links">
+                            <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        </div>
+                    </div>
+                    <div class="footer-column">
+                        <h3>Quick Links</h3>
+                        <ul>
+                            <li><a href="#home">Home</a></li>
+                            <li><a href="#features">Features</a></li>
+                            <li><a href="#testimonials">Testimonials</a></li>
+                            <li><a href="#security">Security</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h3>Support</h3>
+                        <ul>
+                            <li><a href="contact.html">Help Center</a></li>
+                            <li><a href="faq.html">Safety Tips</a></li>
+                            <li><a href="contact.html">Contact Us</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="copyright">
+                    <p>&copy; 2025 FarmerConnect. All rights reserved.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+<script src="js/social.js"></script>
+</body>
+</html>

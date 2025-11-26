@@ -4,11 +4,18 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Contact Us - Farmer Connect</title>
-  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
-<link rel="manifest" href="assets/site.webmanifest">
-<link rel="shortcut icon" href="assets/favicon.ico" type="image/x-icon">
+  <!-- Favicons -->
+<!-- Favicons (Updated) -->
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/android-chrome-192x192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="/assets/android-chrome-512x512.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+<link rel="manifest" href="/assets/site.webmanifest">
+<link rel="stylesheet" href="css/darkmode.css">
+
+
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
   /* Modern Contact Section Styling */
@@ -349,7 +356,61 @@
 .brand-name {
   user-select: none;
 }
+/* Responsive Enhancements */
+@media (max-width: 768px) {
+  .contact-container {
+    border-radius: 0;
+    box-shadow: none;
+    margin: 0 1rem;
+  }
 
+  .contact-header h2 {
+    font-size: 2rem;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+    padding: 0 1rem;
+  }
+
+  .dual-inputs {
+    grid-template-columns: 1fr;
+  }
+
+  .contact-content {
+    padding: 2rem 1rem;
+  }
+
+  .top-nav {
+    padding: 12px 16px;
+    font-size: 16px;
+  }
+
+  .logo-text {
+    font-size: 20px;
+  }
+
+  .center {
+    font-size: 1rem;
+  }
+
+  .back-btn {
+    padding: 5px 8px;
+    font-size: 16px;
+  }
+
+  .submit-btn {
+    flex-direction: column;
+    gap: 0.3rem;
+    padding: 0.8rem;
+    font-size: 0.95rem;
+  }
+
+  .success-message {
+    padding: 2rem 1rem;
+    font-size: 0.95rem;
+  }
+}
 
 
 </style>
@@ -488,6 +549,7 @@
 });
 
   </script>
+<script src="js/darkmode.js"></script>
 
 </body>
 </html>

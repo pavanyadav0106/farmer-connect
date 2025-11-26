@@ -3,11 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <title>Farmer Connect - Login</title>
-  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
-<link rel="manifest" href="assets/site.webmanifest">
-<link rel="shortcut icon" href="assets/favicon.ico" type="image/x-icon">
+ <!-- Favicons (Updated) -->
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/android-chrome-192x192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="/assets/android-chrome-512x512.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+<!-- Preload the logo to prevent flash -->
+<link rel="preload" href="assets/logo.png" as="image">
+<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+<link rel="manifest" href="/assets/site.webmanifest">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   
   <!-- ✅ Google Site Verification Tag -->
@@ -15,8 +20,14 @@
 
   <link rel="stylesheet" href="css/index.css" />
 </head>
-<body>
+  <body>
   <div class="container" id="authContainer">
+    <div class="brand-logo">
+  <img src="assets/logo.png" alt="Farmer Connect Logo" />
+  <h1>Farmer Connect</h1>
+  <p class="tagline">Connecting Farmers & Customers</p>
+</div>
+
     <div class="lang-selector">
       <select id="languageSelect">
         <option value="en">English</option>
@@ -31,5 +42,6 @@
   </footer>
 
   <script type="module" src="js/index.js"></script>
+  <script src="js/darkmode.js"></script>
 </body>
 </html>

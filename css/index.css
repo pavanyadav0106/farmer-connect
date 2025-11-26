@@ -16,15 +16,17 @@
 }
 
 body {
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: flex-start;
   align-items: center;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background: url('https://i.postimg.cc/PqFSDVz5/dd7f6d36-b55a-4d10-abe4-41dbc8cb37fb.webp') no-repeat center center/cover;
   position: relative;
   color: var(--text-color);
   padding-top: 40px;
+  padding: 20px;
 }
 
 body::before {
@@ -39,12 +41,20 @@ body::before {
   z-index: -1;
 }
 html, body {
-  height: 100%;
   margin: 0;
   padding: 0;
+  min-height: 100%;
   display: flex;
   flex-direction: column;
+  height: 100%;
 }
+html {
+  scroll-behavior: smooth;
+}
+input, button, select {
+  min-height: 44px;
+}
+
 
 .main-wrapper {
   flex: 1;
@@ -54,23 +64,17 @@ html, body {
   position: relative;
 }
 
-    footer {
-      background-color: rgba(0, 0, 0, 0.6);
-      color: #eee;
-      text-align: center;
-      padding: 12px 20px;
-      font-size: 14px;
-      backdrop-filter: blur(6px);
-      width: 100%;
-      bottom: 0;
-      margin-top: auto;
-    }
-    footer {
-  background: linear-gradient(135deg, 
-              rgba(30, 122, 30, 0.9) 0%, 
-              rgba(26, 92, 140, 0.9) 100%);
+footer {
+  background: linear-gradient(135deg, rgba(30, 122, 30, 0.9), rgba(26, 92, 140, 0.9));
   color: white;
+  text-align: center;
+  padding: 12px 20px;
+  font-size: 14px;
+  backdrop-filter: blur(6px);
+  width: 100%;
+  margin-top: auto;
 }
+
 
 .container {
   background: var(--background-light);
@@ -110,7 +114,7 @@ select {
 }
 
 .app-title {
-  margin-top: 60px;
+margin-top: 5vh;
   color: var(--primary-color);
   font-size: 28px;
   font-weight: 600;
@@ -399,16 +403,20 @@ input:focus {
 }
 
 /* Responsive adjustments */
-@media screen and (max-width: 480px) {
-  .container {
-    width: 90%;
-    padding: 25px 20px 40px;
-  }
+@media (max-width: 768px) {
+  /* Medium screens */
+  .container { width: 95%; padding: 20px; }
+  .app-title { font-size: 22px; }
+  input, select { font-size: 14px; padding: 10px 12px; }
+  .button, .social-btn { font-size: 14px; padding: 10px; }
+}
 
-  .app-title {
-    margin-top: 50px;
-    font-size: 24px;
-  }
+@media (max-width: 480px) {
+  /* Small screens */
+  .container { width: 90%; padding: 25px 20px 40px; }
+  .app-title { margin-top: 5vh; font-size: 24px; }
+  .lang-selector { top: 10px; right: 10px; transform: scale(0.9); }
+  .toggle-password { font-size: 20px; }
 }
 
 /* Select Dropdown Styles */
@@ -429,4 +437,41 @@ input:focus,
 select:focus {
   outline: 2px solid var(--primary-color);
   outline-offset: 2px;
+}
+/* Brand Logo Styles */
+.brand-logo {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.brand-logo img {
+  max-width: 120px;
+  height: auto;
+  display: block;
+  margin: 0 auto 10px;
+}
+
+.brand-logo h1 {
+  font-size: 24px;
+  margin-bottom: 5px;
+  color: var(--primary-color);
+}
+
+.brand-logo .tagline {
+  font-size: 14px;
+  color: var(--light-text);
+  margin-bottom: 10px;
+}
+/* Loading state for logo */
+.brand-logo img {
+  max-width: 120px;
+  height: auto;
+  display: block;
+  margin: 0 auto 10px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.brand-logo img.loaded {
+  opacity: 1;
 }

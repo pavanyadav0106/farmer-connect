@@ -1,20 +1,22 @@
-import { db, auth } from '../config.js';
+// order.js - Complete Version with PDF Download and Print
 import { 
-  collection, 
-  query, 
-  where, 
-  onSnapshot, 
-  doc, 
+  db, 
+  auth, 
+  onAuthStateChanged,
+  collection,
+  query,
+  where,
+  onSnapshot,
+  doc,
   updateDoc,
   getDocs,
-  runTransaction,
   serverTimestamp,
   getDoc,
-  addDoc
-} from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+  orderBy
+} from '../config.js';
 
 document.addEventListener('DOMContentLoaded', function() {
+
     // DOM Elements
     const ordersList = document.getElementById('ordersList');
     const statusFilter = document.getElementById('statusFilter');
@@ -39,6 +41,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const emptyState = document.getElementById('emptyState');
     const resetFilters = document.getElementById('resetFilters');
     const dateFilter = document.getElementById('dateFilter');
+    const printReceiptBtn = document.getElementById('printReceiptBtn');
+    const downloadReceiptBtn = document.getElementById('downloadReceiptBtn');
 
     // State
     let orders = [];
@@ -58,82 +62,94 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     async function setupAuthListener() {
+        
         onAuthStateChanged(auth, async (user) => {
+            
             if (user) {
                 await fetchOrders(user.uid);
                 setupRealTimeListener(user.uid);
             } else {
-                if (unsubscribeOrders) unsubscribeOrders();
+                console.log('No user authenticated');
+                if (unsubscribeOrders) {
+                    unsubscribeOrders();
+                }
                 window.location.href = "login.html";
             }
         });
     }
 
+    async function fetchOrders(farmerId) {
+        try {
+            showLoadingState();
 
-async function updateOrderWithFarmerIds(orderData, orderId) {
-    const farmerIds = [...new Set(orderData.items.map(item => item.farmerId))];
-    await setDoc(doc(db, 'orders', orderId), {
-        ...orderData,
-        farmerIds
-    });
-}
+            const ordersCollection = collection(db, 'orders');
+            const q = query(
+                ordersCollection,
+                where('farmerIds', 'array-contains', farmerId),
+                orderBy('createdAt', 'desc')
+            );
 
-async function fetchOrders(farmerId) {
-    try {
-        showLoadingState();
+            const querySnapshot = await getDocs(q);
+            
+            orders = querySnapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data(),
+                createdAt: doc.data().createdAt || serverTimestamp()
+            }));
 
-        const q = query(
-            collection(db, 'orders'),
-            where('farmerIds', 'array-contains', farmerId)
-        );
+            filterOrders();
 
-        const querySnapshot = await getDocs(q);
-        orders = querySnapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data(),
-            createdAt: doc.data().createdAt || serverTimestamp()
-        }));
-
-        orders.sort((a, b) => b.createdAt?.toDate() - a.createdAt?.toDate());
-
-        filterOrders();
-
-    } catch (error) {
-        console.error("Error loading orders:", error);
-        showToast('Failed to load orders', 'error');
+        } catch (error) {
+            console.error("Error loading orders:", error);
+            showToast('Failed to load orders: ' + error.message, 'error');
+        }
     }
-}
-
-
 
     function setupRealTimeListener(farmerId) {
-        const q = query(
-            collection(db, 'orders'),
-where('farmerIds', 'array-contains', farmerId)
-        );
-        
-        unsubscribeOrders = onSnapshot(q, (snapshot) => {
-            const updatedOrders = [];
-            snapshot.forEach(doc => {
-                updatedOrders.push({
-                    id: doc.id,
-                    ...doc.data(),
-                    createdAt: doc.data().createdAt || serverTimestamp()
-                });
-            });
+        try {
+            const ordersCollection = collection(db, 'orders');
+            const q = query(
+                ordersCollection,
+                where('farmerIds', 'array-contains', farmerId),
+                orderBy('createdAt', 'desc')
+            );
             
-            // Update orders and maintain sort order
-            orders = updatedOrders.sort((a, b) => b.createdAt?.toDate() - a.createdAt?.toDate());
-            filterOrders();
-            
-            // Check for new orders to show notifications
-            if (orders.length > filteredOrders.length) {
-                const newOrders = orders.filter(o => 
-                    !filteredOrders.some(fo => fo.id === o.id)
-                );
-                newOrders.forEach(order => showNewOrderNotification(order));
-            }
-        });
+            unsubscribeOrders = onSnapshot(q, 
+                (snapshot) => {
+                    const updatedOrders = [];
+                    snapshot.forEach(doc => {
+                        updatedOrders.push({
+                            id: doc.id,
+                            ...doc.data(),
+                            createdAt: doc.data().createdAt || serverTimestamp()
+                        });
+                    });
+                    
+                    orders = updatedOrders.sort((a, b) => {
+                        const dateA = a.createdAt?.toDate() || new Date(0);
+                        const dateB = b.createdAt?.toDate() || new Date(0);
+                        return dateB - dateA;
+                    });
+                    
+                    filterOrders();
+                    
+                    // Check for new orders to show notifications
+                    if (orders.length > filteredOrders.length) {
+                        const newOrders = orders.filter(o => 
+                            !filteredOrders.some(fo => fo.id === o.id)
+                        );
+                        newOrders.forEach(order => showNewOrderNotification(order));
+                    }
+                },
+                (error) => {
+                    console.error('Real-time listener error:', error);
+                    showToast('Error connecting to orders', 'error');
+                }
+            );
+        } catch (error) {
+            console.error('Error setting up real-time listener:', error);
+            showToast('Failed to setup real-time updates', 'error');
+        }
     }
 
     function renderOrders() {
@@ -152,23 +168,23 @@ where('farmerIds', 'array-contains', farmerId)
                 <td>#${order.id.slice(0,8)}</td>
                 <td>
                     <div class="customer-info">
-                        <div class="customer-name">${order.customerName}</div>
+                        <div class="customer-name">${order.customerName || 'N/A'}</div>
                         <div class="customer-phone">${order.customerPhone || 'Not provided'}</div>
                     </div>
                 </td>
                 <td>
-                    ${order.items.filter(i => i.farmerId === auth.currentUser.uid)
-                      .map(i => i.name)
-                      .join(', ')}
+                    ${order.items?.filter(i => i.farmerId === auth.currentUser?.uid)
+                      .map(i => i.name || 'Unknown Item')
+                      .join(', ') || 'No items'}
                 </td>
                 <td>
-                    ${order.items.filter(i => i.farmerId === auth.currentUser.uid)
-                      .map(i => `${i.quantity} ${i.unit || 'unit'}`)
-                      .join(', ')}
+                    ${order.items?.filter(i => i.farmerId === auth.currentUser?.uid)
+                      .map(i => `${i.quantity || 0} ${i.unit || 'unit'}`)
+                      .join(', ') || 'N/A'}
                 </td>
                 <td>₹${calculateFarmerTotal(order).toFixed(2)}</td>
                 <td>${formatDate(order.createdAt?.toDate())}</td>
-                <td><span class="status-badge ${order.status.toLowerCase()}">${order.status}</span></td>
+                <td><span class="status-badge ${(order.status || 'pending').toLowerCase()}">${order.status || 'pending'}</span></td>
                 <td>
                     <button class="btn-text view-details-btn" data-order-id="${order.id}">
                         <i class="fas fa-eye"></i> View
@@ -183,14 +199,19 @@ where('farmerIds', 'array-contains', farmerId)
     }
 
     function calculateFarmerTotal(order) {
+        if (!order.items) return 0;
+        
         return order.items
-            .filter(i => i.farmerId === auth.currentUser.uid)
-            .reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            .filter(i => i.farmerId === auth.currentUser?.uid)
+            .reduce((sum, item) => sum + ((item.price || 0) * (item.quantity || 0)), 0);
     }
 
     function showOrderDetails(orderId) {
         const order = orders.find(o => o.id === orderId);
-        if (!order) return;
+        if (!order) {
+            showToast('Order not found', 'error');
+            return;
+        }
 
         selectedOrderId = orderId;
         
@@ -208,7 +229,7 @@ where('farmerIds', 'array-contains', farmerId)
                     </div>
                     <div class="order-info">
                         <div class="order-info-label">Status</div>
-                        <div class="order-info-value"><span class="status-badge ${order.status.toLowerCase()}">${order.status}</span></div>
+                        <div class="order-info-value"><span class="status-badge ${(order.status || 'pending').toLowerCase()}">${order.status || 'pending'}</span></div>
                     </div>
                     <div class="order-info">
                         <div class="order-info-label">Payment Method</div>
@@ -224,7 +245,7 @@ where('farmerIds', 'array-contains', farmerId)
                     <h3>Customer Information</h3>
                     <div class="order-info">
                         <div class="order-info-label">Name</div>
-                        <div class="order-info-value">${order.customerName}</div>
+                        <div class="order-info-value">${order.customerName || 'N/A'}</div>
                     </div>
                     <div class="order-info">
                         <div class="order-info-label">Phone</div>
@@ -245,22 +266,28 @@ where('farmerIds', 'array-contains', farmerId)
                                 <th>Quantity</th>
                                 <th>Unit Price</th>
                                 <th>Total</th>
+                                <th>Stock Status</th>
                             </tr>
                         </thead>
                         <tbody>
-                            ${order.items.filter(i => i.farmerId === auth.currentUser.uid)
+                            ${(order.items || []).filter(i => i.farmerId === auth.currentUser?.uid)
                               .map(item => `
                                 <tr>
-                                    <td>${item.name}</td>
-                                    <td>${item.quantity} ${item.unit || 'unit'}</td>
-                                    <td>₹${item.price.toFixed(2)}</td>
-                                    <td>₹${(item.quantity * item.price).toFixed(2)}</td>
+                                    <td>${item.name || 'Unknown Item'}</td>
+                                    <td>${item.quantity || 0} ${item.unit || 'unit'}</td>
+                                    <td>₹${(item.price || 0).toFixed(2)}</td>
+                                    <td>₹${((item.quantity || 0) * (item.price || 0)).toFixed(2)}</td>
+                                    <td>
+                                        <span class="stock-status" id="stock-status-${item.id}">
+                                            <i class="fas fa-spinner fa-spin"></i> Checking...
+                                        </span>
+                                    </td>
                                 </tr>
                               `).join('')}
                         </tbody>
                         <tfoot>
                             <tr>
-                                <td colspan="3" class="text-right"><strong>Subtotal:</strong></td>
+                                <td colspan="4" class="text-right"><strong>Subtotal:</strong></td>
                                 <td>₹${calculateFarmerTotal(order).toFixed(2)}</td>
                             </tr>
                         </tfoot>
@@ -269,9 +296,79 @@ where('farmerIds', 'array-contains', farmerId)
             </div>
         `;
         
+        // Check stock for each item
+        checkStockForOrder(order);
+        
         updateActionButtons(order.status);
         orderModal.style.display = 'flex';
         document.body.style.overflow = 'hidden';
+        
+        // Fix for ARIA warning
+        orderModal.removeAttribute('aria-hidden');
+    }
+
+    async function checkStockForOrder(order) {
+        if (!order.items) return;
+        
+        for (const item of order.items.filter(i => i.farmerId === auth.currentUser?.uid)) {
+            const cropId = item.id;
+            
+            if (!cropId) {
+                updateStockStatus(item.id, 'error', 'No crop ID');
+                continue;
+            }
+            
+            try {
+                const cropRef = doc(db, 'products', cropId);
+                const cropDoc = await getDoc(cropRef);
+                
+                if (!cropDoc.exists()) {
+                    updateStockStatus(item.id, 'error', 'Crop not found');
+                    continue;
+                }
+                
+                const cropData = cropDoc.data();
+                const availableQuantity = cropData.quantity || 0;
+                const requiredQuantity = item.quantity || 0;
+                
+                if (availableQuantity >= requiredQuantity) {
+                    updateStockStatus(item.id, 'sufficient', `In stock (${availableQuantity})`);
+                } else if (availableQuantity > 0) {
+                    updateStockStatus(item.id, 'low', `Low stock (${availableQuantity}/${requiredQuantity})`);
+                } else {
+                    updateStockStatus(item.id, 'out-of-stock', 'Out of stock');
+                }
+            } catch (error) {
+                console.error('Error checking stock for crop:', cropId, error);
+                updateStockStatus(item.id, 'error', 'Check failed');
+            }
+        }
+    }
+
+    function updateStockStatus(itemId, status, message) {
+        const statusElement = document.getElementById(`stock-status-${itemId}`);
+        if (statusElement) {
+            statusElement.innerHTML = '';
+            statusElement.className = `stock-status ${status}`;
+            
+            let icon = '';
+            switch (status) {
+                case 'sufficient':
+                    icon = '<i class="fas fa-check-circle" style="color: green;"></i>';
+                    break;
+                case 'low':
+                    icon = '<i class="fas fa-exclamation-triangle" style="color: orange;"></i>';
+                    break;
+                case 'out-of-stock':
+                    icon = '<i class="fas fa-times-circle" style="color: red;"></i>';
+                    break;
+                case 'error':
+                    icon = '<i class="fas fa-question-circle" style="color: gray;"></i>';
+                    break;
+            }
+            
+            statusElement.innerHTML = `${icon} ${message}`;
+        }
     }
 
     async function updateOrderStatus(newStatus) {
@@ -289,28 +386,37 @@ where('farmerIds', 'array-contains', farmerId)
                 
                 const order = orderSnapshot.data();
                 
-                // Update stock for each item
-                for (const item of order.items.filter(i => i.farmerId === auth.currentUser.uid)) {
-                    const cropRef = doc(db, 'crops', item.cropId);
-                    await runTransaction(db, async (transaction) => {
-                        const cropDoc = await transaction.get(cropRef);
-                        if (!cropDoc.exists()) {
-                            throw new Error("Crop not found");
-                        }
+                // Update stock for each item using item.id as cropId
+                for (const item of (order.items || []).filter(i => i.farmerId === auth.currentUser?.uid)) {
+                    const cropId = item.id;
+                    
+                    if (!cropId) {
+                        console.log('No ID for item:', item.name);
+                        continue;
+                    }
+                    
+                    try {
+                        const cropRef = doc(db, 'products', cropId);
+                        const cropDoc = await getDoc(cropRef);
                         
-                        const newQuantity = cropDoc.data().quantity - item.quantity;
-                        if (newQuantity < 0) {
-                            throw new Error("Insufficient stock");
+                        if (cropDoc.exists()) {
+                            const cropData = cropDoc.data();
+                            const newQuantity = (cropData.quantity || 0) - (item.quantity || 0);
+                            
+                            await updateDoc(cropRef, {
+                                quantity: Math.max(0, newQuantity),
+                                status: newQuantity > 0 ? 'available' : 'sold',
+                                updatedAt: serverTimestamp()
+                            });
                         }
-                        
-                        transaction.update(cropRef, {
-                            quantity: newQuantity,
-                            status: newQuantity > 0 ? 'available' : 'sold'
-                        });
-                    });
+                    } catch (error) {
+                        console.error('Error updating stock for crop:', cropId, error);
+                        // Continue with other items
+                    }
                 }
             }
             
+            // Update order status
             await updateDoc(orderRef, {
                 status: newStatus,
                 updatedAt: serverTimestamp()
@@ -318,87 +424,10 @@ where('farmerIds', 'array-contains', farmerId)
             
             showToast(`Order status updated to ${newStatus}`, 'success');
             closeModal();
+            
         } catch (error) {
             console.error('Error updating order status:', error);
             showToast(`Failed to update status: ${error.message}`, 'error');
-        }
-    }
-
-    async function bulkUpdateStatus(newStatus) {
-        if (selectedOrders.size === 0) return;
-
-        try {
-            const batchPromises = [];
-            const insufficientStockOrders = [];
-            
-            for (const orderId of selectedOrders) {
-                const orderRef = doc(db, "orders", orderId);
-                
-                if (newStatus === 'accepted') {
-                    const orderSnapshot = await getDoc(orderRef);
-                    if (!orderSnapshot.exists()) continue;
-                    
-                    const order = orderSnapshot.data();
-                    
-                    try {
-                        // Verify stock for each item
-                        for (const item of order.items.filter(i => i.farmerId === auth.currentUser.uid)) {
-                            const cropRef = doc(db, 'crops', item.cropId);
-                            const cropDoc = await getDoc(cropRef);
-                            
-                            if (!cropDoc.exists()) {
-                                throw new Error("Crop not found");
-                            }
-                            
-                            const newQuantity = cropDoc.data().quantity - item.quantity;
-                            if (newQuantity < 0) {
-                                throw new Error("Insufficient stock");
-                            }
-                        }
-                        
-                        // If stock is sufficient, add to batch
-                        batchPromises.push(updateDoc(orderRef, {
-                            status: newStatus,
-                            updatedAt: serverTimestamp()
-                        }));
-                        
-                    } catch (error) {
-                        insufficientStockOrders.push({
-                            orderId,
-                            error: error.message
-                        });
-                        continue;
-                    }
-                } else {
-                    // For non-accepted statuses, just update
-                    batchPromises.push(updateDoc(orderRef, {
-                        status: newStatus,
-                        updatedAt: serverTimestamp()
-                    }));
-                }
-            }
-            
-            // Execute all updates
-            await Promise.all(batchPromises);
-            
-            // Show results
-            if (insufficientStockOrders.length > 0) {
-                showToast(
-                    `Updated ${batchPromises.length} orders. ${insufficientStockOrders.length} had insufficient stock.`,
-                    'warning'
-                );
-            } else {
-                showToast(`Updated ${batchPromises.length} orders to ${newStatus}`, 'success');
-            }
-            
-            // Clear selection
-            selectedOrders.clear();
-            selectAllCheckbox.checked = false;
-            renderOrders();
-            
-        } catch (error) {
-            console.error('Error in bulk update:', error);
-            showToast('Failed to update some orders', 'error');
         }
     }
 
@@ -409,19 +438,20 @@ where('farmerIds', 'array-contains', farmerId)
         const now = new Date();
         
         filteredOrders = orders.filter(order => {
-            const hasFarmerItems = order.items.some(i => i.farmerId === auth.currentUser.uid);
+            const hasFarmerItems = (order.items || []).some(i => i.farmerId === auth.currentUser?.uid);
             if (!hasFarmerItems) return false;
             
             // Status filter
-            const matchesStatus = status === 'all' || order.status.toLowerCase() === status.toLowerCase();
+            const orderStatus = (order.status || 'pending').toLowerCase();
+            const matchesStatus = status === 'all' || orderStatus === status.toLowerCase();
             
             // Search filter
             const matchesSearch = 
-                order.customerName?.toLowerCase().includes(searchTerm) ||
+                (order.customerName || '').toLowerCase().includes(searchTerm) ||
                 order.id.toLowerCase().includes(searchTerm) ||
-                order.items.some(item => 
-                    item.farmerId === auth.currentUser.uid &&
-                    item.name?.toLowerCase().includes(searchTerm)
+                (order.items || []).some(item => 
+                    item.farmerId === auth.currentUser?.uid &&
+                    (item.name || '').toLowerCase().includes(searchTerm)
                 );
             
             // Date filter
@@ -440,8 +470,7 @@ where('farmerIds', 'array-contains', farmerId)
                         matchesDate = isSameMonth(orderDate, now);
                         break;
                     case 'custom':
-                        // You would implement custom date range logic here
-                        matchesDate = true; // Default to true until custom range is set
+                        matchesDate = true;
                         break;
                 }
             }
@@ -456,7 +485,7 @@ where('farmerIds', 'array-contains', farmerId)
 
     function updateStats() {
         const farmerOrders = orders.filter(o => 
-            o.items.some(i => i.farmerId === auth.currentUser?.uid)
+            (o.items || []).some(i => i.farmerId === auth.currentUser?.uid)
         );
         
         totalOrders.textContent = farmerOrders.length;
@@ -466,7 +495,7 @@ where('farmerIds', 'array-contains', farmerId)
         }, 0);
         
         totalEarnings.textContent = earnings.toFixed(2);
-        pendingCount.textContent = farmerOrders.filter(o => o.status === 'pending').length;
+        pendingCount.textContent = farmerOrders.filter(o => (o.status || 'pending') === 'pending').length;
         acceptedCount.textContent = farmerOrders.filter(o => o.status === 'accepted').length;
         completedCount.textContent = farmerOrders.filter(o => o.status === 'completed').length;
     }
@@ -478,13 +507,11 @@ where('farmerIds', 'array-contains', farmerId)
         
         pageInfo.textContent = `Showing ${startOrder}-${endOrder} of ${filteredOrders.length} orders`;
         
-        // Update pagination buttons
         document.getElementById('firstPageBtn').disabled = currentPage === 1;
         document.getElementById('prevPageBtn').disabled = currentPage === 1;
         document.getElementById('nextPageBtn').disabled = currentPage === totalPages || totalPages === 0;
         document.getElementById('lastPageBtn').disabled = currentPage === totalPages || totalPages === 0;
         
-        // Update page numbers
         const pageNumbers = document.getElementById('pageNumbers');
         pageNumbers.innerHTML = '';
         
@@ -513,17 +540,15 @@ where('farmerIds', 'array-contains', farmerId)
         acceptOrderBtn.style.display = 'none';
         completeOrderBtn.style.display = 'none';
 
-        switch (status.toLowerCase()) {
+        const orderStatus = status || 'pending';
+        
+        switch (orderStatus.toLowerCase()) {
             case 'pending':
                 cancelOrderBtn.style.display = 'block';
                 acceptOrderBtn.style.display = 'block';
                 break;
             case 'accepted':
                 completeOrderBtn.style.display = 'block';
-                break;
-            case 'completed':
-            case 'cancelled':
-                // No buttons for these states
                 break;
         }
     }
@@ -536,6 +561,9 @@ where('farmerIds', 'array-contains', farmerId)
         orderModal.style.display = 'none';
         document.body.style.overflow = '';
         selectedOrderId = null;
+        
+        // Restore aria-hidden when modal is closed
+        orderModal.setAttribute('aria-hidden', 'true');
     }
 
     function showLoadingState() {
@@ -556,7 +584,7 @@ where('farmerIds', 'array-contains', farmerId)
     }
 
     function showNewOrderNotification(order) {
-        if (document.hidden) return; // Don't show if tab is not active
+        if (document.hidden) return;
         
         const notification = document.createElement('div');
         notification.className = 'notification new-order-notification';
@@ -566,13 +594,12 @@ where('farmerIds', 'array-contains', farmerId)
                 <span class="notification-time">Just now</span>
             </div>
             <div class="notification-body">
-                Order #${order.id.slice(0,8)} from ${order.customerName}
+                Order #${order.id.slice(0,8)} from ${order.customerName || 'Customer'}
             </div>
         `;
         
         document.body.appendChild(notification);
         
-        // Auto-remove after 5 seconds
         setTimeout(() => {
             notification.classList.add('fade-out');
             setTimeout(() => notification.remove(), 300);
@@ -611,7 +638,7 @@ where('farmerIds', 'array-contains', farmerId)
     function isSameWeek(date1, date2) {
         const oneDay = 24 * 60 * 60 * 1000;
         const diffDays = Math.round(Math.abs((date1 - date2) / oneDay));
-        return diffDays <= 7 && date1.getDay() <= date2.getDay();
+        return diffDays <= 7;
     }
 
     function isSameMonth(date1, date2) {
@@ -619,8 +646,576 @@ where('farmerIds', 'array-contains', farmerId)
                date1.getMonth() === date2.getMonth();
     }
 
+    // PDF and Print Functions
+    async function downloadOrderPDF() {
+        if (!selectedOrderId) {
+            showToast('No order selected', 'warning');
+            return;
+        }
+
+        const order = orders.find(o => o.id === selectedOrderId);
+        if (!order) {
+            showToast('Order not found', 'error');
+            return;
+        }
+
+        try {
+            showToast('Generating PDF...', 'info');
+            
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            // Add header
+            doc.setFillColor(76, 175, 80);
+            doc.rect(0, 0, 210, 30, 'F');
+            
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(20);
+            doc.text('FARMER CONNECT', 105, 15, { align: 'center' });
+            doc.setFontSize(12);
+            doc.text('ORDER RECEIPT', 105, 25, { align: 'center' });
+            
+            // Order details
+            doc.setTextColor(0, 0, 0);
+            let yPosition = 45;
+            
+            doc.setFontSize(14);
+            doc.text(`Order #${order.id}`, 14, yPosition);
+            yPosition += 8;
+            
+            doc.setFontSize(10);
+            doc.text(`Date: ${formatDate(order.createdAt?.toDate())}`, 14, yPosition);
+            doc.text(`Status: ${order.status || 'pending'}`, 100, yPosition);
+            yPosition += 6;
+            doc.text(`Customer: ${order.customerName || 'N/A'}`, 14, yPosition);
+            doc.text(`Phone: ${order.customerPhone || 'N/A'}`, 100, yPosition);
+            yPosition += 6;
+            doc.text(`Delivery Address: ${order.deliveryAddress || 'Not provided'}`, 14, yPosition);
+            yPosition += 10;
+            
+            // Items table header
+            doc.setFillColor(240, 240, 240);
+            doc.rect(14, yPosition, 182, 6, 'F');
+            doc.setTextColor(60, 60, 60);
+            doc.setFontSize(8);
+            doc.text('Item', 16, yPosition + 4);
+            doc.text('Quantity', 80, yPosition + 4);
+            doc.text('Unit Price', 120, yPosition + 4);
+            doc.text('Total', 160, yPosition + 4);
+            
+            yPosition += 6;
+            
+            // Order items
+            const farmerItems = (order.items || []).filter(i => i.farmerId === auth.currentUser?.uid);
+            farmerItems.forEach(item => {
+                doc.setTextColor(40, 40, 40);
+                doc.text(item.name || 'Unknown Item', 16, yPosition + 4);
+                doc.text(`${item.quantity || 0} ${item.unit || 'unit'}`, 80, yPosition + 4);
+                doc.text(`₹${(item.price || 0).toFixed(2)}`, 120, yPosition + 4);
+                doc.text(`₹${((item.quantity || 0) * (item.price || 0)).toFixed(2)}`, 160, yPosition + 4);
+                yPosition += 6;
+            });
+            
+            // Total
+            yPosition += 4;
+            doc.setFontSize(10);
+            doc.setTextColor(0, 0, 0);
+            doc.text(`Subtotal: ₹${calculateFarmerTotal(order).toFixed(2)}`, 140, yPosition);
+            
+            // Footer
+            yPosition += 20;
+            doc.setFontSize(8);
+            doc.setTextColor(100, 100, 100);
+            doc.text('Thank you for your business!', 105, yPosition, { align: 'center' });
+            yPosition += 4;
+            doc.text('Generated by Farmer Connect', 105, yPosition, { align: 'center' });
+            
+            // Save the PDF
+            doc.save(`order_${order.id.slice(0,8)}_receipt.pdf`);
+            showToast('PDF downloaded successfully', 'success');
+            
+        } catch (error) {
+            console.error('Error generating PDF:', error);
+            showToast('Failed to generate PDF', 'error');
+        }
+    }
+
+    function printOrderReceipt() {
+        if (!selectedOrderId) {
+            showToast('No order selected', 'warning');
+            return;
+        }
+
+        const order = orders.find(o => o.id === selectedOrderId);
+        if (!order) {
+            showToast('Order not found', 'error');
+            return;
+        }
+
+        const printWindow = window.open('', '_blank');
+        const farmerItems = (order.items || []).filter(i => i.farmerId === auth.currentUser?.uid);
+        
+        printWindow.document.write(`
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <title>Order Receipt - #${order.id}</title>
+                <style>
+                    body { 
+                        font-family: Arial, sans-serif; 
+                        margin: 20px; 
+                        color: #333;
+                        max-width: 800px;
+                    }
+                    .header { 
+                        text-align: center; 
+                        margin-bottom: 30px;
+                        border-bottom: 2px solid #4CAF50;
+                        padding-bottom: 10px;
+                    }
+                    .order-info { 
+                        display: grid;
+                        grid-template-columns: 1fr 1fr;
+                        gap: 20px;
+                        margin-bottom: 20px;
+                    }
+                    .info-section {
+                        background: #f9f9f9;
+                        padding: 15px;
+                        border-radius: 5px;
+                    }
+                    .order-items { 
+                        width: 100%; 
+                        border-collapse: collapse;
+                        margin: 20px 0;
+                    }
+                    .order-items th, .order-items td {
+                        border: 1px solid #ddd;
+                        padding: 10px;
+                        text-align: left;
+                    }
+                    .order-items th {
+                        background-color: #4CAF50;
+                        color: white;
+                    }
+                    .total-row {
+                        background-color: #f8f9fa;
+                        font-weight: bold;
+                    }
+                    .footer {
+                        margin-top: 30px;
+                        text-align: center;
+                        color: #666;
+                        font-size: 12px;
+                    }
+                    @media print {
+                        body { margin: 0; }
+                        .no-print { display: none; }
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="header">
+                    <h1 style="color: #4CAF50; margin: 0;">FARMER CONNECT</h1>
+                    <h2 style="margin: 5px 0;">ORDER RECEIPT</h2>
+                </div>
+                
+                <div class="order-info">
+                    <div class="info-section">
+                        <h3>Order Information</h3>
+                        <p><strong>Order ID:</strong> #${order.id}</p>
+                        <p><strong>Date:</strong> ${formatDate(order.createdAt?.toDate())}</p>
+                        <p><strong>Status:</strong> ${order.status || 'pending'}</p>
+                        <p><strong>Payment Method:</strong> ${order.paymentMethod || 'Not specified'}</p>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h3>Customer Information</h3>
+                        <p><strong>Name:</strong> ${order.customerName || 'N/A'}</p>
+                        <p><strong>Phone:</strong> ${order.customerPhone || 'N/A'}</p>
+                        <p><strong>Delivery Address:</strong> ${order.deliveryAddress || 'Not provided'}</p>
+                    </div>
+                </div>
+                
+                <h3>Order Items</h3>
+                <table class="order-items">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Quantity</th>
+                            <th>Unit Price</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${farmerItems.map(item => `
+                            <tr>
+                                <td>${item.name || 'Unknown Item'}</td>
+                                <td>${item.quantity || 0} ${item.unit || 'unit'}</td>
+                                <td>₹${(item.price || 0).toFixed(2)}</td>
+                                <td>₹${((item.quantity || 0) * (item.price || 0)).toFixed(2)}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                    <tfoot>
+                        <tr class="total-row">
+                            <td colspan="3" style="text-align: right;"><strong>Subtotal:</strong></td>
+                            <td><strong>₹${calculateFarmerTotal(order).toFixed(2)}</strong></td>
+                        </tr>
+                    </tfoot>
+                </table>
+                
+                <div class="footer">
+                    <p>Thank you for your business!</p>
+                    <p>Generated by Farmer Connect on ${new Date().toLocaleDateString()}</p>
+                </div>
+                
+                <div class="no-print" style="margin-top: 20px; text-align: center;">
+                    <button onclick="window.print()" style="padding: 10px 20px; background: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer;">Print Receipt</button>
+                    <button onclick="window.close()" style="padding: 10px 20px; background: #666; color: white; border: none; border-radius: 5px; cursor: pointer; margin-left: 10px;">Close</button>
+                </div>
+                
+                <script>
+                    window.onload = function() {
+                        window.print();
+                    };
+                </script>
+            </body>
+            </html>
+        `);
+        
+        printWindow.document.close();
+    }
+
+    function exportOrders() {
+        const exportDropdown = document.getElementById('exportDropdown');
+        if (!exportDropdown) {
+            // Create export dropdown if it doesn't exist
+            createExportDropdown();
+        }
+        exportDropdown.style.display = exportDropdown.style.display === 'block' ? 'none' : 'block';
+    }
+
+    function createExportDropdown() {
+        const dropdown = document.createElement('div');
+        dropdown.id = 'exportDropdown';
+        dropdown.className = 'export-dropdown';
+        dropdown.style.cssText = `
+            position: absolute;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            z-index: 1000;
+            min-width: 180px;
+            margin-top: 5px;
+            display: none;
+        `;
+        
+        dropdown.innerHTML = `
+            <button class="export-option" onclick="exportAsCSV()" style="width: 100%; padding: 12px 16px; border: none; background: none; text-align: left; cursor: pointer; display: flex; align-items: center; gap: 8px; color: #333;">
+                <i class="fas fa-file-csv"></i> Export as CSV
+            </button>
+            <button class="export-option" onclick="exportAsPDF()" style="width: 100%; padding: 12px 16px; border: none; background: none; text-align: left; cursor: pointer; display: flex; align-items: center; gap: 8px; color: #333;">
+                <i class="fas fa-file-pdf"></i> Download PDF
+            </button>
+            <button class="export-option" onclick="printOrders()" style="width: 100%; padding: 12px 16px; border: none; background: none; text-align: left; cursor: pointer; display: flex; align-items: center; gap: 8px; color: #333;">
+                <i class="fas fa-print"></i> Print Report
+            </button>
+        `;
+        
+        exportBtn.parentNode.appendChild(dropdown);
+        
+        // Add click outside listener
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.export-dropdown') && !e.target.matches('#exportBtn')) {
+                dropdown.style.display = 'none';
+            }
+        });
+    }
+
+    function exportAsCSV() {
+        if (filteredOrders.length === 0) {
+            showToast('No orders to export', 'warning');
+            return;
+        }
+        
+        const headers = [
+            'Order ID', 'Customer Name', 'Customer Phone', 'Items', 
+            'Quantities', 'Total', 'Date', 'Status', 'Delivery Address'
+        ];
+        
+        const data = filteredOrders.map(order => {
+            const farmerItems = (order.items || []).filter(i => i.farmerId === auth.currentUser?.uid);
+            return [
+                order.id,
+                order.customerName || 'N/A',
+                order.customerPhone || 'N/A',
+                farmerItems.map(i => i.name || 'Unknown').join(', '),
+                farmerItems.map(i => `${i.quantity || 0} ${i.unit || 'unit'}`).join(', '),
+                `₹${calculateFarmerTotal(order).toFixed(2)}`,
+                formatDate(order.createdAt?.toDate()),
+                order.status || 'pending',
+                order.deliveryAddress || 'N/A'
+            ];
+        });
+        
+        const csvContent = [
+            headers.join(','),
+            ...data.map(row => row.map(field => `"${field}"`).join(','))
+        ].join('\n');
+        
+        downloadFile(csvContent, `orders_${new Date().toISOString().slice(0,10)}.csv`, 'text/csv');
+        document.getElementById('exportDropdown').style.display = 'none';
+    }
+
+    async function exportAsPDF() {
+        if (filteredOrders.length === 0) {
+            showToast('No orders to export', 'warning');
+            return;
+        }
+
+        try {
+            showToast('Generating PDF report...', 'info');
+            
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            // Add title
+            doc.setFontSize(20);
+            doc.setTextColor(40, 40, 40);
+            doc.text('Orders Report - Farmer Connect', 105, 15, { align: 'center' });
+            
+            // Add date
+            doc.setFontSize(10);
+            doc.setTextColor(100, 100, 100);
+            doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 105, 22, { align: 'center' });
+            
+            // Add summary
+            doc.setFontSize(12);
+            doc.setTextColor(40, 40, 40);
+            doc.text(`Total Orders: ${filteredOrders.length}`, 14, 35);
+            const totalEarnings = filteredOrders.reduce((sum, order) => sum + calculateFarmerTotal(order), 0);
+            doc.text(`Total Earnings: ₹${totalEarnings.toFixed(2)}`, 14, 42);
+            
+            let yPosition = 60;
+            const pageHeight = doc.internal.pageSize.height;
+            
+            filteredOrders.forEach((order, index) => {
+                // Add new page if needed
+                if (yPosition > pageHeight - 50) {
+                    doc.addPage();
+                    yPosition = 20;
+                }
+                
+                // Order header
+                doc.setFontSize(14);
+                doc.setTextColor(30, 30, 30);
+                doc.text(`Order #${order.id.slice(0, 8)}`, 14, yPosition);
+                
+                yPosition += 8;
+                doc.setFontSize(10);
+                doc.setTextColor(100, 100, 100);
+                doc.text(`Date: ${formatDate(order.createdAt?.toDate())}`, 14, yPosition);
+                doc.text(`Status: ${order.status || 'pending'}`, 80, yPosition);
+                doc.text(`Customer: ${order.customerName || 'N/A'}`, 130, yPosition);
+                
+                yPosition += 6;
+                doc.text(`Phone: ${order.customerPhone || 'N/A'}`, 14, yPosition);
+                doc.text(`Amount: ₹${calculateFarmerTotal(order).toFixed(2)}`, 130, yPosition);
+                
+                yPosition += 10;
+                
+                // Items
+                const farmerItems = (order.items || []).filter(i => i.farmerId === auth.currentUser?.uid);
+                farmerItems.forEach(item => {
+                    if (yPosition > pageHeight - 20) {
+                        doc.addPage();
+                        yPosition = 20;
+                    }
+                    
+                    doc.setTextColor(60, 60, 60);
+                    doc.text(`• ${item.name || 'Unknown Item'} - ${item.quantity || 0} ${item.unit || 'unit'} - ₹${((item.quantity || 0) * (item.price || 0)).toFixed(2)}`, 20, yPosition);
+                    yPosition += 5;
+                });
+                
+                yPosition += 10;
+                
+                // Separator line
+                if (index < filteredOrders.length - 1) {
+                    doc.setDrawColor(200, 200, 200);
+                    doc.line(14, yPosition, 194, yPosition);
+                    yPosition += 15;
+                }
+            });
+            
+            // Save the PDF
+            doc.save(`orders_report_${new Date().toISOString().slice(0,10)}.pdf`);
+            showToast('PDF report downloaded successfully', 'success');
+            
+        } catch (error) {
+            console.error('Error generating PDF report:', error);
+            showToast('Failed to generate PDF report', 'error');
+        }
+        
+        document.getElementById('exportDropdown').style.display = 'none';
+    }
+
+    function printOrders() {
+        if (filteredOrders.length === 0) {
+            showToast('No orders to print', 'warning');
+            return;
+        }
+
+        try {
+            showToast('Preparing print...', 'info');
+            
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Orders Report - Farmer Connect</title>
+                    <style>
+                        body { 
+                            font-family: Arial, sans-serif; 
+                            margin: 20px; 
+                            color: #333;
+                        }
+                        .header { 
+                            text-align: center; 
+                            margin-bottom: 30px;
+                            border-bottom: 2px solid #4CAF50;
+                            padding-bottom: 10px;
+                        }
+                        .summary {
+                            margin-bottom: 20px;
+                            padding: 15px;
+                            background: #f8f9fa;
+                            border-radius: 5px;
+                        }
+                        .order { 
+                            margin-bottom: 25px; 
+                            padding: 15px;
+                            border: 1px solid #ddd;
+                            border-radius: 5px;
+                            page-break-inside: avoid;
+                        }
+                        .order-header { 
+                            background: #f5f5f5; 
+                            padding: 10px; 
+                            margin: -15px -15px 15px -15px;
+                            border-bottom: 1px solid #ddd;
+                        }
+                        .order-items { 
+                            width: 100%; 
+                            border-collapse: collapse;
+                            margin: 10px 0;
+                        }
+                        .order-items th, .order-items td {
+                            border: 1px solid #ddd;
+                            padding: 8px;
+                            text-align: left;
+                        }
+                        .order-items th {
+                            background-color: #4CAF50;
+                            color: white;
+                        }
+                        @media print {
+                            .no-print { display: none; }
+                            .order { page-break-inside: avoid; }
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="header">
+                        <h1 style="color: #4CAF50;">FARMER CONNECT</h1>
+                        <h2>Orders Report</h2>
+                        <p>Generated on: ${new Date().toLocaleDateString()}</p>
+                    </div>
+                    
+                    <div class="summary">
+                        <strong>Summary:</strong> 
+                        ${filteredOrders.length} orders | 
+                        Total Earnings: ₹${filteredOrders.reduce((sum, order) => sum + calculateFarmerTotal(order), 0).toFixed(2)}
+                    </div>
+                    
+                    ${filteredOrders.map(order => {
+                        const farmerItems = (order.items || []).filter(i => i.farmerId === auth.currentUser?.uid);
+                        return `
+                            <div class="order">
+                                <div class="order-header">
+                                    <strong>Order #${order.id.slice(0, 8)}</strong> | 
+                                    Date: ${formatDate(order.createdAt?.toDate())} | 
+                                    Status: ${order.status || 'pending'} |
+                                    Customer: ${order.customerName || 'N/A'}
+                                </div>
+                                
+                                <div><strong>Customer Phone:</strong> ${order.customerPhone || 'N/A'}</div>
+                                <div><strong>Delivery Address:</strong> ${order.deliveryAddress || 'N/A'}</div>
+                                <div><strong>Total Amount:</strong> ₹${calculateFarmerTotal(order).toFixed(2)}</div>
+                                
+                                <table class="order-items">
+                                    <thead>
+                                        <tr>
+                                            <th>Item</th>
+                                            <th>Quantity</th>
+                                            <th>Unit Price</th>
+                                            <th>Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${farmerItems.map(item => `
+                                            <tr>
+                                                <td>${item.name || 'Unknown Item'}</td>
+                                                <td>${item.quantity || 0} ${item.unit || 'unit'}</td>
+                                                <td>₹${(item.price || 0).toFixed(2)}</td>
+                                                <td>₹${((item.quantity || 0) * (item.price || 0)).toFixed(2)}</td>
+                                            </tr>
+                                        `).join('')}
+                                    </tbody>
+                                </table>
+                            </div>
+                        `;
+                    }).join('')}
+                    
+                    <div class="no-print" style="margin-top: 20px; text-align: center;">
+                        <button onclick="window.print()" style="padding: 10px 20px; background: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer;">Print Report</button>
+                        <button onclick="window.close()" style="padding: 10px 20px; background: #666; color: white; border: none; border-radius: 5px; cursor: pointer; margin-left: 10px;">Close</button>
+                    </div>
+                    
+                    <script>
+                        window.onload = function() {
+                            window.print();
+                        };
+                    </script>
+                </body>
+                </html>
+            `);
+            
+            printWindow.document.close();
+            
+        } catch (error) {
+            console.error('Error printing orders:', error);
+            showToast('Failed to open print window', 'error');
+        }
+        
+        document.getElementById('exportDropdown').style.display = 'none';
+    }
+
+    function downloadFile(content, filename, mimeType) {
+        const blob = new Blob([content], { type: mimeType });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.setAttribute('href', url);
+        link.setAttribute('download', filename);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
     function setupEventListeners() {
-        // Filter event listeners
         statusFilter.addEventListener('change', filterOrders);
         orderSearch.addEventListener('input', debounce(filterOrders, 300));
         dateFilter.addEventListener('change', filterOrders);
@@ -631,7 +1226,6 @@ where('farmerIds', 'array-contains', farmerId)
             filterOrders();
         });
 
-        // Pagination event listeners
         document.getElementById('firstPageBtn').addEventListener('click', () => {
             currentPage = 1;
             renderOrders();
@@ -662,7 +1256,6 @@ where('farmerIds', 'array-contains', farmerId)
             renderOrders();
         });
 
-        // Modal event listeners
         closeModalBtn.addEventListener('click', closeModal);
         window.addEventListener('click', (e) => {
             if (e.target === orderModal) closeModal();
@@ -672,14 +1265,14 @@ where('farmerIds', 'array-contains', farmerId)
         acceptOrderBtn.addEventListener('click', () => updateOrderStatus('accepted'));
         completeOrderBtn.addEventListener('click', () => updateOrderStatus('completed'));
         
+        // PDF and Print buttons
+        printReceiptBtn.addEventListener('click', printOrderReceipt);
+        downloadReceiptBtn.addEventListener('click', downloadOrderPDF);
+        
         backBtn.addEventListener('click', () => {
-            currentPage = 1;
-            renderOrders();
+            window.location.href = 'farmer4.html';
         });
-        document.getElementById('backBtn').addEventListener('click', () => {
-  window.location.href = 'farmer4.html'; // change to your dashboard URL if different
-});
-        // Bulk actions
+
         selectAllCheckbox.addEventListener('change', (e) => {
             const checkboxes = document.querySelectorAll('.order-checkbox');
             checkboxes.forEach(checkbox => {
@@ -700,7 +1293,8 @@ where('farmerIds', 'array-contains', farmerId)
         
         document.querySelectorAll('.bulk-status-option').forEach(option => {
             option.addEventListener('click', () => {
-                bulkUpdateStatus(option.dataset.status);
+                showToast('Bulk update functionality to be implemented', 'info');
+                document.getElementById('bulkStatusDropdown').style.display = 'none';
             });
         });
         
@@ -747,45 +1341,8 @@ where('farmerIds', 'array-contains', farmerId)
         };
     }
 
-    function exportOrders() {
-        if (filteredOrders.length === 0) {
-            showToast('No orders to export', 'warning');
-            return;
-        }
-        
-        const headers = [
-            'Order ID', 'Customer Name', 'Customer Phone', 'Items', 
-            'Quantities', 'Total', 'Date', 'Status', 'Delivery Address'
-        ];
-        
-        const data = filteredOrders.map(order => {
-            const farmerItems = order.items.filter(i => i.farmerId === auth.currentUser.uid);
-            return [
-                order.id,
-                order.customerName,
-                order.customerPhone || 'N/A',
-                farmerItems.map(i => i.name).join(', '),
-                farmerItems.map(i => `${i.quantity} ${i.unit || 'unit'}`).join(', '),
-                `₹${calculateFarmerTotal(order).toFixed(2)}`,
-                formatDate(order.createdAt?.toDate()),
-                order.status,
-                order.deliveryAddress || 'N/A'
-            ];
-        });
-        
-        const csvContent = [
-            headers.join(','),
-            ...data.map(row => row.map(field => `"${field}"`).join(','))
-        ].join('\n');
-        
-        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.setAttribute('href', url);
-        link.setAttribute('download', `orders_${new Date().toISOString().slice(0,10)}.csv`);
-        link.style.visibility = 'hidden';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    }
+    // Make functions available globally for the export dropdown
+    window.exportAsCSV = exportAsCSV;
+    window.exportAsPDF = exportAsPDF;
+    window.printOrders = printOrders;
 });

@@ -1,0 +1,1355 @@
+/* =========================================
+   UNIFIED DARK MODE FOR CUSTOMER PAGES
+   Compatible with all customer pages
+========================================= */
+
+/* Base dark mode styles */
+body.customer-dark-mode {
+    background: #121212 !important;
+    color: #eaeaea !important;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Top Navigation */
+body.customer-dark-mode .top-nav {
+    background: linear-gradient(135deg, #1a1a1a, #2d2d2d) !important;
+    border-bottom: 1px solid #333 !important;
+}
+
+body.customer-dark-mode .logo-text {
+    color: #ffffff !important;
+}
+
+body.customer-dark-mode .logo-text:hover {
+    color: #4CAF50 !important;
+}
+
+/* Back Button */
+body.customer-dark-mode .back-button {
+    background: #2d2d2d !important;
+    color: #ffffff !important;
+    border: 1px solid #444 !important;
+}
+
+body.customer-dark-mode .back-button:hover {
+    background: #4CAF50 !important;
+    color: #ffffff !important;
+}
+
+/* Main Content Areas */
+body.customer-dark-mode .main-content,
+body.customer-dark-mode .profile-container,
+body.customer-dark-mode .dashboard-columns,
+body.customer-dark-mode .orders-page,
+body.customer-dark-mode .container {
+    background: #1a1a1a !important;
+    color: #eaeaea !important;
+}
+
+/* Profile Container Specific */
+body.customer-dark-mode .profile-container {
+    background: #1e1e1e !important;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3) !important;
+    border: 1px solid #333 !important;
+}
+
+/* Headings */
+body.customer-dark-mode h1,
+body.customer-dark-mode h2,
+body.customer-dark-mode h3,
+body.customer-dark-mode h4,
+body.customer-dark-mode h5,
+body.customer-dark-mode h6 {
+    color: #f1f1f1 !important;
+}
+
+body.customer-dark-mode .profile-content h1 {
+    color: #4CAF50 !important;
+}
+
+/* Form Elements */
+body.customer-dark-mode input,
+body.customer-dark-mode select,
+body.customer-dark-mode textarea,
+body.customer-dark-mode .profile-field input,
+body.customer-dark-mode .profile-field select,
+body.customer-dark-mode .profile-field textarea {
+    background: #2d2d2d !important;
+    color: #f1f1f1 !important;
+    border: 1px solid #444 !important;
+}
+
+body.customer-dark-mode input::placeholder,
+body.customer-dark-mode textarea::placeholder {
+    color: #888 !important;
+}
+
+body.customer-dark-mode input:focus,
+body.customer-dark-mode select:focus,
+body.customer-dark-mode textarea:focus,
+body.customer-dark-mode .profile-field input:focus,
+body.customer-dark-mode .profile-field select:focus,
+body.customer-dark-mode .profile-field textarea:focus {
+    border-color: #4CAF50 !important;
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2) !important;
+    background: #333 !important;
+}
+
+body.customer-dark-mode input:disabled,
+body.customer-dark-mode select:disabled,
+body.customer-dark-mode textarea:disabled,
+body.customer-dark-mode .profile-field input:disabled,
+body.customer-dark-mode .profile-field select:disabled,
+body.customer-dark-mode .profile-field textarea:disabled {
+    background: #252525 !important;
+    color: #888 !important;
+    border-color: #333 !important;
+}
+
+/* Read-only fields */
+body.customer-dark-mode .read-only {
+    background: #252525 !important;
+    border: 1px dashed #444 !important;
+    color: #ccc !important;
+}
+
+/* Buttons */
+body.customer-dark-mode .btn {
+    transition: all 0.3s ease !important;
+}
+
+body.customer-dark-mode .btn-primary {
+    background: #4CAF50 !important;
+    color: #ffffff !important;
+    box-shadow: 0 3px 10px rgba(76, 175, 80, 0.3) !important;
+}
+
+body.customer-dark-mode .btn-primary:hover:not(:disabled) {
+    background: #45a049 !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4) !important;
+}
+
+body.customer-dark-mode .btn-secondary {
+    background: #555 !important;
+    color: #ffffff !important;
+    border: 1px solid #666 !important;
+}
+
+body.customer-dark-mode .btn-secondary:hover:not(:disabled) {
+    background: #666 !important;
+    border-color: #777 !important;
+}
+
+body.customer-dark-mode .btn-warning {
+    background: #ff9800 !important;
+    color: #212529 !important;
+}
+
+body.customer-dark-mode .btn-warning:hover:not(:disabled) {
+    background: #e68900 !important;
+}
+
+body.customer-dark-mode .btn-danger {
+    background: #f44336 !important;
+    color: #ffffff !important;
+}
+
+body.customer-dark-mode .btn-danger:hover:not(:disabled) {
+    background: #da190b !important;
+}
+
+/* Photo Section */
+body.customer-dark-mode .photo-section {
+    background: rgba(45, 45, 45, 0.8) !important;
+    backdrop-filter: blur(10px) !important;
+    border: 1px solid #444 !important;
+}
+
+body.customer-dark-mode .profile-pic-container {
+    border: 3px solid rgba(76, 175, 80, 0.3) !important;
+}
+
+body.customer-dark-mode .upload-overlay {
+    background: #4CAF50 !important;
+    color: #ffffff !important;
+}
+
+/* Password Change Section */
+body.customer-dark-mode .password-change-box {
+    background: #252525 !important;
+    border: 1px solid #444 !important;
+}
+
+body.customer-dark-mode .password-hint {
+    color: #888 !important;
+}
+
+/* Toggle Password */
+body.customer-dark-mode .toggle-password {
+    color: #888 !important;
+}
+
+body.customer-dark-mode .toggle-password:hover {
+    color: #4CAF50 !important;
+}
+
+/* Status Messages */
+body.customer-dark-mode .status-message.success {
+    background: rgba(76, 175, 80, 0.1) !important;
+    color: #4CAF50 !important;
+    border: 1px solid rgba(76, 175, 80, 0.3) !important;
+}
+
+body.customer-dark-mode .status-message.error {
+    background: rgba(244, 67, 54, 0.1) !important;
+    color: #f44336 !important;
+    border: 1px solid rgba(244, 67, 54, 0.3) !important;
+}
+
+body.customer-dark-mode .status-message.info {
+    background: rgba(33, 150, 243, 0.1) !important;
+    color: #2196F3 !important;
+    border: 1px solid rgba(33, 150, 243, 0.3) !important;
+}
+
+body.customer-dark-mode .status-message.warning {
+    background: rgba(255, 152, 0, 0.1) !important;
+    color: #ff9800 !important;
+    border: 1px solid rgba(255, 152, 0, 0.3) !important;
+}
+
+/* Toast Notifications */
+body.customer-dark-mode .toast {
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Loading Overlay */
+body.customer-dark-mode .loading-overlay {
+    background: rgba(18, 18, 18, 0.95) !important;
+}
+
+body.customer-dark-mode .loading-overlay p {
+    color: #eaeaea !important;
+}
+
+/* Skeleton Loader */
+body.customer-dark-mode .profile-skeleton {
+    background: rgba(30, 30, 30, 0.95) !important;
+}
+
+body.customer-dark-mode .skeleton-avatar,
+body.customer-dark-mode .skeleton-photo,
+body.customer-dark-mode .skeleton-line,
+body.customer-dark-mode .skeleton-input,
+body.customer-dark-mode .skeleton-textarea,
+body.customer-dark-mode .skeleton-button {
+    background: linear-gradient(90deg, #2a2a2a 25%, #3a3a3a 50%, #2a2a2a 75%) !important;
+}
+
+/* Dark Mode Toggle Button */
+body.customer-dark-mode .dark-mode-toggle {
+    background: #333 !important;
+    color: #4CAF50 !important;
+    border: 1px solid #444 !important;
+}
+
+body.customer-dark-mode .dark-mode-toggle:hover {
+    background: #444 !important;
+    color: #45a049 !important;
+}
+
+body.customer-dark-mode .dark-mode-toggle.active {
+    background: #4CAF50 !important;
+    color: #ffffff !important;
+}
+
+/* Dashboard Specific Styles */
+body.customer-dark-mode .hero {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%) !important;
+    color: #f1f1f1 !important;
+}
+
+body.customer-dark-mode .action-card {
+    background: #252525 !important;
+    border: 1px solid #444 !important;
+    color: #eaeaea !important;
+}
+
+body.customer-dark-mode .action-card:hover {
+    background: #2d2d2d !important;
+    border-color: #4CAF50 !important;
+    transform: translateY(-2px) !important;
+}
+
+body.customer-dark-mode .action-card i {
+    color: #4CAF50 !important;
+}
+
+/* Orders Page */
+body.customer-dark-mode .orders-summary .summary-card {
+    background: #252525 !important;
+    border: 1px solid #444 !important;
+    color: #eaeaea !important;
+}
+
+body.customer-dark-mode .orders-table {
+    background: #1e1e1e !important;
+    color: #eaeaea !important;
+}
+
+body.customer-dark-mode .orders-table th {
+    background: #252525 !important;
+    color: #f1f1f1 !important;
+    border-bottom: 2px solid #444 !important;
+}
+
+body.customer-dark-mode .orders-table td {
+    border-bottom: 1px solid #333 !important;
+}
+
+body.customer-dark-mode .orders-table tr:hover {
+    background: #252525 !important;
+}
+
+/* Marketplace */
+body.customer-dark-mode .crops-grid {
+    background: transparent !important;
+}
+
+body.customer-dark-mode .crop-card {
+    background: #252525 !important;
+    border: 1px solid #444 !important;
+    color: #eaeaea !important;
+}
+
+body.customer-dark-mode .crop-card:hover {
+    background: #2d2d2d !important;
+    border-color: #4CAF50 !important;
+}
+
+body.customer-dark-mode .crop-price {
+    color: #4CAF50 !important;
+}
+
+/* Cart */
+body.customer-dark-mode .cart-items,
+body.customer-dark-mode .cart-summary {
+    background: #252525 !important;
+    border: 1px solid #444 !important;
+    color: #eaeaea !important;
+}
+
+body.customer-dark-mode .cart-item {
+    border-bottom: 1px solid #333 !important;
+}
+
+body.customer-dark-mode .empty-cart {
+    color: #888 !important;
+}
+
+/* Modal */
+body.customer-dark-mode .modal-content {
+    background: #252525 !important;
+    color: #eaeaea !important;
+    border: 1px solid #444 !important;
+}
+
+body.customer-dark-mode .modal-header {
+    border-bottom: 1px solid #444 !important;
+}
+
+body.customer-dark-mode .modal-footer {
+    border-top: 1px solid #444 !important;
+}
+
+/* Footer */
+body.customer-dark-mode .footer {
+    background: #1a1a1a !important;
+    color: #888 !important;
+    border-top: 1px solid #333 !important;
+}
+
+body.customer-dark-mode .footer a {
+    color: #4CAF50 !important;
+}
+
+body.customer-dark-mode .footer a:hover {
+    color: #45a049 !important;
+}
+
+/* Status Badges */
+body.customer-dark-mode .status-pill,
+body.customer-dark-mode .status-badge {
+    color: #ffffff !important;
+}
+
+body.customer-dark-mode .status-processing {
+    background: rgba(255, 152, 0, 0.2) !important;
+    color: #ff9800 !important;
+}
+
+body.customer-dark-mode .status-completed {
+    background: rgba(76, 175, 80, 0.2) !important;
+    color: #4CAF50 !important;
+}
+
+body.customer-dark-mode .status-cancelled {
+    background: rgba(244, 67, 54, 0.2) !important;
+    color: #f44336 !important;
+}
+
+/* Scrollbar Styling */
+body.customer-dark-mode ::-webkit-scrollbar {
+    width: 8px;
+}
+
+body.customer-dark-mode ::-webkit-scrollbar-track {
+    background: #1a1a1a;
+}
+
+body.customer-dark-mode ::-webkit-scrollbar-thumb {
+    background: #444;
+    border-radius: 4px;
+}
+
+body.customer-dark-mode ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Selection */
+body.customer-dark-mode ::selection {
+    background: rgba(76, 175, 80, 0.3) !important;
+    color: #ffffff !important;
+}
+
+/* Focus styles for accessibility */
+body.customer-dark-mode :focus-visible {
+    outline: 2px solid #4CAF50 !important;
+    outline-offset: 2px !important;
+}
+
+/* Print styles */
+@media print {
+    body.customer-dark-mode {
+        background: white !important;
+        color: black !important;
+    }
+    
+    body.customer-dark-mode .profile-container {
+        background: white !important;
+        color: black !important;
+        box-shadow: none !important;
+        border: 1px solid #ccc !important;
+    }
+}
+/* =========================================
+   DASHBOARD-SPECIFIC DARK MODE STYLES
+   Add these to your existing darkmode.css
+========================================= */
+
+/* Dashboard Hero Section */
+body.customer-dark-mode .hero {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%) !important;
+    color: #f1f1f1 !important;
+}
+
+body.customer-dark-mode .hero-content h1 {
+    color: #ffffff !important;
+}
+
+body.customer-dark-mode .hero-content p {
+    color: #cccccc !important;
+}
+
+/* Market Ticker */
+body.customer-dark-mode .ticker-container {
+    background: #1c1c1c !important;
+    border-bottom: 1px solid #333 !important;
+}
+
+body.customer-dark-mode .ticker {
+    color: #cccccc !important;
+}
+
+/* Quick Actions Grid */
+body.customer-dark-mode .action-grid {
+    background: transparent !important;
+}
+
+body.customer-dark-mode .action-card {
+    background: #252525 !important;
+    border: 1px solid #444 !important;
+    color: #eaeaea !important;
+    transition: all 0.3s ease !important;
+}
+
+body.customer-dark-mode .action-card:hover {
+    background: #2d2d2d !important;
+    border-color: #4CAF50 !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3) !important;
+}
+
+body.customer-dark-mode .action-card i {
+    color: #4CAF50 !important;
+}
+
+body.customer-dark-mode .action-card span {
+    color: #eaeaea !important;
+}
+
+/* Dashboard Columns Layout */
+body.customer-dark-mode .dashboard-columns {
+    background: transparent !important;
+}
+
+/* Recent Orders Section */
+body.customer-dark-mode .recent-orders {
+    background: transparent !important;
+}
+
+body.customer-dark-mode .orders-container {
+    background: #252525 !important;
+    border: 1px solid #444 !important;
+    border-radius: 12px !important;
+}
+
+body.customer-dark-mode .order-item {
+    background: #1e1e1e !important;
+    border-bottom: 1px solid #333 !important;
+    color: #eaeaea !important;
+    transition: background-color 0.2s ease !important;
+}
+
+body.customer-dark-mode .order-item:hover {
+    background: #2d2d2d !important;
+}
+
+body.customer-dark-mode .order-item:last-child {
+    border-bottom: none !important;
+}
+
+body.customer-dark-mode .order-status {
+    background: #333 !important;
+    color: #cccccc !important;
+    border-radius: 20px !important;
+    padding: 4px 12px !important;
+    font-size: 0.8rem !important;
+}
+
+body.customer-dark-mode .order-status.completed {
+    background: rgba(76, 175, 80, 0.2) !important;
+    color: #4CAF50 !important;
+}
+
+body.customer-dark-mode .order-status.pending {
+    background: rgba(255, 152, 0, 0.2) !important;
+    color: #ff9800 !important;
+}
+
+body.customer-dark-mode .order-status.processing {
+    background: rgba(33, 150, 243, 0.2) !important;
+    color: #2196F3 !important;
+}
+
+/* Recommended Products */
+body.customer-dark-mode .recommended-products {
+    background: transparent !important;
+}
+
+body.customer-dark-mode .products-grid {
+    background: transparent !important;
+}
+
+body.customer-dark-mode .product-card {
+    background: #252525 !important;
+    border: 1px solid #444 !important;
+    color: #eaeaea !important;
+    transition: all 0.3s ease !important;
+}
+
+body.customer-dark-mode .product-card:hover {
+    background: #2d2d2d !important;
+    border-color: #4CAF50 !important;
+    transform: translateY(-2px) !important;
+}
+
+body.customer-dark-mode .product-price {
+    color: #4CAF50 !important;
+    font-weight: 600 !important;
+}
+
+/* Testimonials Section */
+body.customer-dark-mode .testimonials-section {
+    background: transparent !important;
+}
+
+body.customer-dark-mode .testimonials-container {
+    background: #252525 !important;
+    border: 1px solid #444 !important;
+    border-radius: 12px !important;
+}
+
+body.customer-dark-mode .testimonial-item {
+    background: #1e1e1e !important;
+    border: 1px solid #333 !important;
+    color: #eaeaea !important;
+}
+
+body.customer-dark-mode .testimonial-item:hover {
+    background: #2d2d2d !important;
+    border-color: #444 !important;
+}
+
+/* Seasonal Offers */
+body.customer-dark-mode .seasonal-offers {
+    background: transparent !important;
+}
+
+body.customer-dark-mode .offers-container {
+    background: #252525 !important;
+    border: 1px solid #444 !important;
+    border-radius: 12px !important;
+}
+
+body.customer-dark-mode .offer-item {
+    background: #1e1e1e !important;
+    border: 1px solid #333 !important;
+    color: #eaeaea !important;
+}
+
+body.customer-dark-mode .offer-item:hover {
+    background: #2d2d2d !important;
+    border-color: #4CAF50 !important;
+}
+
+/* Quick Tips */
+body.customer-dark-mode .quick-tips {
+    background: transparent !important;
+}
+
+body.customer-dark-mode .tips-container {
+    background: #252525 !important;
+    border: 1px solid #444 !important;
+    border-radius: 12px !important;
+}
+
+body.customer-dark-mode .tip-item {
+    background: #1e1e1e !important;
+    border-bottom: 1px solid #333 !important;
+    color: #eaeaea !important;
+}
+
+body.customer-dark-mode .tip-item:last-child {
+    border-bottom: none !important;
+}
+
+body.customer-dark-mode .tip-item i {
+    color: #4CAF50 !important;
+}
+
+/* Section Headers */
+body.customer-dark-mode .section-header {
+    border-bottom: 1px solid #333 !important;
+}
+
+body.customer-dark-mode .section-header h2 {
+    color: #f1f1f1 !important;
+}
+
+body.customer-dark-mode .view-all {
+    color: #4CAF50 !important;
+}
+
+body.customer-dark-mode .view-all:hover {
+    color: #45a049 !important;
+}
+
+/* =========================================
+   MARKETPLACE-SPECIFIC DARK MODE STYLES
+========================================= */
+
+/* Marketplace Header */
+body.customer-dark-mode .marketplace-filters {
+    background: #252525 !important;
+    border: 1px solid #444 !important;
+    border-radius: 12px !important;
+}
+
+body.customer-dark-mode .search-box {
+    background: #2d2d2d !important;
+    border: 1px solid #444 !important;
+}
+
+body.customer-dark-mode .search-box i {
+    color: #888 !important;
+}
+
+body.customer-dark-mode .search-box input {
+    background: transparent !important;
+    color: #f1f1f1 !important;
+}
+
+body.customer-dark-mode .search-box input::placeholder {
+    color: #888 !important;
+}
+
+body.customer-dark-mode #categoryFilter {
+    background: #2d2d2d !important;
+    color: #f1f1f1 !important;
+    border: 1px solid #444 !important;
+}
+
+/* Crops Grid */
+body.customer-dark-mode .crops-grid {
+    background: transparent !important;
+}
+
+body.customer-dark-mode .crop-card {
+    background: #252525 !important;
+    border: 1px solid #444 !important;
+    color: #eaeaea !important;
+    transition: all 0.3s ease !important;
+}
+
+body.customer-dark-mode .crop-card:hover {
+    background: #2d2d2d !important;
+    border-color: #4CAF50 !important;
+    transform: translateY(-2px) !important;
+}
+
+body.customer-dark-mode .crop-price {
+    color: #4CAF50 !important;
+    font-weight: 600 !important;
+}
+
+body.customer-dark-mode .crop-stock {
+    color: #cccccc !important;
+}
+
+/* Pagination */
+body.customer-dark-mode .pagination-container {
+    background: transparent !important;
+}
+
+body.customer-dark-mode .pagination button {
+    background: #2d2d2d !important;
+    color: #eaeaea !important;
+    border: 1px solid #444 !important;
+}
+
+body.customer-dark-mode .pagination button:hover:not(:disabled) {
+    background: #4CAF50 !important;
+    color: #ffffff !important;
+}
+
+body.customer-dark-mode .pagination button:disabled {
+    background: #1a1a1a !important;
+    color: #666 !important;
+}
+
+/* =========================================
+   CART-SPECIFIC DARK MODE STYLES
+========================================= */
+
+/* Cart Items */
+body.customer-dark-mode .cart-items {
+    background: #252525 !important;
+    border: 1px solid #444 !important;
+    border-radius: 12px !important;
+}
+
+body.customer-dark-mode .cart-item {
+    background: #1e1e1e !important;
+    border-bottom: 1px solid #333 !important;
+    color: #eaeaea !important;
+}
+
+body.customer-dark-mode .cart-item:hover {
+    background: #2d2d2d !important;
+}
+
+body.customer-dark-mode .cart-item:last-child {
+    border-bottom: none !important;
+}
+
+body.customer-dark-mode .item-price {
+    color: #4CAF50 !important;
+}
+
+/* Cart Summary */
+body.customer-dark-mode .cart-summary {
+    background: #252525 !important;
+    border: 1px solid #444 !important;
+    border-radius: 12px !important;
+    color: #eaeaea !important;
+}
+
+body.customer-dark-mode .summary-row {
+    border-bottom: 1px solid #333 !important;
+}
+
+body.customer-dark-mode .summary-row.total {
+    border-bottom: none !important;
+    color: #4CAF50 !important;
+    font-weight: 600 !important;
+}
+
+/* Empty Cart */
+body.customer-dark-mode .empty-cart {
+    color: #888 !important;
+}
+
+body.customer-dark-mode .empty-cart i {
+    color: #666 !important;
+}
+
+/* =========================================
+   ORDERS-SPECIFIC DARK MODE STYLES
+========================================= */
+
+/* Orders Summary Cards */
+body.customer-dark-mode .orders-summary {
+    background: transparent !important;
+}
+
+body.customer-dark-mode .summary-card {
+    background: #252525 !important;
+    border: 1px solid #444 !important;
+    color: #eaeaea !important;
+    transition: all 0.3s ease !important;
+}
+
+body.customer-dark-mode .summary-card:hover {
+    background: #2d2d2d !important;
+    border-color: #4CAF50 !important;
+}
+
+body.customer-dark-mode .summary-value {
+    color: #f1f1f1 !important;
+}
+
+body.customer-dark-mode .summary-chip {
+    background: #333 !important;
+    color: #cccccc !important;
+}
+
+body.customer-dark-mode .summary-chip i {
+    color: #4CAF50 !important;
+}
+
+/* Orders Toolbar */
+body.customer-dark-mode .orders-toolbar {
+    background: #252525 !important;
+    border: 1px solid #444 !important;
+    border-radius: 12px !important;
+}
+
+body.customer-dark-mode .filter-group select {
+    background: #2d2d2d !important;
+    color: #f1f1f1 !important;
+    border: 1px solid #444 !important;
+}
+
+body.customer-dark-mode .search-input-wrapper {
+    background: #2d2d2d !important;
+    border: 1px solid #444 !important;
+}
+
+body.customer-dark-mode .search-input-wrapper i {
+    color: #888 !important;
+}
+
+body.customer-dark-mode .search-input-wrapper input {
+    background: transparent !important;
+    color: #f1f1f1 !important;
+}
+
+body.customer-dark-mode .search-input-wrapper input::placeholder {
+    color: #888 !important;
+}
+
+/* Orders Table */
+body.customer-dark-mode .orders-table {
+    background: #252525 !important;
+    border: 1px solid #444 !important;
+    color: #eaeaea !important;
+}
+
+body.customer-dark-mode .orders-table th {
+    background: #2d2d2d !important;
+    color: #f1f1f1 !important;
+    border-bottom: 2px solid #444 !important;
+}
+
+body.customer-dark-mode .orders-table td {
+    border-bottom: 1px solid #333 !important;
+    color: #eaeaea !important;
+}
+
+body.customer-dark-mode .orders-table tr:hover {
+    background: #2d2d2d !important;
+}
+
+/* View Toggle */
+body.customer-dark-mode .view-toggle .icon-btn {
+    background: #2d2d2d !important;
+    color: #888 !important;
+    border: 1px solid #444 !important;
+}
+
+body.customer-dark-mode .view-toggle .icon-btn.active {
+    background: #4CAF50 !important;
+    color: #ffffff !important;
+    border-color: #4CAF50 !important;
+}
+
+/* =========================================
+   COMMON ELEMENTS ACROSS ALL PAGES
+========================================= */
+
+/* Header Icons */
+body.customer-dark-mode .header-icons {
+    background: transparent !important;
+}
+
+body.customer-dark-mode .cart-icon {
+    color: #eaeaea !important;
+}
+
+body.customer-dark-mode .cart-count {
+    background: #4CAF50 !important;
+    color: #ffffff !important;
+}
+
+body.customer-dark-mode .profile-icon {
+    color: #eaeaea !important;
+}
+
+/* Profile Dropdown */
+body.customer-dark-mode .profile-dropdown {
+    background: #252525 !important;
+    border: 1px solid #444 !important;
+    color: #eaeaea !important;
+}
+
+body.customer-dark-mode .profile-dropdown a {
+    color: #eaeaea !important;
+    border-bottom: 1px solid #333 !important;
+}
+
+body.customer-dark-mode .profile-dropdown a:hover {
+    background: #2d2d2d !important;
+    color: #4CAF50 !important;
+}
+
+/* Loading States */
+body.customer-dark-mode .loading-skeleton {
+    background: rgba(30, 30, 30, 0.95) !important;
+}
+
+/* Modal Overlays */
+body.customer-dark-mode .modal {
+    background: rgba(0, 0, 0, 0.7) !important;
+}
+
+body.customer-dark-mode .modal-content {
+    background: #252525 !important;
+    border: 1px solid #444 !important;
+    color: #eaeaea !important;
+}
+
+/* Form Groups in Modals */
+body.customer-dark-mode .form-group label {
+    color: #cccccc !important;
+}
+
+/* Success/Error States */
+body.customer-dark-mode .success {
+    color: #4CAF50 !important;
+}
+
+body.customer-dark-mode .error {
+    color: #f44336 !important;
+}
+
+body.customer-dark-mode .warning {
+    color: #ff9800 !important;
+}
+/* =========================================
+   SIDEBAR DARK MODE STYLES
+========================================= */
+
+/* Sidebar Container */
+body.customer-dark-mode .sidebar {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%) !important;
+    border-right: 1px solid #333 !important;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Sidebar List */
+body.customer-dark-mode .sidebar ul {
+    background: transparent !important;
+}
+
+/* Sidebar List Items */
+body.customer-dark-mode .sidebar ul li {
+    background: transparent !important;
+    border-bottom: 1px solid #333 !important;
+}
+
+body.customer-dark-mode .sidebar ul li:last-child {
+    border-bottom: none !important;
+}
+
+/* Sidebar Links */
+body.customer-dark-mode .sidebar ul li a {
+    background: transparent !important;
+    color: #eaeaea !important;
+    transition: all 0.3s ease !important;
+    border: none !important;
+}
+
+body.customer-dark-mode .sidebar ul li a:hover {
+    background: rgba(76, 175, 80, 0.1) !important;
+    color: #4CAF50 !important;
+    border-left: 4px solid #4CAF50 !important;
+    padding-left: 16px !important;
+}
+
+body.customer-dark-mode .sidebar ul li a i {
+    color: #888 !important;
+    transition: color 0.3s ease !important;
+}
+
+body.customer-dark-mode .sidebar ul li a:hover i {
+    color: #4CAF50 !important;
+}
+
+/* Active Sidebar Link */
+body.customer-dark-mode .sidebar ul li a.active {
+    background: rgba(76, 175, 80, 0.15) !important;
+    color: #4CAF50 !important;
+    border-left: 4px solid #4CAF50 !important;
+}
+
+body.customer-dark-mode .sidebar ul li a.active i {
+    color: #4CAF50 !important;
+}
+
+/* Logout Button Special Styling */
+body.customer-dark-mode .sidebar ul li:last-child a {
+    color: #f44336 !important;
+    border-top: 1px solid #333 !important;
+    margin-top: 10px !important;
+}
+
+body.customer-dark-mode .sidebar ul li:last-child a:hover {
+    background: rgba(244, 67, 54, 0.1) !important;
+    color: #ff5252 !important;
+    border-left: 4px solid #f44336 !important;
+}
+
+body.customer-dark-mode .sidebar ul li:last-child a i {
+    color: #f44336 !important;
+}
+
+/* =========================================
+   DASHBOARD BACKGROUND IMAGE FIX
+========================================= */
+
+/* Dashboard Background */
+body.customer-dark-mode .main-content#main-content {
+    background: 
+        linear-gradient(rgba(18, 18, 18, 0.85), rgba(18, 18, 18, 0.9)),
+        url('assets/dashboard-bg.jpg') !important;
+    background-size: cover !important;
+    background-position: center !important;
+    background-attachment: fixed !important;
+    background-repeat: no-repeat !important;
+}
+
+/* If you want a pattern instead of image in dark mode */
+body.customer-dark-mode .main-content#main-content {
+    /* Alternative: Subtle dark pattern */
+    background: 
+        linear-gradient(135deg, rgba(26, 26, 26, 0.95) 0%, rgba(45, 45, 45, 0.95) 100%),
+        radial-gradient(circle at 10% 20%, rgba(76, 175, 80, 0.05) 0%, transparent 20%),
+        radial-gradient(circle at 90% 80%, rgba(76, 175, 80, 0.05) 0%, transparent 20%) !important;
+}
+
+/* Hero Section Override */
+body.customer-dark-mode .hero {
+    background: linear-gradient(135deg, rgba(26, 26, 26, 0.9) 0%, rgba(45, 45, 45, 0.9) 100%) !important;
+    backdrop-filter: blur(10px) !important;
+    border: 1px solid #333 !important;
+    border-radius: 16px !important;
+    margin: 20px !important;
+}
+
+/* Dashboard Columns Background */
+body.customer-dark-mode .dashboard-columns {
+    background: transparent !important;
+}
+
+body.customer-dark-mode .dashboard-columns .column {
+    background: transparent !important;
+}
+
+/* Cards in Dashboard */
+body.customer-dark-mode .dashboard-columns section {
+    background: rgba(30, 30, 30, 0.8) !important;
+    backdrop-filter: blur(10px) !important;
+    border: 1px solid #333 !important;
+    border-radius: 16px !important;
+    padding: 20px !important;
+    margin-bottom: 20px !important;
+}
+
+/* =========================================
+   OVERLAY DARK MODE
+========================================= */
+
+body.customer-dark-mode .overlay {
+    background: rgba(0, 0, 0, 0.7) !important;
+    backdrop-filter: blur(5px) !important;
+}
+
+/* =========================================
+   MENU TOGGLE BUTTON
+========================================= */
+
+body.customer-dark-mode .menu-toggle {
+    background: #2d2d2d !important;
+    color: #eaeaea !important;
+    border: 1px solid #444 !important;
+    transition: all 0.3s ease !important;
+}
+
+body.customer-dark-mode .menu-toggle:hover {
+    background: #4CAF50 !important;
+    color: #ffffff !important;
+    border-color: #4CAF50 !important;
+}
+
+body.customer-dark-mode .menu-toggle i {
+    color: inherit !important;
+}
+
+/* =========================================
+   SCROLLBAR FOR SIDEBAR
+========================================= */
+
+body.customer-dark-mode .sidebar::-webkit-scrollbar {
+    width: 6px !important;
+}
+
+body.customer-dark-mode .sidebar::-webkit-scrollbar-track {
+    background: #1a1a1a !important;
+}
+
+body.customer-dark-mode .sidebar::-webkit-scrollbar-thumb {
+    background: #444 !important;
+    border-radius: 3px !important;
+}
+
+body.customer-dark-mode .sidebar::-webkit-scrollbar-thumb:hover {
+    background: #555 !important;
+}
+/* =========================================
+   GUARANTEED BACKGROUND FIX - CSS PATTERN
+   No image dependencies, always works
+========================================= */
+
+/* Reset any conflicting backgrounds first */
+body.customer-dark-mode .main-content,
+body.customer-dark-mode .main-content#main-content,
+body.customer-dark-mode #main-content {
+    background: 
+        /* Base dark gradient */
+        linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%),
+        
+        /* Subtle agricultural-themed green accents */
+        radial-gradient(circle at 10% 20%, rgba(76, 175, 80, 0.08) 0%, transparent 25%),
+        radial-gradient(circle at 90% 80%, rgba(76, 175, 80, 0.08) 0%, transparent 25%),
+        radial-gradient(circle at 50% 50%, rgba(76, 175, 80, 0.05) 0%, transparent 30%),
+        
+        /* Leaf/plant pattern effect */
+        repeating-linear-gradient(
+            45deg,
+            transparent,
+            transparent 10px,
+            rgba(76, 175, 80, 0.02) 10px,
+            rgba(76, 175, 80, 0.02) 20px
+        ),
+        
+        /* Subtle noise texture for depth */
+        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"><filter id="grain"><feTurbulence baseFrequency="0.015" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23grain)" opacity="0.08"/></svg>') !important;
+    
+    background-attachment: fixed !important;
+    background-size: cover !important;
+    position: relative !important;
+}
+
+/* Add a beautiful agricultural overlay */
+body.customer-dark-mode .main-content#main-content::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        /* Farm field lines effect */
+        repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 2px,
+            rgba(76, 175, 80, 0.03) 2px,
+            rgba(76, 175, 80, 0.03) 4px
+        ),
+        /* Crop row effect */
+        repeating-linear-gradient(
+            90deg,
+            transparent,
+            transparent 3px,
+            rgba(76, 175, 80, 0.02) 3px,
+            rgba(76, 175, 80, 0.02) 6px
+        );
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Ensure all content stays above the background */
+body.customer-dark-mode .main-content > * {
+    position: relative;
+    z-index: 1;
+}
+
+/* Dashboard sections with glass morphism effect */
+body.customer-dark-mode .dashboard-columns .column section {
+    background: rgba(30, 30, 30, 0.7) !important;
+    backdrop-filter: blur(20px) !important;
+    border: 1px solid rgba(76, 175, 80, 0.2) !important;
+    border-radius: 16px !important;
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Hero section with enhanced dark mode styling */
+body.customer-dark-mode .hero {
+    background: linear-gradient(
+        135deg, 
+        rgba(26, 26, 26, 0.9) 0%, 
+        rgba(45, 45, 45, 0.9) 100%
+    ) !important;
+    backdrop-filter: blur(20px) !important;
+    border: 1px solid rgba(76, 175, 80, 0.3) !important;
+    border-radius: 20px !important;
+    box-shadow: 
+        0 20px 40px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+    margin: 20px !important;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Add a subtle green glow to hero */
+body.customer-dark-mode .hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(
+        circle,
+        rgba(76, 175, 80, 0.1) 0%,
+        transparent 70%
+    );
+    animation: float 6s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(180deg); }
+}
+
+/* Action cards with enhanced dark mode */
+body.customer-dark-mode .action-card {
+    background: rgba(35, 35, 35, 0.8) !important;
+    backdrop-filter: blur(15px) !important;
+    border: 1px solid rgba(76, 175, 80, 0.3) !important;
+    border-radius: 16px !important;
+    box-shadow: 
+        0 8px 25px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+    transition: all 0.3s ease !important;
+    position: relative;
+    overflow: hidden;
+}
+
+body.customer-dark-mode .action-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(76, 175, 80, 0.1),
+        transparent
+    );
+    transition: left 0.6s ease;
+}
+
+body.customer-dark-mode .action-card:hover::before {
+    left: 100%;
+}
+
+body.customer-dark-mode .action-card:hover {
+    transform: translateY(-8px) scale(1.02) !important;
+    border-color: #4CAF50 !important;
+    box-shadow: 
+        0 15px 35px rgba(76, 175, 80, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Market ticker dark mode enhancement */
+body.customer-dark-mode .ticker-container {
+    background: rgba(28, 28, 28, 0.9) !important;
+    backdrop-filter: blur(15px) !important;
+    border-bottom: 1px solid rgba(76, 175, 80, 0.2) !important;
+}
+
+/* Section headers */
+body.customer-dark-mode .section-header {
+    border-bottom: 1px solid rgba(76, 175, 80, 0.3) !important;
+}
+
+body.customer-dark-mode .section-header h2 {
+    color: #f1f1f1 !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* View all links */
+body.customer-dark-mode .view-all {
+    color: #4CAF50 !important;
+    background: rgba(76, 175, 80, 0.1) !important;
+    padding: 8px 16px !important;
+    border-radius: 20px !important;
+    border: 1px solid rgba(76, 175, 80, 0.3) !important;
+    transition: all 0.3s ease !important;
+}
+
+body.customer-dark-mode .view-all:hover {
+    background: rgba(76, 175, 80, 0.2) !important;
+    border-color: #4CAF50 !important;
+    transform: translateX(5px) !important;
+}
+

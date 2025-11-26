@@ -7,11 +7,16 @@
   rel="stylesheet"
   href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
 />
-<link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
-<link rel="manifest" href="assets/site.webmanifest">
-<link rel="shortcut icon" href="assets/favicon.ico" type="image/x-icon">
+<!-- Favicons (Updated) -->
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/android-chrome-192x192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="/assets/android-chrome-512x512.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+<link rel="manifest" href="/assets/site.webmanifest">
+<link rel="stylesheet" href="css/darkmode.css">
+
   <title>FAQ - Farmer Connect</title>
   <style>
     :root {
@@ -277,6 +282,47 @@
         gap: 10px;
       }
     }
+    @media (max-width: 576px) {
+  .top-nav {
+    justify-content: space-between;
+    height: auto;
+  }
+
+  .logo-text {
+    font-size: 18px;
+    text-align: center;
+  }
+
+  .btn-back {
+    font-size: 1.2rem;
+    width: 32px;
+    height: 32px;
+  }
+
+  .faq-header h2 {
+    font-size: 1.6rem;
+  }
+
+  .faq-header p {
+    font-size: 0.95rem;
+  }
+
+  .category-btn {
+    font-size: 0.85rem;
+    padding: 6px 14px;
+  }
+
+  .search-input {
+    font-size: 0.9rem;
+    padding-left: 40px;
+  }
+
+  .search-icon {
+    left: 12px;
+    font-size: 0.9rem;
+  }
+}
+
   </style>
 </head>
 <body>
@@ -497,7 +543,7 @@
       window.print();
     }
   </script>
+<script src="js/darkmode.js"></script>
 
-  <!-- Font Awesome for icons -->
 </body>
 </html>

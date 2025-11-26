@@ -1,28 +1,32 @@
 document.addEventListener('DOMContentLoaded', () => {
-  // Sidebar toggle functionality
   const menuToggle = document.getElementById("menu-toggle");
   const sidebar = document.getElementById("sidebar");
   const mainContent = document.getElementById("main-content");
+  const overlay = document.querySelector(".overlay");
 
-  if (menuToggle && sidebar && mainContent) {
+  if (menuToggle && sidebar && mainContent && overlay) {
+    // Toggle sidebar and overlay
     menuToggle.addEventListener("click", () => {
       sidebar.classList.toggle("active");
-      mainContent.classList.toggle("shift");
+      overlay.classList.toggle("active");
 
+      if (window.innerWidth > 768) {
+        mainContent.classList.toggle("shift");
+      }
     });
 
-    if (localStorage.getItem("sidebarActive") === "true") {
-      sidebar.classList.add("active");
-      mainContent.classList.add("shift");
-    }
+    // Hide sidebar when overlay is clicked
+    overlay.addEventListener("click", () => {
+      sidebar.classList.remove("active");
+      overlay.classList.remove("active");
+      mainContent.classList.remove("shift");
+    });
   }
 
-  // Profile link click listener
+  // Optional: handle profile link click
   const profileLink = document.getElementById('profileLink');
   if (profileLink) {
-    profileLink.addEventListener('click', (e) => {
-      console.log('Profile link clicked');
-      // You can add your navigation or logic here
+    profileLink.addEventListener('click', () => {
     });
   }
 });

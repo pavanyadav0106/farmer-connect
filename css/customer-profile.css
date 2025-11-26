@@ -1,110 +1,61 @@
-/* ======= CSS Variables ======= */
+/* =========================
+   CSS VARIABLES
+   ========================= */
 :root {
-  /* Colors */
-  --primary-color: #28a745;
-  --primary-dark: #1f4f1f;
-  --primary-light: #d4edda;
-  --secondary-color: #6c757d;
-  --danger-color: #dc3545;
-  --danger-dark: #b5302a;
-  --warning-color: #ffc107;
-  --light-color: #f8f9fa;
-  --dark-color: #343a40;
-  --gray-light: #e9ecef;
-  --gray-medium: #dee2e6;
-  --white: #ffffff;
-  
-  /* Text */
-  --text-primary: #212529;
-  --text-secondary: #495057;
-  --text-light: #f8f9fa;
-  
-  /* Status */
-  --success-bg: #d4edda;
-  --success-text: #155724;
-  --error-bg: #f8d7da;
-  --error-text: #721c24;
-  --info-bg: #cce5ff;
-  --info-text: #004085;
-  
-  /* Shadows */
-  --shadow-sm: 0 1px 3px rgba(0,0,0,0.12);
-  --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
-  --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
-  
-  /* Spacing */
-  --space-xs: 0.25rem;
-  --space-sm: 0.5rem;
-  --space-md: 1rem;
-  --space-lg: 1.5rem;
-  --space-xl: 2rem;
-  
-  /* Borders */
-  --border-radius-sm: 4px;
-  --border-radius-md: 6px;
-  --border-radius-lg: 8px;
-  --border-radius-circle: 50%;
-  
-  /* Fonts */
-  --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  --font-logo: 'Poppins', sans-serif;
-  
-  /* Transitions */
-  --transition-fast: 0.15s ease;
-  --transition-normal: 0.3s ease;
-  --transition-slow: 0.5s ease;
+  --primary: #4CAF50;
+  --primary-dark: #388E3C;
+  --bg-light: #f8f9fa;
+  --bg-white: #ffffff;
+  --text-dark: #1a1a1a;
+  --text-muted: #6c757d;
+  --border: #e2e8f0;
+  --radius: 14px;
+  --radius-full: 999px;
+  --shadow-soft: 0 6px 18px rgba(0,0,0,0.08);
+  --shadow-strong: 0 12px 30px rgba(0,0,0,0.18);
+  --transition: 0.25s ease;
 }
 
-/* ======= Base Styles ======= */
+/* =========================
+   BASE RESET
+   ========================= */
 *,
 *::before,
 *::after {
-  box-sizing: border-box;
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-  font-family: var(--font-main);
-  line-height: 1.6;
-  color: var(--text-primary);
-  background-color: var(--light-color);
-  padding-top: 60px; /* For fixed header */
+  font-family: "Poppins", system-ui, -apple-system, sans-serif;
+  background: var(--bg-light);
+  color: var(--text-dark);
+  padding-top: 80px;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* ======= Typography ======= */
-h1, h2, h3, h4 {
-  line-height: 1.2;
-  margin-bottom: var(--space-md);
+/* Improve focus outlines for accessibility */
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
 }
 
-h1 {
-  font-size: 2rem;
-  color: var(--primary-dark);
-}
-
-/* ======= Layout ======= */
-.container {
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 var(--space-md);
-}
-
-/* ======= Header ======= */
+/* =========================
+   TOP NAV & BACK BUTTON
+   ========================= */
 .top-nav {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 15px 20px;
   position: fixed;
-  width: 100%;
   top: 0;
   left: 0;
-  background: #28a745;
-  color: white;
+  right: 0;
+  height: 64px;
+  background: linear-gradient(135deg, #4CAF50, #66BB6A);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: var(--shadow-soft);
   z-index: 1000;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 .logo-text {
@@ -120,211 +71,433 @@ h1 {
   user-select: none;
 }
 
-/* ======= Back Button ======= */
+.logo-text:hover {
+  text-decoration: underline;
+}
+
 .back-button {
   position: fixed;
-  top: 70px; /* just below top-nav */
-  left: 20px;
-  z-index: 9999; /* very high to stay on top */
-  background-color: #28a745; /* matching theme */
-  color: white;
+  top: 72px;
+  left: 10px;
+  z-index: 1100;
+  background: var(--primary);
+  color: #fff;
   border: none;
-  border-radius: 4px;
-  padding: 8px 16px;
+  border-radius: 999px;
+  padding: 7px 13px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   cursor: pointer;
-  font-weight: 600;
-  font-size: 18px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-  transition: background-color 0.3s ease;
-  user-select: none;
+  box-shadow: var(--shadow-soft);
+  transition: var(--transition);
+  font-size: 0.9rem;
 }
 
 .back-button:hover {
-  background-color: #1f4f1f;
+  background: var(--primary-dark);
+  transform: translateX(-2px);
 }
 
-/* ======= Profile Container ======= */
+/* =========================
+   MAIN LAYOUT
+   ========================= */
+.main-content {
+  display: flex;
+  justify-content: center;
+  padding: 20px 12px 32px;
+}
+
 .profile-container {
-  max-width: 600px;
-  margin: var(--space-xl) auto;
-  padding: var(--space-lg);
-  background-color: var(--white);
-  border-radius: var(--border-radius-lg);
-  box-shadow: var(--shadow-sm);
+  width: 100%;
+  max-width: 720px;
+  background: var(--bg-white);
+  border-radius: 22px;
+  padding: 20px 22px 22px;
+  box-shadow: var(--shadow-strong);
+  position: relative;
+  overflow: hidden;
+  min-height: 600px;
 }
 
-.profile-container h1 {
+/* =========================
+   SKELETON LOADER
+   ========================= */
+.profile-skeleton {
+  position: absolute;
+  inset: 12px 12px 16px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  display: none;
+  z-index: 15;
+  pointer-events: none;
+  padding: 24px 20px;
+}
+
+.profile-skeleton.active {
+  display: block;
+  animation: fadeIn 0.3s ease;
+}
+
+.skeleton-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 24px;
   text-align: center;
-  color: var(--primary-dark);
-  margin-bottom: var(--space-lg);
+}
+
+.skeleton-avatar {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  margin-bottom: 16px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s ease-in-out infinite;
+}
+
+.skeleton-photo-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.skeleton-photo {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s ease-in-out infinite;
+  margin-bottom: 12px;
+}
+
+.skeleton-section {
+  margin-bottom: 20px;
+}
+
+.skeleton-line {
+  height: 14px;
+  border-radius: 8px;
+  margin: 8px 0;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s ease-in-out infinite;
+}
+
+.skeleton-line.short {
+  width: 40%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.skeleton-line.medium {
+  width: 60%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.skeleton-line.full {
+  width: 100%;
+}
+
+.skeleton-input {
+  height: 44px;
+  border-radius: 12px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s ease-in-out infinite;
+  margin-top: 6px;
+}
+
+.skeleton-textarea {
+  height: 80px;
+  border-radius: 12px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s ease-in-out infinite;
+  margin-top: 6px;
+}
+
+.skeleton-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.skeleton-grid-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.skeleton-buttons {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.skeleton-button {
+  height: 40px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s ease-in-out infinite;
+  flex: 1;
+  min-width: 120px;
+}
+
+/* =========================
+   PROFILE CONTENT
+   ========================= */
+.profile-content {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.profile-content.loaded {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.profile-content h1 {
+  font-size: 1.8rem;
+  margin-bottom: 16px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: var(--space-sm);
+  gap: 10px;
+  color: var(--primary-dark);
 }
 
-/* ======= Photo Section ======= */
+/* Glassy header section */
 .photo-section {
+  margin-bottom: 20px;
   text-align: center;
-  margin-bottom: var(--space-lg);
+  padding: 16px 12px 20px;
+  border-radius: 18px;
+  background: rgba(255,255,255,0.85);
+  box-shadow: var(--shadow-soft);
+  backdrop-filter: blur(10px);
 }
 
+/* Profile Avatar */
 .profile-pic-container {
   position: relative;
-  width: 150px;
-  height: 150px;
-  margin: 0 auto var(--space-md);
+  width: 140px;
+  height: 140px;
+  margin: 0 auto 10px;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: var(--shadow-strong);
+  border: 3px solid rgba(255,255,255,0.9);
   cursor: pointer;
+  transition: var(--transition);
+}
+
+.profile-pic-container:hover {
+  transform: scale(1.02);
 }
 
 .profile-pic {
   width: 100%;
   height: 100%;
-  border-radius: var(--border-radius-circle);
   object-fit: cover;
-  border: 3px solid var(--primary-color);
-  box-shadow: 0 0 0 3px var(--primary-light);
-  transition: all var(--transition-normal);
-}
-
-.profile-pic:hover {
-  box-shadow: 0 0 0 5px var(--primary-light);
 }
 
 .upload-overlay {
   position: absolute;
-  bottom: 0;
-  right: 0;
-  background-color: var(--primary-color);
-  color: var(--white);
-  width: 40px;
-  height: 40px;
-  border-radius: var(--border-radius-circle);
+  right: 6px;
+  bottom: 6px;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
   opacity: 0;
-  transition: opacity var(--transition-normal);
+  transform: translateY(4px);
+  transition: var(--transition);
+  border: none;
+  cursor: pointer;
 }
 
 .profile-pic-container:hover .upload-overlay {
   opacity: 1;
+  transform: translateY(0);
 }
 
-/* ======= Form Styles ======= */
+.upload-status {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-top: 6px;
+  min-height: 20px;
+}
+
+/* =========================
+   FORM FIELDS
+   ========================= */
 .profile-field {
-  margin-bottom: var(--space-md);
+  margin-bottom: 14px;
 }
 
 .profile-field label {
-  display: block;
+  font-size: 0.9rem;
   font-weight: 600;
-  margin-bottom: var(--space-xs);
-  color: var(--text-secondary);
+  margin-bottom: 6px;
+  display: block;
+  color: var(--text-muted);
+}
+
+.profile-field label i {
+  color: var(--primary);
+  margin-right: 4px;
 }
 
 .profile-field input,
-.profile-field select {
+.profile-field select,
+.profile-field textarea {
   width: 100%;
-  padding: var(--space-sm) var(--space-md);
-  font-size: 1rem;
-  border: 1px solid var(--gray-medium);
-  border-radius: var(--border-radius-md);
-  transition: all var(--transition-fast);
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: #f9fafb;
+  font-size: 0.95rem;
+  transition: var(--transition);
+  font-family: inherit;
+}
+
+.profile-field textarea {
+  resize: vertical;
+  min-height: 80px;
 }
 
 .profile-field input:focus,
-.profile-field select:focus {
+.profile-field select:focus,
+.profile-field textarea:focus {
   outline: none;
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 2px rgba(40, 167, 69, 0.25);
+  border-color: var(--primary);
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(76,175,80,0.18);
 }
 
 .profile-field input:disabled,
-.profile-field select:disabled {
-  background-color: var(--gray-light);
+.profile-field select:disabled,
+.profile-field textarea:disabled {
+  background: #eceff1;
+  color: #7a7a7a;
   cursor: not-allowed;
 }
 
 .read-only {
-  background-color: var(--gray-light);
-  padding: var(--space-sm) var(--space-md);
-  border-radius: var(--border-radius-md);
-  color: var(--text-secondary);
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: #f3f4f6;
+  border: 1px dashed var(--border);
+  font-size: 0.95rem;
+  word-break: break-word;
 }
 
-/* ======= Form Layout ======= */
+/* 2-column row */
 .form-row {
   display: flex;
-  gap: var(--space-md);
+  gap: 16px;
 }
 
-.form-row .profile-field {
-  flex: 1;
-}
-
-/* ======= Buttons ======= */
+/* =========================
+   BUTTONS
+   ========================= */
 .btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-xs);
-  padding: var(--space-sm) var(--space-md);
   border: none;
-  border-radius: var(--border-radius-md);
+  border-radius: 999px;
+  padding: 8px 16px;
+  font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all var(--transition-normal);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: var(--transition);
+  text-decoration: none;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
 }
 
 .btn-primary {
-  background-color: var(--primary-color);
-  color: var(--white);
+  background: var(--primary);
+  color: #fff;
+  box-shadow: 0 3px 10px rgba(76,175,80,0.35);
 }
 
-.btn-primary:hover {
-  background-color: var(--primary-dark);
+.btn-primary:hover:not(:disabled) {
+  background: var(--primary-dark);
 }
 
 .btn-secondary {
-  background-color: var(--secondary-color);
-  color: var(--white);
+  background: #e5e7eb;
+  color: #111827;
 }
 
-.btn-danger {
-  background-color: var(--danger-color);
-  color: var(--white);
-}
-
-.btn-danger:hover {
-  background-color: var(--danger-dark);
+.btn-secondary:hover:not(:disabled) {
+  background: #d1d5db;
 }
 
 .btn-warning {
-  background-color: var(--warning-color);
-  color: var(--text-primary);
+  background: #ffc107;
+  color: #111827;
 }
 
-/* ======= Profile Actions ======= */
+.btn-warning:hover:not(:disabled) {
+  background: #e0a800;
+}
+
+.btn-danger {
+  background: #dc3545;
+  color: #fff;
+}
+
+.btn-danger:hover:not(:disabled) {
+  background: #c82333;
+}
+
 .profile-actions {
   display: flex;
-  gap: var(--space-md);
-  margin-top: var(--space-lg);
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 12px;
 }
 
-/* ======= Password Change Section ======= */
+/* =========================
+   PASSWORD BOX
+   ========================= */
 .password-change-box {
-  margin-top: var(--space-lg);
-  padding: var(--space-md);
-  background-color: var(--gray-light);
-  border-radius: var(--border-radius-md);
-  display: none;
+  margin-top: 18px;
+  padding: 14px 12px 12px;
+  background: #f3f4f6;
+  border-radius: 16px;
+  animation: slideDown 0.3s ease;
 }
 
 .password-change-box h3 {
-  color: var(--danger-color);
-  font-size: 1.25rem;
-  margin-bottom: var(--space-md);
+  font-size: 1rem;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .password-input {
@@ -332,61 +505,176 @@ h1 {
 }
 
 .password-input input {
-  padding-right: 40px;
+  padding-right: 34px;
 }
 
 .toggle-password {
   position: absolute;
-  right: var(--space-md);
+  right: 10px;
   top: 50%;
   transform: translateY(-50%);
   cursor: pointer;
-  color: var(--secondary-color);
+  color: #6b7280;
+  background: none;
+  border: none;
+  padding: 4px;
 }
 
 .password-hint {
-  font-size: 0.875rem;
-  color: var(--secondary-color);
-  margin-top: var(--space-xs);
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-top: 4px;
 }
 
 .form-actions {
   display: flex;
-  gap: var(--space-md);
-  margin-top: var(--space-md);
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
 }
 
-/* ======= Status Messages ======= */
+/* =========================
+   STATUS MESSAGES
+   ========================= */
 .status-message {
-  padding: var(--space-sm) var(--space-md);
-  border-radius: var(--border-radius-md);
-  font-weight: 600;
-  margin-top: var(--space-sm);
+  margin-top: 8px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  font-size: 0.86rem;
   display: none;
 }
 
 .status-message.success {
-  background-color: var(--success-bg);
-  color: var(--success-text);
   display: block;
+  background: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
 }
 
 .status-message.error {
-  background-color: var(--error-bg);
-  color: var(--error-text);
   display: block;
+  background: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
 }
 
-.upload-status {
-  font-size: 0.875rem;
-  margin-top: var(--space-xs);
+.status-message.info {
+  display: block;
+  background: #d1ecf1;
+  color: #0c5460;
+  border: 1px solid #bee5eb;
 }
 
-/* ======= Responsive Design ======= */
+.status-message.warning {
+  display: block;
+  background: #fff3cd;
+  color: #856404;
+  border: 1px solid #ffeaa7;
+}
+
+/* =========================
+   LOADING OVERLAY
+   ========================= */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.9);
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  backdrop-filter: blur(5px);
+}
+
+.loading-overlay.active {
+  display: flex;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid var(--primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 16px;
+}
+
+/* =========================
+   TOASTS
+   ========================= */
+#toast-container {
+  position: fixed;
+  bottom: 18px;
+  right: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 2000;
+}
+
+.toast {
+  min-width: 220px;
+  padding: 9px 14px;
+  border-radius: 999px;
+  box-shadow: var(--shadow-soft);
+  color: #fff;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  animation: toast-in 0.25s ease, toast-out 0.35s ease 2.7s forwards;
+}
+
+.toast.success { background: #28a745; }
+.toast.error { background: #dc3545; }
+.toast.info { background: #17a2b8; }
+.toast.warning { background: #ffc107; color: #212529; }
+
+.toast i { font-size: 1rem; }
+
+/* =========================
+   ANIMATIONS
+   ========================= */
+@keyframes toast-in {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes toast-out {
+  to { opacity: 0; transform: translateX(20px); }
+}
+
+@keyframes skeleton-loading {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* =========================
+   RESPONSIVE
+   ========================= */
 @media (max-width: 768px) {
   .profile-container {
-    margin: var(--space-md);
-    padding: var(--space-md);
+    padding: 18px 14px 20px;
   }
 
   .form-row {
@@ -394,27 +682,69 @@ h1 {
     gap: 0;
   }
 
+  .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
   .profile-actions,
   .form-actions {
     flex-direction: column;
   }
 
-  .btn {
-    width: 100%;
+  .profile-skeleton {
+    inset: 10px 10px 14px;
+  }
+  
+  .skeleton-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
   }
 }
 
 @media (max-width: 480px) {
-  .logo-text {
-    font-size: 1rem;
+  .logo-text { font-size: 1.2rem; }
+  .profile-pic-container { width: 120px; height: 120px; }
+  .back-button span { display: none; }
+  .profile-content h1 { font-size: 1.5rem; }
+  
+  .skeleton-photo {
+    width: 100px;
+    height: 100px;
   }
+  
+  .skeleton-avatar {
+    width: 80px;
+    height: 80px;
+  }
+}
 
-  .profile-container h1 {
-    font-size: 1.5rem;
-  }
+/* =========================
+   DARK MODE SUPPORT
+   ========================= */
+body.dark-mode .profile-skeleton {
+  background: rgba(30, 30, 30, 0.95);
+}
 
-  .profile-pic-container {
-    width: 120px;
-    height: 120px;
-  }
+body.dark-mode .skeleton-avatar,
+body.dark-mode .skeleton-photo,
+body.dark-mode .skeleton-line,
+body.dark-mode .skeleton-input,
+body.dark-mode .skeleton-textarea,
+body.dark-mode .skeleton-button {
+  background: linear-gradient(90deg, #2a2a2a 25%, #3a3a3a 50%, #2a2a2a 75%);
+  background-size: 200% 100%;
+}
+
+body.dark-mode .loading-overlay {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+body.dark-mode .loading-spinner {
+  border-color: #444;
+  border-top-color: var(--primary);
+}
+
+body.dark-mode .loading-overlay p {
+  color: #fff;
 }

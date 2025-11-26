@@ -4,14 +4,458 @@
   <meta charset="UTF-8" />
   <title>Farmer Connect - License</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
-<link rel="manifest" href="assets/site.webmanifest">
-<link rel="shortcut icon" href="assets/favicon.ico" type="image/x-icon">
-  <link rel="stylesheet" href="css/license.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <style>
+    /* ============================================
+       FARMER CONNECT LICENSE AGREEMENT STYLES
+    ============================================ */
+
+    /* ============================================
+       GLOBAL VARIABLES & RESET
+    ============================================ */
+    :root {
+      --primary: #4CAF50;
+      --primary-dark: #388E3C;
+      --primary-light: #C8E6C9;
+      --secondary: #FF9800;
+      --accent: #2196F3;
+      --light: #f8f9fa;
+      --white: #ffffff;
+      --dark: #333333;
+      --border: #e0e0e0;
+      --text: #333333;
+      --text-muted: #666666;
+      --text-light: #999999;
+      --shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+      --shadow-hover: 0 8px 25px rgba(0, 0, 0, 0.15);
+      --radius: 12px;
+      --radius-sm: 8px;
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, #f8faf9 0%, #e8f5e9 100%);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      padding: 20px;
+      min-height: 100vh;
+    }
+
+    /* ============================================
+       LICENSE CONTAINER
+    ============================================ */
+    .license-container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 40px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .license-container::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+    }
+
+    /* ============================================
+       HEADER STYLES
+    ============================================ */
+    h1 {
+      color: var(--primary-dark);
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      text-align: center;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    h1::before {
+      content: "📄";
+      font-size: 2.2rem;
+    }
+
+    .license-container > p {
+      text-align: center;
+      font-size: 1.1rem;
+      margin-bottom: 40px;
+      padding: 15px;
+      background: var(--primary-light);
+      border-radius: var(--radius-sm);
+      border-left: 4px solid var(--primary);
+    }
+
+    /* ============================================
+       SECTION STYLES
+    ============================================ */
+    section {
+      margin-bottom: 30px;
+      padding: 25px;
+      background: var(--light);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      transition: var(--transition);
+      position: relative;
+    }
+
+    section:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-hover);
+      border-color: var(--primary-light);
+    }
+
+    section::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      border-radius: var(--radius) 0 0 var(--radius);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    section:hover::before {
+      opacity: 1;
+    }
+
+    h2 {
+      color: var(--primary-dark);
+      font-size: 1.4rem;
+      margin-bottom: 15px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    h2::before {
+      content: "§";
+      font-weight: bold;
+      color: var(--primary);
+    }
+
+    p {
+      margin-bottom: 15px;
+      font-size: 1rem;
+      line-height: 1.7;
+    }
+
+    /* ============================================
+       LIST STYLES
+    ============================================ */
+    ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    li {
+      padding: 10px 0;
+      font-size: 1rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    li:last-child {
+      border-bottom: none;
+    }
+
+    li::before {
+      font-size: 1.1rem;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    /* Grant of License items */
+    section:nth-child(3) li::before {
+      content: "✅";
+      color: #4CAF50;
+    }
+
+    /* Prohibitions items */
+    section:nth-child(4) li::before {
+      content: "❌";
+      color: #F44336;
+    }
+
+    /* ============================================
+       CONTACT SECTION
+    ============================================ */
+    section:last-child {
+      background: linear-gradient(135deg, var(--primary-light), #E8F5E8);
+      border: 1px solid var(--primary);
+      text-align: center;
+    }
+
+    section:last-child p {
+      font-size: 1.1rem;
+      margin-bottom: 10px;
+    }
+
+    section:last-child a {
+      color: var(--primary-dark);
+      text-decoration: none;
+      font-weight: 600;
+      transition: var(--transition);
+    }
+
+    section:last-child a:hover {
+      color: var(--accent);
+      text-decoration: underline;
+    }
+
+    /* ============================================
+       FOOTER STYLES
+    ============================================ */
+    .license-footer {
+      text-align: center;
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+    }
+
+    .license-footer a {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      background: var(--primary);
+      color: white;
+      text-decoration: none;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      transition: var(--transition);
+    }
+
+    .license-footer a:hover {
+      background: var(--primary-dark);
+      transform: translateX(-5px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .license-footer a::before {
+      content: "←";
+      font-size: 1.1rem;
+    }
+
+    /* ============================================
+       DARK MODE STYLES
+    ============================================ */
+    body.dark {
+      background: linear-gradient(135deg, #121212 0%, #1a1a1a 100%);
+      color: #e0e0e0;
+    }
+
+    body.dark .license-container {
+      background: #2d2d2d;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    body.dark section {
+      background: #333333;
+      border-color: #404040;
+    }
+
+    body.dark section:hover {
+      border-color: var(--primary);
+    }
+
+    body.dark h1,
+    body.dark h2 {
+      color: var(--primary-light);
+    }
+
+    body.dark p {
+      color: #e0e0e0;
+    }
+
+    body.dark li {
+      border-bottom-color: rgba(255, 255, 255, 0.1);
+    }
+
+    body.dark section:last-child {
+      background: linear-gradient(135deg, #2d2d2d, #333333);
+      border-color: var(--primary);
+    }
+
+    body.dark .license-footer {
+      border-top-color: #404040;
+    }
+
+    /* ============================================
+       DARK MODE TOGGLE
+    ============================================ */
+    .dark-mode-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      transition: var(--transition);
+      box-shadow: var(--shadow);
+      z-index: 1000;
+    }
+
+    .dark-mode-toggle:hover {
+      transform: scale(1.1);
+      box-shadow: var(--shadow-hover);
+    }
+
+    body.dark .dark-mode-toggle {
+      background: var(--primary-dark);
+    }
+
+    /* ============================================
+       RESPONSIVE DESIGN
+    ============================================ */
+    @media (max-width: 768px) {
+      body {
+        padding: 15px;
+      }
+
+      .license-container {
+        padding: 25px;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+
+      section {
+        padding: 20px;
+      }
+
+      h2 {
+        font-size: 1.2rem;
+      }
+
+      .dark-mode-toggle {
+        top: 15px;
+        right: 15px;
+        width: 44px;
+        height: 44px;
+        font-size: 1.1rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .license-container {
+        padding: 20px;
+      }
+
+      h1 {
+        font-size: 1.7rem;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      section {
+        padding: 15px;
+      }
+
+      li {
+        font-size: 0.9rem;
+      }
+
+      .license-footer a {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    /* ============================================
+       PRINT STYLES
+    ============================================ */
+    @media print {
+      .dark-mode-toggle,
+      .license-footer a {
+        display: none;
+      }
+
+      body {
+        background: white !important;
+        color: black !important;
+        padding: 0;
+      }
+
+      .license-container {
+        box-shadow: none;
+        border: 1px solid #ccc;
+      }
+
+      section {
+        break-inside: avoid;
+      }
+    }
+
+    /* ============================================
+       ACCESSIBILITY
+    ============================================ */
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        transition: none !important;
+        transform: none !important;
+      }
+
+      section:hover {
+        transform: none !important;
+      }
+
+      .license-footer a:hover {
+        transform: none !important;
+      }
+
+      .dark-mode-toggle:hover {
+        transform: none !important;
+      }
+    }
+
+    /* Focus styles */
+    .dark-mode-toggle:focus,
+    .license-footer a:focus,
+    section:last-child a:focus {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+  </style>
 </head>
 <body>
+  <!-- Dark Mode Toggle -->
+  <button class="dark-mode-toggle" id="darkModeToggle">
+    <i class="fas fa-moon"></i>
+  </button>
+
   <div class="license-container">
     <h1>Farmer Connect License Agreement</h1>
     <p><strong>Copyright © 2025 Mangadudla Pavan. All Rights Reserved.</strong></p>
@@ -24,18 +468,18 @@
     <section>
       <h2>2. Grant of License</h2>
       <ul>
-        <li>✔ Use the Software for personal or agricultural business purposes</li>
-        <li>✔ Modify for personal use (modifications remain governed by this license)</li>
+        <li>Use the Software for personal or agricultural business purposes</li>
+        <li>Modify for personal use (modifications remain governed by this license)</li>
       </ul>
     </section>
 
     <section>
       <h2>3. Strict Prohibitions</h2>
       <ul>
-        <li>❌ Redistribute, sell, or commercialize the Software</li>
-        <li>❌ Reverse-engineer, decompile, or disassemble</li>
-        <li>❌ Remove/alter copyright notices or license files</li>
-        <li>❌ Use for unlawful purposes or competitive analysis</li>
+        <li>Redistribute, sell, or commercialize the Software</li>
+        <li>Reverse-engineer, decompile, or disassemble</li>
+        <li>Remove/alter copyright notices or license files</li>
+        <li>Use for unlawful purposes or competitive analysis</li>
       </ul>
     </section>
 
@@ -43,25 +487,124 @@
       <h2>4. Termination</h2>
       <p>Any violation automatically terminates all rights without notice.</p>
     </section>
-    <section>
-  <h2>5. No Warranty</h2>
-  <p>
-    This Software is provided “as is,” without warranty of any kind, express or implied. The author is not liable for any damages arising from the use or inability to use this Software.
-  </p>
-</section>
 
     <section>
-        <p>
+      <h2>5. No Warranty</h2>
+      <p>This Software is provided "as is," without warranty of any kind, express or implied. The author is not liable for any damages arising from the use or inability to use this Software.</p>
+    </section>
+
+    <section>
+      <h2>Contact Information</h2>
+      <p>
         Mangadudla Pavan<br/>
         Phone: +91 95055 10127<br/>
         Email: <a href="mailto:farmerconnect30@gmail.com">farmerconnect30@gmail.com</a>
-        </p>
+      </p>
     </section>
 
-<footer class="license-footer">
-  <a href="index.html">← Back to Home</a>
-</footer>
-
+    <footer class="license-footer">
+      <a href="index.html">Back to Home</a>
+    </footer>
   </div>
+
+  <script>
+    // Dark Mode Toggle Functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      const darkModeToggle = document.getElementById('darkModeToggle');
+      const icon = darkModeToggle.querySelector('i');
+      
+      // Check for saved theme or prefer-color-scheme
+      const savedTheme = localStorage.getItem('theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      
+      if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+        document.body.classList.add('dark');
+        icon.className = 'fas fa-sun';
+      }
+      
+      darkModeToggle.addEventListener('click', function() {
+        document.body.classList.toggle('dark');
+        
+        if (document.body.classList.contains('dark')) {
+          icon.className = 'fas fa-sun';
+          localStorage.setItem('theme', 'dark');
+        } else {
+          icon.className = 'fas fa-moon';
+          localStorage.setItem('theme', 'light');
+        }
+      });
+      
+      // Listen for system theme changes
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+        if (!localStorage.getItem('theme')) {
+          if (e.matches) {
+            document.body.classList.add('dark');
+            icon.className = 'fas fa-sun';
+          } else {
+            document.body.classList.remove('dark');
+            icon.className = 'fas fa-moon';
+          }
+        }
+      });
+    });
+
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        document.querySelector(this.getAttribute('href')).scrollIntoView({
+          behavior: 'smooth'
+        });
+      });
+    });
+
+    // Add loading animation
+    document.addEventListener('DOMContentLoaded', function() {
+      document.body.style.opacity = '0';
+      document.body.style.transition = 'opacity 0.3s ease';
+      
+      setTimeout(() => {
+        document.body.style.opacity = '1';
+      }, 100);
+    });
+
+    // Print functionality
+    function printLicense() {
+      window.print();
+    }
+
+    // Add keyboard shortcuts
+    document.addEventListener('keydown', function(e) {
+      // Ctrl+P or Cmd+P for print
+      if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
+        e.preventDefault();
+        printLicense();
+      }
+      
+      // Escape key to go back
+      if (e.key === 'Escape') {
+        window.history.back();
+      }
+    });
+
+    // Add section highlighting on scroll
+    const sections = document.querySelectorAll('section');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.background = 'linear-gradient(135deg, var(--primary-light), #E8F5E8)';
+          setTimeout(() => {
+            if (entry.isIntersecting) {
+              entry.target.style.background = '';
+            }
+          }, 1000);
+        }
+      });
+    }, { threshold: 0.3 });
+
+    sections.forEach(section => {
+      observer.observe(section);
+    });
+  </script>
 </body>
 </html>

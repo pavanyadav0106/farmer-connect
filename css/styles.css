@@ -1,135 +1,296 @@
+/* ===== RESET & BASE STYLES ===== */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: Arial, sans-serif;
+  font-family: 'Arial', sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 body {
   background-color: #f0f2f5;
+  color: #333;
+  line-height: 1.6;
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
+/* ===== TOP NAV ===== */
 .top-nav {
+  height: 70px;
   display: flex;
-  align-items: center;
   justify-content: center;
-  padding: 15px 20px;
+  align-items: center;
+  background: #28a745;
+  color: white;
   position: fixed;
   width: 100%;
   top: 0;
   left: 0;
-  background: #28a745;
-  color: white;
   z-index: 1000;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
 }
 
-.hero {
-  background: url('https://i.ibb.co/fdw6Y2Xr/IMG-farmermobileinhand-HERO-L2-HRO-02-1440x400px-3.jpg') no-repeat center center/cover;
-  height: 80vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
+.logo-text {
+    font-size: 24px;
+    font-weight: bold;
+    font-family: 'Poppins', sans-serif;
+    letter-spacing: 1px;
+    text-decoration: none;
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    user-select: none;
+}
+
+/* Dark mode button */
+.dark-toggle {
+  position: absolute;
+  right: 20px;
+  background: none;
+  border: none;
+  font-size: 1.3rem;
   color: white;
-  padding: 20px;
+  cursor: pointer;
+}
+
+/* ===== HERO SECTION ===== */
+.hero {
+  height: 60vh;
+  margin-top: 70px;
   position: relative;
-  margin-top: 80px;
+  background: url("https://i.ibb.co/fdw6Y2Xr/IMG-farmermobileinhand-HERO-L2-HRO-02-1440x400px-3.jpg")
+    no-repeat center/cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 }
 
 .hero::before {
   content: "";
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
+  inset: 0;
+  background: rgba(0,0,0,0.3);
 }
 
 .hero-content {
-  max-width: 80%;
-  font-size: 1.2rem;
+  position: relative;
+  padding: 20px;
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(2px);
+  border-radius: 8px;
+  color: white;
+}
+
+/* ===== STATS SECTION ===== */
+.stats {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  background: white;
+  padding: 30px 20px;
+  flex-wrap: wrap;
+}
+
+.stat-card {
+  width: 150px;
   padding: 20px;
   border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  text-align: center;
+  transition: 0.3s;
 }
 
-.hero-content h1 {
-  font-size: clamp(1.2rem,5vw,2rem);
+.stat-card:hover {
+  transform: translateY(-5px);
 }
 
+.stat-card h2 {
+  font-size: 2rem;
+  color: #28a745;
+}
+
+/* ===== FEATURES ===== */
 .features {
   display: flex;
   justify-content: center;
-  text-align: center;
-  padding: 50px 20px;
-  background: white;
-  cursor: pointer;
   flex-wrap: wrap;
-  gap: 20px;
+  gap: 25px;
+  padding: 40px 20px;
+  background: #fff;
 }
 
 .feature {
   flex: 1;
-  min-width: 250px;
+  min-width: 220px;
   max-width: 300px;
-  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  padding: 25px;
+  background: #fff;
+  border-radius: 10px;
+  transition: 0.3s;
   cursor: pointer;
 }
 
 .feature:hover {
   transform: translateY(-5px);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
 
 .feature i {
   font-size: 40px;
   color: #28a745;
+  margin-bottom: 10px;
 }
 
+/* ===== TESTIMONIALS ===== */
 .testimonials {
-  text-align: center;
   background: #fff;
-  padding: 40px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 40px 20px;
+  text-align: center;
 }
 
+.testimonial-slider {
+  position: relative;
+  overflow: hidden;
+  min-height: 150px;
+}
+
+.testimonial {
+  position: absolute;
+  opacity: 0;
+  transform: scale(0.92);
+  transition: all 0.6s ease;
+  width: 90%;
+  left: 50%;
+  transform: translateX(-50%) scale(0.95);
+  background: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.testimonial.active {
+  opacity: 1;
+  transform: translateX(-50%) scale(1);
+}
+
+/* ===== FOOTER ===== */
 .footer {
   background: #28a745;
   color: white;
   text-align: center;
-  padding: 20px;
+  padding: 25px;
 }
 
 .footer a {
   color: white;
   text-decoration: none;
+  padding: 6px;
 }
 
-#loading {
-  display: none;
-  text-align: center;
-  opacity: 0;
-  transition: opacity 0.3s ease-in-out;
+/* =========================================
+    PERFECT GLOBAL DARK MODE 
+========================================= */
+
+body.dark {
+  background: #121212 !important;
+  color: #f1f1f1 !important;
 }
 
-#loading.show {
-  opacity: 1;
+/* Global containers */
+body.dark .hero-content,
+body.dark .feature,
+body.dark .testimonial,
+body.dark .stat-card,
+body.dark .footer,
+body.dark .ticker-container,
+body.dark .testimonials,
+body.dark .features {
+  background: #1a1a1a !important;
+  color: #fff !important;
 }
 
-@media (max-width: 600px) {
+/* Hero */
+body.dark .hero::before {
+  background: rgba(0,0,0,0.6) !important;
+}
+
+/* Nav */
+body.dark .top-nav {
+  background: #1e1e1e !important;
+}
+
+/* Inputs */
+body.dark input {
+  background: #222 !important;
+  color: white !important;
+  border: 1px solid #444 !important;
+}
+
+/* Buttons */
+body.dark button {
+  background: #222 !important;
+  color: white !important;
+  border: 1px solid #4caf50 !important;
+}
+
+/* Links */
+body.dark a {
+  color: #90ee90 !important;
+}
+/* ===== MOBILE IMPROVEMENTS ===== */
+@media (max-width: 768px) {
   .hero {
-    height: 60vh;
-    padding: 14px;
-  }
-  
-  .hero-content {
-    background: rgba(0, 0, 0, 0.7);
+    height: 50vh;
     padding: 10px;
-    border-radius: 10px;
   }
-  
-  .feature i {
-    font-size: 30px;
+
+  .hero-content {
+    padding: 15px;
+  }
+
+  .stats {
+    padding: 20px 10px;
+    gap: 12px;
+  }
+
+  .stat-card {
+    width: 45%;
+    padding: 15px;
+  }
+
+  .features {
+    padding: 25px 10px;
+  }
+
+  .feature {
+    max-width: 100%;
+  }
+
+  .testimonial {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .logo-text {
+    font-size: 1.3rem;
+  }
+
+  .stat-card {
+    width: 100%;
+  }
+
+  .top-nav {
+    height: 64px;
+  }
+
+  .hero {
+    height: 45vh;
   }
 }

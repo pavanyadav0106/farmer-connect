@@ -3,27 +3,48 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#28a745">
+  <meta name="mobile-web-app-capable" content="yes">
   <title>Farmer Connect</title>
-  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
-<link rel="manifest" href="assets/site.webmanifest">
-<link rel="shortcut icon" href="assets/favicon.ico" type="image/x-icon">
+  
+  <!-- Favicons -->
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/assets/android-chrome-192x192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="/assets/android-chrome-512x512.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="manifest" href="/assets/site.webmanifest">
+  <link rel="stylesheet" href="css/darkmode.css">
+
+
+  <!-- Fonts & Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&display=swap" rel="stylesheet">
+
+  <!-- CSS -->
   <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="css/sidebar.css">
   <link rel="stylesheet" href="css/weather.css">
   <link rel="stylesheet" href="css/market.css">
   <link rel="stylesheet" href="css/testimonials.css">
   <link rel="stylesheet" href="css/modal.css">
+  <link rel="stylesheet" href="css/darkmode.css">
+
 </head>
+
 <body>
-  <!-- Loading Indicator -->
+  <a href="#main-content" class="skip-nav">Skip to main content</a>
+
   <div id="loading">Loading...</div>
 
   <!-- Top Navigation -->
   <div class="top-nav">
-    <span class="logo-text">🌾 Farmer Connect</span>
+    <span class="logo-text">🌾 FARMER CONNECT</span>
+
+    <button id="darkModeToggle" class="dark-toggle">
+      <i id="darkModeIcon" class="fas fa-moon"></i>
+    </button>
   </div>
 
   <!-- Logout Modal -->
@@ -36,7 +57,7 @@
     </div>
   </div>
 
-  <!-- Hero Section -->
+  <!-- Hero -->
   <div class="hero">
     <div class="hero-content">
       <h1>Empowering Farmers with Real-Time Market Insights</h1>
@@ -44,57 +65,64 @@
     </div>
   </div>
 
+  <!-- Stats -->
+  <section class="stats">
+    <div class="stat-card">
+      <h2 id="statCrops">0</h2><p>Total Crops</p>
+    </div>
+    <div class="stat-card">
+      <h2 id="statOrders">0</h2><p>Orders Placed</p>
+    </div>
+    <div class="stat-card">
+      <h2 id="statWeather">0</h2><p>Weather Alerts</p>
+    </div>
+    <div class="stat-card">
+      <h2 id="statMessages">0</h2><p>Messages</p>
+    </div>
+  </section>
+
   <!-- Market Ticker -->
   <div class="ticker-container">
     <div class="ticker" id="market-ticker">Loading market prices...</div>
   </div>
 
-  <!-- Features Section -->
+  <!-- Features -->
   <div class="features">
-    <div class="feature">
-      <i class="fas fa-chart-line"></i>
-      <h3>Live Market Prices</h3>
-      <p>Stay updated with real-time crop rates.</p>
-    </div>
-    <div class="feature">
-      <i class="fas fa-cloud-sun"></i>
-      <h3>Weather Forecast</h3>
-      <p>Plan your farming with accurate weather data.</p>
-    </div>
-    <div class="feature">
-      <i class="fas fa-newspaper"></i>
-      <h3>Latest News</h3>
-      <p>Get farming tips & industry updates.</p>
-    </div>
-    <div class="feature">
-      <i class="fas fa-handshake"></i>
-      <h3>Seamless Transactions</h3>
-      <p>Sell crops easily with secure payments.</p>
-    </div>
+    <div class="feature"><i class="fas fa-chart-line"></i><h3>Live Market Prices</h3><p>Stay updated with real-time crop rates.</p></div>
+    <div class="feature"><i class="fas fa-cloud-sun"></i><h3>Weather Forecast</h3><p>Plan your farming with accurate weather data.</p></div>
+    <div class="feature"><i class="fas fa-newspaper"></i><h3>Latest News</h3><p>Get farming tips & industry updates.</p></div>
+    <div class="feature"><i class="fas fa-handshake"></i><h3>Seamless Transactions</h3><p>Sell crops easily with secure payments.</p></div>
   </div>
 
-  <!-- Testimonials -->
+  <!-- Testimonials (Slider) -->
   <div class="testimonials">
     <h2>Farmers' Success Stories</h2>
-    <div class="testimonial active">
-      <p>"Farmer Connect helped me get better prices for my crops. Highly recommend!"</p>
-      <h4>- Ramesh Patel, Gujarat</h4>
-    </div>
-    <div class="testimonial">
-      <p>"With real-time weather updates, I planned my farming better and avoided losses."</p>
-      <h4>- Sita Devi, Maharashtra</h4>
-    </div>
-    <div class="testimonial">
-      <p>"Selling crops online has never been easier. The best platform for farmers!"</p>
-      <h4>- Arjun Kumar, Punjab</h4>
+
+    <div class="testimonial-slider">
+
+      <div class="testimonial active">
+        <p>"Farmer Connect helped me get better prices for my crops. Highly recommend!"</p>
+        <h4>- Ramesh Patel, Gujarat</h4>
+      </div>
+
+      <div class="testimonial">
+        <p>"With real-time weather updates, I planned my farming better and avoided losses."</p>
+        <h4>- Sita Devi, Maharashtra</h4>
+      </div>
+
+      <div class="testimonial">
+        <p>"Selling crops online has never been easier. The best platform for farmers!"</p>
+        <h4>- Arjun Kumar, Punjab</h4>
+      </div>
+
     </div>
   </div>
 
   <!-- Footer -->
   <div class="footer">
     <p>
-      <a href="contact.html">Contact us</a> | 
-      <a href="faq.html">FAQs</a> | 
+      <a href="contact.html">Contact us</a> |
+      <a href="faq.html">FAQs</a> |
       <a href="social.html">Social Media</a>
     </p>
   </div>
@@ -102,25 +130,31 @@
   <!-- Sidebar -->
   <div class="sidebar" id="sidebar">
     <ul>
-<li><a href="profile.html" id="profileLink">Profile</a></li>
+      <li><a href="profile.html">Profile</a></li>
       <li><a href="mycrops.html">My Crops</a></li>
       <li><a href="order.html">My Orders</a></li>
       <li><a href="#" id="weatherButton">Weather</a></li>
       <li><a href="#" id="logoutBtn">Log out</a></li>
     </ul>
   </div>
+
   <!-- Main Content -->
-<div class="main-content" id="main-content">
-    <!-- Your content here -->
-</div>
+  <div class="main-content" id="main-content"></div>
+
+  <div class="overlay"></div>
+
+  <!-- Menu Toggle -->
+  <button class="menu-toggle" id="menu-toggle">
+    <i class="fas fa-bars"></i>
+  </button>
 
   <!-- Weather Popup -->
   <div id="weatherPopup" class="popup">
     <div class="popup-content">
       <span class="close-btn">&times;</span>
       <h2>Weather Forecast</h2>
-      <div style="position: relative;">
-        <input type="text" id="locationInput" placeholder="Enter city name">
+      <div style="position:relative;">
+        <input id="locationInput" placeholder="Enter city name">
         <div id="suggestionBox" class="suggestion-box"></div>
       </div>
       <button id="getWeatherBtn">Get Weather</button>
@@ -128,26 +162,21 @@
     </div>
   </div>
 
-  <!-- Overlay -->
-  <div class="overlay"></div>
-
-  <!-- Menu Toggle -->
-  <button class="menu-toggle" id="menu-toggle"><i class="fas fa-bars"></i></button>
-
-  <!-- Scripts -->
-   <script type="module" src="config.js"></script>
+  <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-  <!-- Add these SDKs in farmer4.html -->
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
-<script type="module" src="js/auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+
+  <!-- Custom Scripts -->
+  <script type="module" src="js/config.js"></script>
+  <script type="module" src="js/auth.js"></script>
   <script type="module" src="js/market.js"></script>
-<script type="module" src="js/main.js"></script>
+  <script type="module" src="js/main.js"></script>
   <script src="js/testimonials.js"></script>
   <script src="js/sidebar.js"></script>
-<script type="module" src="js/weather.js"></script>
-  <script>
-  </script>
+  <script type="module" src="js/weather.js"></script>
+<script src="js/darkmode.js"></script>
+
 </body>
 </html>

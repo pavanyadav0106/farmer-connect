@@ -196,16 +196,18 @@ async function placeOrder() {
     } : null
   };
 
-  const order = {
-    customerId: auth.currentUser.uid,
-    date: serverTimestamp(),
-    items: [...cart],
-    subtotal: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0),
-    delivery: 0,
-    total: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0),
-    status: 'processing',
-    ...formData
-  };
+const order = {
+  customerId: auth.currentUser.uid,
+  createdAt: serverTimestamp(),     // required by rules
+  items: [...cart],
+  farmerIds: cart.map(i => i.farmerId),  // required by rules
+  subtotal: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0),
+  delivery: 0,
+  total: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0),
+  status: 'pending',               // must be 'pending'
+  ...formData
+};
+
 
   try {
     await addDoc(collection(db, 'orders'), order);
@@ -290,4 +292,3 @@ document.addEventListener('DOMContentLoaded', () => {
     window.location.href = 'customer-dashboard.html';
   });
 });
-

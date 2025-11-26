@@ -135,9 +135,6 @@ function filterCrops() {
         return matchesSearch && matchesCategory;
     });
 
-    console.log('Search term:', searchTerm);
-    console.log('Filtered crops:', filteredCrops.map(c => c.name));
-
     currentPage = 1;
     renderPage();
     renderPagination();
@@ -283,7 +280,3 @@ confirmLogoutBtn.addEventListener('click', () => {
   // Your logout logic here, e.g.
   window.location.href = "index.html";
 });
-
-
-
-
