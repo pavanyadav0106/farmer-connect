@@ -38,46 +38,6 @@
 
 ---
 
-## 📁 Folder Structure
-
-```
-Farmer Connect/
-├── index.html
-├── customer-dashboard.html
-├── farmer4.html
-├── mycrops.html
-├── customer-cart.html
-├── ...
-├── config.js
-├── firebase-config.js
-├── README.md
-└── firebase.json
-```
-
----
-
-## ⚙️ Setup Instructions
-
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/your-repo/farmer-connect.git
-   cd farmer-connect
-   ```
-
-2. **Set up Firebase**
-   - Go to [Firebase Console](https://console.firebase.google.com/)
-   - Create a project, enable Authentication and Firestore
-   - Copy Firebase config keys into `firebase-config.js`
-
-3. **Enable APIs**
-   - [OpenWeatherMap](https://openweathermap.org/api) – for weather data
-   - [Cloudinary](https://cloudinary.com/) – for image uploads
-
-4. **Run Locally**
-   Open `index.html` in your browser or serve it using VS Code Live Server.
-
----
-
 ## 🧾 License
 
 This project is proprietary and built for educational/hackathon purposes.  
