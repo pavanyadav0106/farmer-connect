@@ -5,16 +5,16 @@
             
             // Fallback timer to ensure splash screen disappears
             const fallbackTimer = setTimeout(() => {
-                if (splashScreen && splashScreen.parentNode) {
-                    splashScreen.classList.add('splash-screen-hiding');
-                    splashScreen.addEventListener('animationend', () => {
-                        splashScreen.remove();
-                        if (mainContent) {
-                            mainContent.classList.add('visible');
-                        }
-                    }, { once: true });
-                }
-            }, 2100);
+    if (splashScreen && splashScreen.parentNode) {
+        splashScreen.classList.add('splash-screen-hiding');
+        splashScreen.addEventListener('animationend', () => {
+            splashScreen.remove();
+            if (mainContent) {
+                mainContent.classList.add('visible');
+            }
+        }, { once: true });
+    }
+}, 2300);
 
             // Primary timer with animation
             setTimeout(() => {
@@ -38,7 +38,7 @@
                     // Fallback in case animationend doesn't fire
                     setTimeout(removeSplashScreen, 700);
                 }
-            }, 1500);
+            }, 2300);
         });
 
         // Enhanced Testimonial Slider JavaScript
