@@ -72,7 +72,7 @@ body {
 }
 
 .logo-text:hover {
-  text-decoration: underline;
+  text-decoration: none;
 }
 
 .back-button {

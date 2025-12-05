@@ -94,7 +94,11 @@ document.addEventListener('DOMContentLoaded', function() {
             orders = querySnapshot.docs.map(doc => ({
                 id: doc.id,
                 ...doc.data(),
-                createdAt: doc.data().createdAt || serverTimestamp()
+            customerName: doc.data().customerName || 'N/A',
+            customerPhone: doc.data().customerPhone || 'Not provided',
+            customerAddress: doc.data().customerAddress || doc.data().deliveryAddress || doc.data().delivery || 'Not provided',
+            createdAt: doc.data().createdAt || serverTimestamp()
+
             }));
 
             filterOrders();
@@ -252,9 +256,9 @@ document.addEventListener('DOMContentLoaded', function() {
                         <div class="order-info-value">${order.customerPhone || 'Not provided'}</div>
                     </div>
                     <div class="order-info">
-                        <div class="order-info-label">Delivery Address</div>
-                        <div class="order-info-value">${order.deliveryAddress || 'Not provided'}</div>
-                    </div>
+                    <div class="order-info-label">Delivery Address</div>
+                    <div class="order-info-value">${order.customerAddress || order.deliveryAddress || order.delivery || 'Not provided'}</div>
+                </div>
                 </div>
 
                 <div class="order-section" style="grid-column: 1 / -1">

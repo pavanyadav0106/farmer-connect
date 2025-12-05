@@ -11,6 +11,7 @@ import {
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+import { getDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 document.addEventListener('DOMContentLoaded', function() {
   // DOM Elements
   const cartItemsContainer = document.getElementById('cartItems');
@@ -177,7 +178,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
-async function placeOrder() {
+  async function placeOrder() {
   if (!checkoutForm.checkValidity()) {
     checkoutForm.reportValidity();
     return;
@@ -196,34 +197,45 @@ async function placeOrder() {
     } : null
   };
 
-const order = {
-  customerId: auth.currentUser.uid,
-  createdAt: serverTimestamp(),     // required by rules
-  items: [...cart],
-  farmerIds: cart.map(i => i.farmerId),  // required by rules
-  subtotal: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0),
-  delivery: 0,
-  total: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0),
-  status: 'pending',               // must be 'pending'
-  ...formData
-};
-
-
   try {
-    await addDoc(collection(db, 'orders'), order);
+    // Fetch customer profile from Firestore
+    const user = auth.currentUser;
+    const profileSnap = await getDoc(doc(db, "users", user.uid));
+    const profile = profileSnap.data() || {};
 
-    // Clear the cart after successful order placement
+    // Final order object with customer info
+    const order = {
+      customerId: user.uid,
+      customerName: profile.name || "N/A",
+      customerPhone: profile.phone || formData.contactNumber || "Not provided",
+      customerAddress: profile.address || formData.deliveryAddress || "Not provided",
+      createdAt: serverTimestamp(),
+      items: [...cart],
+      farmerIds: cart.map(i => i.farmerId),
+      subtotal: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0),
+      delivery: 0,
+      total: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0),
+      status: 'pending',
+      deliveryDate: formData.deliveryDate,
+      paymentMethod: formData.paymentMethod
+    };
+
+    const docRef = await addDoc(collection(db, 'orders'), order);
+
+    // Clear cart
     cart = [];
     localStorage.removeItem('cart');
     renderCart();
 
     closeCheckoutModal();
-    showOrderConfirmation(order);
+    showOrderConfirmation({ ...order, id: docRef.id });
+
   } catch (error) {
     console.error("Error placing order:", error);
     showToast('Failed to place order. Please try again.');
   }
 }
+
 
   function showOrderConfirmation(order) {
     document.getElementById('orderConfirmationText').textContent = 

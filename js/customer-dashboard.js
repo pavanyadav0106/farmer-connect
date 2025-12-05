@@ -85,62 +85,216 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Load cart items from Firestore
-  async function loadCartItems(userId) {
-    try {
-      const cartRef = doc(db, 'users', userId, 'cart', 'items');
-      const cartDoc = await getDoc(cartRef);
-      
-      if (cartDoc.exists()) {
-        cartItems = cartDoc.data().items || [];
-        updateCartBadge();
-      }
-    } catch (error) {
-      console.error('Error loading cart:', error);
-    }
+async function addToCart(product) {
+  if (!auth.currentUser) {
+    showToast('Please log in to add items to cart', 'error');
+    return;
   }
 
-  // Add item to cart
-  async function addToCart(product) {
-    if (!auth.currentUser) {
-      showToast('Please log in to add items to cart', 'error');
-      return;
+  try {
+    const userId = auth.currentUser.uid;
+    
+    // Try different cart document paths
+    let cartRef;
+    
+    // Option 1: Check if user has a cart document
+    const userDocRef = doc(db, 'users', userId);
+    const userDoc = await getDoc(userDocRef);
+    
+    if (userDoc.exists()) {
+      // User exists, try to get their cart
+      const cartData = userDoc.data();
+      
+      if (cartData.cartItems) {
+        // User has cart items in their user document
+        cartItems = cartData.cartItems;
+      } else {
+        // Try to get cart from a separate cart collection
+        const separateCartRef = doc(db, 'carts', userId);
+        const separateCartDoc = await getDoc(separateCartRef);
+        
+        if (separateCartDoc.exists()) {
+          cartItems = separateCartDoc.data().items || [];
+        }
+      }
+    }
+    
+    // Check if item already exists in cart
+    const existingItemIndex = cartItems.findIndex(item => item.id === product.id);
+    
+    if (existingItemIndex > -1) {
+      // Update quantity if item exists
+      cartItems[existingItemIndex].quantity += 1;
+    } else {
+      // Add new item to cart with proper structure
+      cartItems.push({
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        image: product.imageUrl || 'images/default-crop.jpg',
+        quantity: 1,
+        farmerId: product.farmerId || '',
+        farmerName: product.farmerName || 'Unknown Farmer',
+        unit: product.unit || 'kg',
+        addedAt: new Date()
+      });
     }
 
+    // Save to localStorage as fallback
+    localStorage.setItem('cart', JSON.stringify(cartItems));
+    
+    // Try to save to Firestore if user document exists
+    if (userDoc.exists()) {
+      try {
+        // Update user document with cart items
+        await updateDoc(userDocRef, {
+          cartItems: cartItems,
+          cartUpdatedAt: new Date()
+        });
+      } catch (error) {
+        console.log("Could not update user cart in Firestore, using localStorage only");
+      }
+    }
+    
+    // Update UI
+    updateCartBadge();
+    showToast(`${product.name} added to cart!`);
+    
+  } catch (error) {
+    console.error('Error adding to cart:', error);
+    
+    // Fallback to localStorage only
     try {
-      const userId = auth.currentUser.uid;
-      const cartRef = doc(db, 'users', userId, 'cart', 'items');
+      // Load existing cart from localStorage
+      const existingCart = JSON.parse(localStorage.getItem('cart')) || [];
       
-      // Check if item already exists in cart
-      const existingItemIndex = cartItems.findIndex(item => item.id === product.id);
+      // Check if item exists
+      const existingItemIndex = existingCart.findIndex(item => item.id === product.id);
       
       if (existingItemIndex > -1) {
-        // Update quantity if item exists
-        cartItems[existingItemIndex].quantity += 1;
+        existingCart[existingItemIndex].quantity += 1;
       } else {
-        // Add new item to cart
-        cartItems.push({
+        existingCart.push({
           id: product.id,
           name: product.name,
           price: product.price,
-          imageUrl: product.imageUrl,
-          unit: product.unit,
+          image: product.imageUrl || 'images/default-crop.jpg',
           quantity: 1,
+          farmerId: product.farmerId || '',
+          farmerName: product.farmerName || 'Unknown Farmer',
+          unit: product.unit || 'kg',
           addedAt: new Date()
         });
       }
-
-      // Update Firestore
-      await setDoc(cartRef, { items: cartItems });
       
-      // Update UI
+      // Save to localStorage
+      localStorage.setItem('cart', JSON.stringify(existingCart));
+      cartItems = existingCart;
       updateCartBadge();
-      showToast(`${product.name} added to cart!`);
+      showToast(`${product.name} added to cart (local storage)!`);
       
-    } catch (error) {
-      console.error('Error adding to cart:', error);
+    } catch (localStorageError) {
+      console.error('LocalStorage error:', localStorageError);
       showToast('Error adding item to cart', 'error');
     }
   }
+}
+
+// Update loadCartItems function to use localStorage as primary source
+async function loadCartItems(userId) {
+  try {
+    // Try to get cart from localStorage first
+    const savedCart = localStorage.getItem('cart');
+    if (savedCart) {
+      cartItems = JSON.parse(savedCart);
+    } else {
+      // If no localStorage, try Firestore
+      const userDocRef = doc(db, 'users', userId);
+      const userDoc = await getDoc(userDocRef);
+      
+      if (userDoc.exists()) {
+        const userData = userDoc.data();
+        if (userData.cartItems) {
+          cartItems = userData.cartItems;
+          // Save to localStorage for future use
+          localStorage.setItem('cart', JSON.stringify(cartItems));
+        }
+      }
+    }
+    
+    updateCartBadge();
+  } catch (error) {
+    console.error('Error loading cart:', error);
+    // Try to get from localStorage as fallback
+    const savedCart = localStorage.getItem('cart');
+    if (savedCart) {
+      cartItems = JSON.parse(savedCart);
+      updateCartBadge();
+    }
+  }
+}
+
+// Update updateCartBadge function
+function updateCartBadge() {
+  const cartBadge = document.querySelector('.badge');
+  if (cartBadge) {
+    const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0);
+    cartBadge.textContent = totalItems;
+    cartBadge.style.display = totalItems > 0 ? 'flex' : 'none';
+  }
+}
+
+// Also update the add to cart event handler to get more product info
+document.addEventListener('click', (e) => {
+  if (e.target.classList.contains('add-to-cart') || 
+      e.target.closest('.add-to-cart')) {
+    const button = e.target.classList.contains('add-to-cart') ? 
+                   e.target : e.target.closest('.add-to-cart');
+    const productCard = button.closest('.product-card');
+    
+    if (productCard) {
+      const productId = productCard.getAttribute('data-product-id');
+      const productName = productCard.querySelector('h3')?.textContent || 'Product';
+      const priceText = productCard.querySelector('p')?.textContent || '$0.00 / kg';
+      
+      // Extract price from text (handles both $ and ₹)
+      const priceMatch = priceText.match(/[\$₹]?([\d,.]+)/);
+      const productPrice = priceMatch ? parseFloat(priceMatch[1]) : 0;
+      
+      // Get image URL
+      const imageDiv = productCard.querySelector('.product-image');
+      let productImage = '';
+      if (imageDiv && imageDiv.style.backgroundImage) {
+        productImage = imageDiv.style.backgroundImage
+          .replace('url("', '')
+          .replace('")', '')
+          .replace("url('", "")
+          .replace("')", "");
+      }
+      
+      const product = {
+        id: productId,
+        name: productName,
+        price: productPrice,
+        imageUrl: productImage || 'images/default-crop.jpg',
+        unit: 'kg'
+      };
+      
+      // Visual feedback
+      const originalText = button.innerHTML;
+      button.innerHTML = '<i class="fas fa-check"></i> Added';
+      button.style.backgroundColor = '#4CAF50';
+      button.disabled = true;
+            
+      // Reset button after 2 seconds
+      setTimeout(() => {
+        button.innerHTML = originalText;
+        button.style.backgroundColor = '';
+        button.disabled = false;
+      }, 2000);
+    }
+  }
+});
 
   // Update cart badge
   function updateCartBadge() {

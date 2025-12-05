@@ -1,0 +1,228 @@
+/* Reviews Modal */
+#reviewModal .modal-content {
+  max-width: 500px;
+}
+
+.review-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-weight: 600;
+  color: var(--gray-dark);
+}
+
+.rating-input {
+  display: flex;
+  gap: 5px;
+  direction: rtl; /* For better star selection */
+}
+
+.star-rating {
+  font-size: 28px;
+  color: #ddd;
+  cursor: pointer;
+  transition: color 0.2s, transform 0.2s;
+}
+
+.star-rating:hover,
+.star-rating:hover ~ .star-rating {
+  color: #ffc107 !important;
+}
+
+.star-rating.selected {
+  color: #ffc107;
+}
+
+.star-rating:hover {
+  transform: scale(1.1);
+}
+
+/* Different colors for selected stars */
+.star-rating[data-value="1"].selected { color: #ff6b6b; }
+.star-rating[data-value="2"].selected { color: #ffa94d; }
+.star-rating[data-value="3"].selected { color: #ffd43b; }
+.star-rating[data-value="4"].selected { color: #a5d6a7; }
+.star-rating[data-value="5"].selected { color: #4caf50; }
+
+.textarea-group textarea {
+  width: 100%;
+  min-height: 120px;
+  padding: 12px;
+  border: 1.5px solid var(--border-color);
+  border-radius: var(--border-radius);
+  font-family: var(--font-family);
+  font-size: 0.95rem;
+  resize: vertical;
+  transition: border-color var(--transition-speed);
+}
+
+.textarea-group textarea:focus {
+  outline: none;
+  border-color: var(--primary-green);
+  box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1);
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+/* Review Display Styles */
+.reviews-container {
+  margin-top: 20px;
+}
+
+.review-item {
+  background: var(--gray-lightest);
+  border-radius: var(--border-radius);
+  padding: 16px;
+  margin-bottom: 12px;
+  border-left: 4px solid var(--primary-green);
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+
+.reviewer-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.reviewer-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--primary-green);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+}
+
+.reviewer-name {
+  font-weight: 600;
+  color: var(--gray-dark);
+}
+
+.review-date {
+  font-size: 0.85rem;
+  color: var(--gray-medium);
+}
+
+.review-rating {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.review-stars {
+  color: #ffc107;
+  font-size: 0.9rem;
+}
+
+.review-comment {
+  color: var(--gray-dark);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.review-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+  font-size: 0.85rem;
+}
+
+.review-helpful-btn {
+  background: none;
+  border: 1px solid var(--border-color);
+  border-radius: 999px;
+  padding: 4px 12px;
+  cursor: pointer;
+  color: var(--gray-medium);
+  transition: all var(--transition-speed);
+}
+
+.review-helpful-btn:hover {
+  background: var(--primary-green-soft);
+  color: var(--primary-green);
+}
+
+.review-helpful-btn.active {
+  background: var(--primary-green);
+  color: white;
+  border-color: var(--primary-green);
+}
+
+/* Average Rating Display */
+.average-rating {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  padding: 16px;
+  background: linear-gradient(135deg, #f8fff9, #e8f5e9);
+  border-radius: var(--border-radius);
+}
+
+.average-rating-value {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--primary-green-dark);
+}
+
+.average-rating-stars {
+  color: #ffc107;
+  font-size: 1.5rem;
+}
+
+.average-rating-count {
+  color: var(--gray-medium);
+  font-size: 0.9rem;
+}
+
+/* Existing Reviews Modal */
+#existingReviewsModal .modal-content {
+  max-width: 700px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-body-scrollable {
+  flex: 1;
+  overflow-y: auto;
+  max-height: 50vh;
+  padding-right: 5px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .review-header {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .average-rating {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+}

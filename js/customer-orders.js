@@ -7,6 +7,9 @@ import {
   doc,
   updateDoc,
   serverTimestamp,
+  addDoc,
+  getDocs,
+  getDoc
 } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 
@@ -59,8 +62,21 @@ document.addEventListener("DOMContentLoaded", () => {
   const cancelOrderBtn = document.getElementById("cancelOrderBtn");
   const trackOrderBtn = document.getElementById("trackOrderBtn");
   const downloadInvoiceBtn = document.getElementById("downloadInvoiceBtn");
+  const addReviewBtn = document.getElementById("addReviewBtn");
   const modalOrderIdEl = document.getElementById("modalOrderId");
   const modalOrderStatusEl = document.getElementById("modalOrderStatus");
+
+  // Review Modals
+  const reviewModal = document.getElementById("reviewModal");
+  const existingReviewsModal = document.getElementById("existingReviewsModal");
+  const reviewForm = document.getElementById("reviewForm");
+  const starRatings = document.querySelectorAll(".star-rating");
+  const reviewRatingInput = document.getElementById("reviewRating");
+  const reviewComment = document.getElementById("reviewComment");
+  const charCount = document.getElementById("charCount");
+  const closeReviewModalBtns = document.querySelectorAll(".close-review-modal");
+  const closeReviewsModalBtns = document.querySelectorAll(".close-reviews-modal");
+  const reviewsContainer = document.getElementById("reviewsContainer");
 
   // Loading Overlay
   const ordersLoadingOverlay = document.getElementById("ordersLoadingOverlay");
@@ -74,6 +90,9 @@ document.addEventListener("DOMContentLoaded", () => {
   let currentPage = 1;
   let pageSize = 10;
   let selectedOrderId = null;
+  let selectedCropForReview = null;
+  let selectedCropData = null;
+  let currentOrderForReview = null;
 
   /* ------------------------------------------------------------------
    * INIT
@@ -362,6 +381,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!order) return;
 
     selectedOrderId = orderId;
+    currentOrderForReview = order; // Store the order for review context
 
     const items = Array.isArray(order.items) ? order.items : [];
     const total = order.totalAmount || 0;
@@ -386,10 +406,6 @@ document.addEventListener("DOMContentLoaded", () => {
             <div class="order-info-value">${order.id}</div>
           </div>
           <div class="order-info">
-            <div class="order-info-label">Date</div>
-            <div class="order-info-value">${formatDate(order.date)}</div>
-          </div>
-          <div class="order-info">
             <div class="order-info-label">Status</div>
             <div class="order-info-value">
               <span class="status-badge ${getStatusClass(order.status)}">
@@ -410,20 +426,36 @@ document.addEventListener("DOMContentLoaded", () => {
         </div>
 
         <div class="order-section">
-          <h3>Delivery Information</h3>
-          <div class="order-info">
-            <div class="order-info-label">Address</div>
-            <div class="order-info-value">
-              ${order.deliveryAddress || "Not specified"}
-            </div>
-          </div>
-          <div class="order-info">
-            <div class="order-info-label">Contact</div>
-            <div class="order-info-value">
-              ${order.contactNumber || "Not specified"}
-            </div>
-          </div>
+      <h3>Delivery Information</h3>
+      <div class="order-info">
+        <div class="order-info-label">Address</div>
+        <div class="order-info-value">
+          ${
+            order.customerAddress ||
+            order.deliveryAddress ||
+            order.address ||
+            "Not specified"
+          }
         </div>
+      </div>
+      <div class="order-info">
+        <div class="order-info-label">Contact</div>
+        <div class="order-info-value">
+          ${
+            order.customerPhone ||
+            order.contactNumber ||
+            order.phone ||
+            "Not specified"
+          }
+        </div>
+      </div>
+      <div class="order-info">
+        <div class="order-info-label">Delivery Date</div>
+        <div class="order-info-value">
+          ${order.deliveryDate || "Not specified"}
+        </div>
+      </div>
+    </div>
 
         <div class="order-section" style="grid-column: 1 / -1">
           <h3>Order Items</h3>
@@ -478,6 +510,63 @@ document.addEventListener("DOMContentLoaded", () => {
       trackOrderBtn.style.display = "inline-flex";
     }
 
+    if (addReviewBtn) {
+      const isCompleted = normalizedStatus === "completed";
+      if (isCompleted && items.length > 0) {
+        addReviewBtn.style.display = "inline-flex";
+
+        // Check if already reviewed
+        checkIfAlreadyReviewed(orderId).then(alreadyReviewed => {
+          const crop = items[0];  // First item in the order
+
+          if (alreadyReviewed) {
+            addReviewBtn.innerHTML = '<i class="fas fa-star"></i> View Review';
+            addReviewBtn.onclick = () => {
+              let cropId = crop.cropId || crop.id;
+              if (!cropId) {
+                // Fallback lookup for old orders
+                findCropIdByNameAndFarmer(crop.name, order.farmerId || (order.farmer && order.farmer.id))
+                  .then(foundId => {
+                    if (!foundId) {
+                      showToast("Crop not found in database", "error");
+                      return;
+                    }
+                    // Store crop data before showing reviews
+                    selectedCropData = {
+                      cropName: crop.name,
+                      cropId: foundId,           // ← correct cropId from database
+                      farmerId: crop.farmerId,   // ← always from item, never from order
+                      orderId: order.id,
+                      farmerName: crop.farmerName || "Farmer"
+                    };
+                    showExistingReviews(foundId);
+
+
+                  });
+                return;
+              }
+              // Store crop data before showing reviews
+              selectedCropData = {
+                cropName: crop.name,
+                cropId: cropId,
+                farmerId: order.farmerId,
+                orderId: order.id,
+                farmerName: order.farmerName || "Farmer"
+              };
+              console.log("Crop data stored for view:", selectedCropData);
+              showExistingReviews(cropId);
+            };
+          } else {
+            addReviewBtn.innerHTML = '<i class="fas fa-star"></i> Add Review';
+            addReviewBtn.onclick = () => showReviewModal(orderId);
+          }
+        });
+
+      } else {
+        addReviewBtn.style.display = "none";
+      }
+    }
+
     orderModal.style.display = "flex";
   }
 
@@ -494,6 +583,385 @@ document.addEventListener("DOMContentLoaded", () => {
       applyFiltersAndRender();
       updateSummaryCards();
     }
+  }
+
+  async function findCropIdByNameAndFarmer(cropName, farmerId) {
+    console.log("Looking for crop:", cropName, "farmer:", farmerId);
+    if (!cropName || !farmerId) {
+      console.error("Missing cropName or farmerId");
+      return null;
+    }
+    
+    try {
+      const q = query(
+        collection(db, "crops"),
+        where("name", "==", cropName),
+        where("farmerId", "==", farmerId)
+      );
+      const snap = await getDocs(q);
+      console.log("Found crops:", snap.size);
+      
+      if (snap.empty) {
+        // Try without farmerId filter as fallback
+        const q2 = query(
+          collection(db, "crops"),
+          where("name", "==", cropName)
+        );
+        const snap2 = await getDocs(q2);
+        console.log("Found crops without farmer filter:", snap2.size);
+        
+        if (snap2.empty) {
+          return null;
+        }
+        return snap2.docs[0].id;
+      }
+      return snap.docs[0].id;
+    } catch (error) {
+      console.error("Error finding crop:", error);
+      return null;
+    }
+  }
+
+  /* ------------------------------------------------------------------
+   * REVIEW FUNCTIONALITY
+   * ------------------------------------------------------------------ */
+  
+  // Show Review Modal
+  function showReviewModal(orderId) {
+    const order = orders.find(o => o.id === orderId);
+    if (!order || !order.items || order.items.length === 0) {
+      showToast("No items found in this order", "error");
+      return;
+    }
+    
+    // Store crop data
+    const crop = order.items[0];
+    selectedCropForReview = crop.cropId || crop.id;
+    selectedCropData = {
+      orderId: order.id,
+      cropName: crop.name,
+      cropId: crop.cropId || crop.id,
+      farmerId: order.farmerId,
+      farmerName: order.farmerName || "Farmer"
+    };
+    
+    console.log("Crop data stored for review:", selectedCropData);
+    
+    // Reset form
+    reviewRatingInput.value = "5";
+    if (reviewComment) reviewComment.value = "";
+    if (charCount) charCount.textContent = "0";
+    
+    // Reset star colors
+    starRatings.forEach(star => {
+      const value = parseInt(star.dataset.value);
+      star.style.color = value <= 5 ? "#ffc107" : "#ddd";
+    });
+    
+    // Check if user already reviewed this crop
+    checkIfAlreadyReviewed(orderId);
+    
+    reviewModal.style.display = "flex";
+  }
+
+  // Check if Already Reviewed
+  async function checkIfAlreadyReviewed(orderId) {
+    const user = auth.currentUser;
+    if (!user) return false;
+    
+    try {
+      const q = query(
+        collection(db, "reviews"),
+        where("orderId", "==", orderId),
+        where("customerId", "==", user.uid)
+      );
+      
+      const querySnapshot = await getDocs(q);
+      if (!querySnapshot.empty) {
+        showToast("You've already reviewed this purchase", "info");
+        reviewModal.style.display = "none";
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error("Error checking reviews:", error);
+      return false;
+    }
+  }
+
+  // Submit Review
+  async function submitReview(e) {
+    e.preventDefault();
+    
+    const user = auth.currentUser;
+    if (!user || !selectedCropForReview || !selectedCropData) {
+      showToast("Please select an item to review", "error");
+      return;
+    }
+    
+    const rating = parseInt(reviewRatingInput.value);
+    const comment = reviewComment ? reviewComment.value.trim() : "";
+    
+    if (rating < 1 || rating > 5) {
+      showToast("Please select a rating between 1-5 stars", "error");
+      return;
+    }
+    
+    try {
+      showLoadingOverlay(true);
+      
+      // Create review data with ALL required fields
+      const reviewData = {
+        cropId: selectedCropForReview || "unknown_crop",
+        cropName: selectedCropData.cropName || "Product",
+        orderId: selectedCropData.orderId || "unknown_order",
+        customerId: user.uid,
+        customerName: user.displayName || "Customer",
+        farmerId: selectedCropData.farmerId || "unknown_farmer",
+        farmerName: selectedCropData.farmerName || "Unknown Farmer",
+        rating: rating,
+        comment: comment || "", // Ensure it's never undefined
+        createdAt: serverTimestamp(),
+        helpfulCount: 0,
+        updatedAt: serverTimestamp()
+      };
+      
+      console.log("Submitting review:", reviewData);
+      
+      // Add to Firestore
+      await addDoc(collection(db, "reviews"), reviewData);
+      
+      // Update crop rating
+      await updateCropRating(selectedCropForReview);
+      
+      showToast("Thank you for your review!", "success");
+      reviewModal.style.display = "none";
+      showLoadingOverlay(false);
+      
+    } catch (error) {
+      console.error("Error submitting review:", error);
+      showToast("Failed to submit review. Please try again.", "error");
+      showLoadingOverlay(false);
+    }
+  }
+
+  // Update Crop Rating
+  async function updateCropRating(cropId) {
+    try {
+      // Get all reviews for this crop
+      const q = query(
+        collection(db, "reviews"),
+        where("cropId", "==", cropId)
+      );
+      
+      const querySnapshot = await getDocs(q);
+      let totalRating = 0;
+      let reviewCount = 0;
+      
+      querySnapshot.forEach(doc => {
+        const data = doc.data();
+        totalRating += data.rating || 0;
+        reviewCount++;
+      });
+      
+      const averageRating = reviewCount > 0 ? totalRating / reviewCount : 0;
+      
+      // Update crop document with new rating
+      const cropRef = doc(db, "crops", cropId);
+      await updateDoc(cropRef, {
+        averageRating: parseFloat(averageRating.toFixed(1)),
+        reviewCount: reviewCount,
+        lastReviewed: serverTimestamp()
+      });
+      
+    } catch (error) {
+      console.error("Error updating crop rating:", error);
+    }
+  }
+
+  // Show Existing Reviews - IMPROVED VERSION
+  async function showExistingReviews(cropId) {
+    try {
+      showLoadingOverlay(true);
+      
+      console.log("Showing reviews for cropId:", cropId);
+      console.log("Selected crop data:", selectedCropData);
+      console.log("Current order:", currentOrderForReview);
+
+      let cropRef = doc(db, "crops", cropId);
+      let cropDoc = await getDoc(cropRef);
+
+      // If crop document doesn't exist, try to find it by name
+      if (!cropDoc.exists()) {
+        console.log("Crop document not found with ID:", cropId);
+        
+        // Try to get crop data from available sources
+        let cropName = selectedCropData?.cropName;
+        let farmerId = selectedCropData?.farmerId || currentOrderForReview?.items?.[0]?.farmerId;
+        
+        if (!cropName && currentOrderForReview?.items?.[0]) {
+          cropName = currentOrderForReview.items[0].name;
+        }
+        
+        if (!farmerId && currentOrderForReview) {
+          farmerId = currentOrderForReview.farmerId || 
+                     (currentOrderForReview.farmer && currentOrderForReview.farmer.id);
+        }
+        
+        console.log("Looking for crop by name:", cropName, "farmer:", farmerId);
+        
+        if (!cropName) {
+          showToast("Could not find crop information", "error");
+          showLoadingOverlay(false);
+          return;
+        }
+
+        // First try with farmerId if available
+        if (farmerId) {
+          const q = query(
+            collection(db, "crops"),
+            where("name", "==", cropName),
+            where("farmerId", "==", farmerId)
+          );
+          const snap = await getDocs(q);
+
+          if (!snap.empty) {
+            cropRef = snap.docs[0].ref;
+            cropDoc = snap.docs[0];
+            cropId = snap.docs[0].id;
+            console.log("Found crop with farmer filter:", cropId);
+          }
+        }
+        
+        // If still not found, try without farmer filter
+        if (!cropDoc.exists()) {
+          const q = query(
+            collection(db, "crops"),
+            where("name", "==", cropName)
+          );
+          const snap = await getDocs(q);
+
+          if (snap.empty) {
+            showToast("Crop not found in database. It may have been removed.", "error");
+            showLoadingOverlay(false);
+            return;
+          }
+
+          // Take the first matching crop
+          cropRef = snap.docs[0].ref;
+          cropDoc = snap.docs[0];
+          cropId = snap.docs[0].id;
+          console.log("Found crop without farmer filter:", cropId);
+        }
+      }
+
+      const cropData = cropDoc.data();
+      console.log("Crop data loaded:", cropData);
+
+      // Update modal title
+      const titleEl = document.getElementById("reviewsModalTitle");
+      if (titleEl) {
+        titleEl.textContent = `Reviews for ${cropData.name}`;
+      }
+
+      // Fetch all reviews for this crop
+      const q = query(collection(db, "reviews"), where("cropId", "==", cropId));
+      const querySnapshot = await getDocs(q);
+
+      let totalRating = 0;
+      const reviews = [];
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        reviews.push({ id: doc.id, ...data });
+        totalRating += data.rating || 0;
+      });
+
+      const avg = reviews.length > 0 ? totalRating / reviews.length : 0;
+      console.log("Found reviews:", reviews.length, "Average:", avg);
+
+      renderReviews(reviews, avg);
+      existingReviewsModal.style.display = "flex";
+      showLoadingOverlay(false);
+
+    } catch (err) {
+      console.error("Error loading reviews:", err);
+      showToast("Failed to load reviews. Please try again.", "error");
+      showLoadingOverlay(false);
+    }
+  }
+
+  // Render Reviews
+  function renderReviews(reviews, averageRating) {
+    if (!reviewsContainer) return;
+    
+    if (reviews.length === 0) {
+      reviewsContainer.innerHTML = `
+        <div class="empty-state" style="margin: 20px 0; text-align: center;">
+          <i class="fas fa-comment-alt" style="font-size: 3rem; color: #ddd; margin-bottom: 10px;"></i>
+          <h3>No reviews yet</h3>
+          <p>Be the first to review this crop!</p>
+        </div>
+      `;
+      return;
+    }
+    
+    // Sort by date (newest first)
+    reviews.sort((a, b) => {
+      const dateA = a.createdAt?.toDate?.() || new Date(0);
+      const dateB = b.createdAt?.toDate?.() || new Date(0);
+      return dateB - dateA;
+    });
+    
+    let html = `
+      <div class="average-rating">
+        <div class="average-rating-value">${averageRating.toFixed(1)}</div>
+        <div class="average-rating-stars">
+          ${getStarRatingHTML(averageRating)}
+        </div>
+        <div class="average-rating-count">
+          Based on ${reviews.length} ${reviews.length === 1 ? 'review' : 'reviews'}
+        </div>
+      </div>
+    `;
+    
+    reviews.forEach(review => {
+      const date = review.createdAt?.toDate?.() || new Date();
+      const formattedDate = date.toLocaleDateString('en-IN', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      });
+      
+      const initials = review.customerName
+        .split(' ')
+        .map(n => n[0])
+        .join('')
+        .toUpperCase()
+        .slice(0, 2);
+      
+      html += `
+        <div class="review-item">
+          <div class="review-header">
+            <div class="reviewer-info">
+              <div class="reviewer-avatar">${initials}</div>
+              <div>
+                <div class="reviewer-name">${review.customerName}</div>
+                <div class="review-date">${formattedDate}</div>
+              </div>
+            </div>
+            <div class="review-rating">
+              <div class="review-stars">
+                ${getStarRatingHTML(review.rating)}
+              </div>
+              <span>${review.rating}.0</span>
+            </div>
+          </div>
+          ${review.comment ? `<p class="review-comment">${review.comment}</p>` : ''}
+        </div>
+      `;
+    });
+    
+    reviewsContainer.innerHTML = html;
   }
 
   /* ------------------------------------------------------------------
@@ -553,10 +1021,47 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function showToast(message, type = "info") {
+    // Remove any existing toasts
+    const existingToasts = document.querySelectorAll('.toast');
+    existingToasts.forEach(toast => toast.remove());
+    
     const toast = document.createElement("div");
     toast.className = `toast ${type}`;
     toast.textContent = message;
     document.body.appendChild(toast);
+
+    // Add styles if not already added
+    if (!document.querySelector('#toast-styles')) {
+      const style = document.createElement('style');
+      style.id = 'toast-styles';
+      style.textContent = `
+        .toast {
+          position: fixed;
+          top: 100px;
+          right: 20px;
+          padding: 12px 20px;
+          border-radius: 8px;
+          background: #343a40;
+          color: white;
+          font-size: 0.9rem;
+          z-index: 9999;
+          box-shadow: 0 10px 25px rgba(15, 23, 42, 0.16);
+          animation: slideIn 0.3s ease, fadeOut 0.3s ease 2.7s forwards;
+          max-width: 300px;
+        }
+        .toast.success { background: #28a745; }
+        .toast.error { background: #dc3545; }
+        .toast.info { background: #0d6efd; }
+        @keyframes slideIn {
+          from { transform: translateX(100%); opacity: 0; }
+          to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes fadeOut {
+          to { opacity: 0; transform: translateY(-20px); }
+        }
+      `;
+      document.head.appendChild(style);
+    }
 
     setTimeout(() => {
       toast.remove();
@@ -635,6 +1140,44 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
     paginationInfo.textContent = `${start}–${end} of ${total} orders`;
+  }
+
+  // Get Star Rating HTML
+  function getStarRatingHTML(rating) {
+    const fullStars = Math.floor(rating);
+    const hasHalfStar = rating % 1 >= 0.5;
+    
+    let stars = '';
+    
+    // Full stars
+    for (let i = 0; i < fullStars; i++) {
+      stars += '<i class="fas fa-star"></i>';
+    }
+    
+    // Half star
+    if (hasHalfStar) {
+      stars += '<i class="fas fa-star-half-alt"></i>';
+    }
+    
+    // Empty stars
+    const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+    for (let i = 0; i < emptyStars; i++) {
+      stars += '<i class="far fa-star"></i>';
+    }
+    
+    return stars;
+  }
+
+  // Get Star Color
+  function getStarColor(value) {
+    switch(value) {
+      case 1: return "#ff6b6b";
+      case 2: return "#ffa94d";
+      case 3: return "#ffd43b";
+      case 4: return "#a5d6a7";
+      case 5: return "#4caf50";
+      default: return "#ffc107";
+    }
   }
 
   /* ------------------------------------------------------------------
@@ -773,6 +1316,12 @@ document.addEventListener("DOMContentLoaded", () => {
       if (e.target === orderModal) {
         orderModal.style.display = "none";
       }
+      if (e.target === reviewModal) {
+        reviewModal.style.display = "none";
+      }
+      if (e.target === existingReviewsModal) {
+        existingReviewsModal.style.display = "none";
+      }
     });
 
     // Cancel order
@@ -802,6 +1351,84 @@ document.addEventListener("DOMContentLoaded", () => {
     if (downloadInvoiceBtn) {
       downloadInvoiceBtn.addEventListener("click", () => {
         showToast("Invoice download will be available soon.", "info");
+      });
+    }
+
+    // Review functionality
+    if (addReviewBtn) {
+      // Handler will be set dynamically in showOrderDetails
+    }
+
+    // Star Rating Selection
+    if (starRatings) {
+      starRatings.forEach(star => {
+        star.addEventListener("click", () => {
+          const value = parseInt(star.dataset.value);
+          if (reviewRatingInput) {
+            reviewRatingInput.value = value;
+          }
+          
+          // Update star colors
+          starRatings.forEach(s => {
+            const sValue = parseInt(s.dataset.value);
+            if (sValue <= value) {
+              s.style.color = getStarColor(sValue);
+            } else {
+              s.style.color = "#ddd";
+            }
+          });
+        });
+        
+        star.addEventListener("mouseover", () => {
+          const value = parseInt(star.dataset.value);
+          starRatings.forEach(s => {
+            const sValue = parseInt(s.dataset.value);
+            if (sValue <= value) {
+              s.style.color = getStarColor(sValue);
+            }
+          });
+        });
+        
+        star.addEventListener("mouseout", () => {
+          const currentValue = reviewRatingInput ? parseInt(reviewRatingInput.value) : 5;
+          starRatings.forEach(s => {
+            const sValue = parseInt(s.dataset.value);
+            if (sValue <= currentValue) {
+              s.style.color = getStarColor(sValue);
+            } else {
+              s.style.color = "#ddd";
+            }
+          });
+        });
+      });
+    }
+
+    // Character counter for review comment
+    if (reviewComment && charCount) {
+      reviewComment.addEventListener("input", () => {
+        charCount.textContent = reviewComment.value.length;
+      });
+    }
+
+    // Review form submission
+    if (reviewForm) {
+      reviewForm.addEventListener("submit", submitReview);
+    }
+
+    // Close review modals
+    if (closeReviewModalBtns) {
+      closeReviewModalBtns.forEach(btn => {
+        btn.addEventListener("click", () => {
+          reviewModal.style.display = "none";
+        });
+      });
+    }
+
+    if (closeReviewsModalBtns) {
+      closeReviewsModalBtns.forEach(btn => {
+        btn.addEventListener("click", () => {
+          existingReviewsModal.style.display = "none";
+        });
       });
     }
 

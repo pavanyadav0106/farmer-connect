@@ -13,6 +13,7 @@
   <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png" />
   <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
   <link rel="manifest" href="/assets/site.webmanifest" />
+  <link rel="stylesheet" href="css/customer-review.css">
 
   <!-- Styles -->
   <link rel="stylesheet" href="css/customer-orders.css" />
@@ -291,23 +292,25 @@
         -->
       </div>
 
-      <div class="modal-footer">
-        <div class="modal-footer-left">
-          <button id="downloadInvoiceBtn" class="btn-outline">
-            <i class="fas fa-file-download"></i> Download Invoice
-          </button>
-        </div>
-        <div class="modal-footer-right">
-          <button id="cancelOrderBtn" class="btn-danger">
-            <i class="fas fa-times-circle"></i> Cancel Order
-          </button>
-          <button id="trackOrderBtn" class="btn-primary">
-            <i class="fas fa-route"></i> Track Order
-          </button>
-        </div>
+    <!-- In modal-footer section, add this button: -->
+    <div class="modal-footer">
+      <div class="modal-footer-left">
+        <button id="downloadInvoiceBtn" class="btn-outline">
+          <i class="fas fa-file-download"></i> Download Invoice
+        </button>
+        <button id="addReviewBtn" class="btn-outline">
+          <i class="fas fa-star"></i> Add Review
+        </button>
+      </div>
+      <div class="modal-footer-right">
+        <button id="cancelOrderBtn" class="btn-danger">
+          <i class="fas fa-times-circle"></i> Cancel Order
+        </button>
+        <button id="trackOrderBtn" class="btn-primary">
+          <i class="fas fa-route"></i> Track Order
+        </button>
       </div>
     </div>
-  </div>
 
   <!-- Optional: Loading Overlay -->
   <div id="ordersLoadingOverlay" class="loading-overlay" aria-hidden="true">
@@ -315,6 +318,75 @@
     <p>Loading your orders...</p>
   </div>
 
+  <!-- Review Form Modal -->
+<div id="reviewModal" class="modal" aria-hidden="true" role="dialog" aria-modal="true">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div>
+        <h2>Rate Your Purchase</h2>
+        <p class="modal-subtitle">Share your experience with this crop</p>
+      </div>
+      <span class="close-btn close-review-modal" aria-label="Close">&times;</span>
+    </div>
+    
+    <div class="modal-body">
+      <form id="reviewForm" class="review-form">
+        <div class="form-group">
+          <label>Rating</label>
+          <div class="rating-input">
+            <span class="star-rating" data-value="5">★</span>
+            <span class="star-rating" data-value="4">★</span>
+            <span class="star-rating" data-value="3">★</span>
+            <span class="star-rating" data-value="2">★</span>
+            <span class="star-rating" data-value="1">★</span>
+          </div>
+          <input type="hidden" id="reviewRating" name="rating" value="5" required>
+        </div>
+        
+        <div class="form-group textarea-group">
+          <label for="reviewComment">Your Review (Optional)</label>
+          <textarea 
+            id="reviewComment" 
+            name="comment" 
+            placeholder="Share details about your experience with this crop. Was it fresh? Good quality? Fair price?" 
+            maxlength="500"
+          ></textarea>
+          <div class="char-count">
+            <span id="charCount">0</span>/500 characters
+          </div>
+        </div>
+        
+        <div class="form-actions">
+          <button type="button" class="btn-outline close-review-modal">
+            Cancel
+          </button>
+          <button type="submit" class="btn-primary">
+            <i class="fas fa-paper-plane"></i> Submit Review
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Existing Reviews Modal -->
+<div id="existingReviewsModal" class="modal" aria-hidden="true" role="dialog" aria-modal="true">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div>
+        <h2 id="reviewsModalTitle">Customer Reviews</h2>
+        <p class="modal-subtitle">What others are saying</p>
+      </div>
+      <span class="close-btn close-reviews-modal" aria-label="Close">&times;</span>
+    </div>
+    
+    <div class="modal-body">
+      <div id="reviewsContainer" class="reviews-container">
+        <!-- Reviews will be loaded here -->
+      </div>
+    </div>
+  </div>
+</div>
   <script type="module" src="js/customer-orders.js"></script>
   <script src="js/customer-darkmode.js"></script>
 
