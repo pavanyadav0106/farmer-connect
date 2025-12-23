@@ -637,7 +637,7 @@ document.addEventListener('click', (e) => {
         <div class="product-image" style="background-image: url('${product.imageUrl || 'https://images.unsplash.com/photo-1546470427-e212b7d31075?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'}')"></div>
         <div class="product-info">
           <h3>${product.name || 'Product'}</h3>
-          <p>$${product.price || '0.00'} / ${product.unit || 'kg'}</p>
+          <p>₹${product.price || '0.00'} / ${product.unit || 'kg'}</p>
           <button class="add-to-cart">
             <i class="fas fa-cart-plus"></i>
             Add to Cart
