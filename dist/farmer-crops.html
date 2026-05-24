@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title data-i18n="navigation.my_crops">My Crops | Farmer Connect</title>
+  
+  <!-- Favicons -->
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/assets/android-chrome-192x192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="/assets/android-chrome-512x512.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="manifest" href="/assets/site.webmanifest">
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Global Design System -->
+  <!-- Page-specific -->
+  
+  <!-- Cloudinary -->
+  <script src="https://upload-widget.cloudinary.com/global/all.js"></script>
+
+  <!-- Shared Layout System & Guard (Loaded early to prevent flash of content) -->
+  <script type="module" crossorigin src="/assets/farmerCrops-BZzAHE7n.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/modulepreload-polyfill-B5Qt9EMX.js">
+  <link rel="modulepreload" crossorigin href="/assets/config--Onoqk_Z.js">
+  <link rel="modulepreload" crossorigin href="/assets/layout-loader-LuVZLwht.js">
+  <link rel="stylesheet" crossorigin href="/assets/farmerCrops-DKzpL6IA.css">
+  <link rel="stylesheet" crossorigin href="/assets/app-BMiSxBfN.css">
+</head>
+<body>
+
+  <!-- Layout Placeholders (Injected dynamically) -->
+  <div id="top-nav-placeholder"></div>
+  <div id="sidebar-placeholder" data-role="farmer"></div>
+  <div id="logout-modal-placeholder"></div>
+
+  <div class="app-container" style="margin-top: 80px;">
+    <!-- Navigation Sidebar -->
+    <aside class="crops-sidebar">
+      <div class="crops-sidebar-header">
+        <h2><i class="fas fa-leaf"></i> <span data-i18n="navigation.my_crops">My Crops</span></h2>
+        <button class="btn btn-primary" id="addNewCropBtn">
+          <i class="fas fa-plus"></i> 
+          <span data-i18n="crops.add_new">Add New</span>
+        </button>
+      </div>
+      
+      <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Search crops..." data-i18n-placeholder="crops.search">
+        <i class="fas fa-search search-icon"></i>
+      </div>
+      
+      <div class="filter-controls">
+        <select id="statusFilter" class="filter-select">
+          <option value="all" data-i18n="filter.all">All Statuses</option>
+          <option value="available" data-i18n="filter.available">Available</option>
+          <option value="sold" data-i18n="filter.sold">Sold Out</option>
+        </select>
+        
+        <select id="sortBy" class="filter-select">
+          <option value="newest" data-i18n="sort.newest">Newest First</option>
+          <option value="oldest" data-i18n="sort.oldest">Oldest First</option>
+          <option value="price-high" data-i18n="sort.price_high">Price (High-Low)</option>
+          <option value="price-low" data-i18n="sort.price_low">Price (Low-High)</option>
+        </select>
+      </div>
+      
+      <div class="crops-list" id="myCrops">
+        <!-- Crops will be loaded here -->
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <div class="content-header">
+        <h2 id="formTitle" data-i18n="crops.add_new">Add New Crop</h2>
+        <div class="action-buttons">
+          <button class="btn btn-secondary" id="cancelEdit" style="display:none;">
+            <i class="fas fa-times"></i> 
+            <span data-i18n="buttons.cancel">Cancel</span>
+          </button>
+        </div>
+      </div>
+      
+      <form id="cropForm">
+        <div class="form-group">
+          <label for="cropName" data-i18n="crops.crop_name">Crop Name</label>
+          <input type="text" id="cropName" placeholder="Enter crop name" required data-i18n-placeholder="crops.crop_name_placeholder">
+          <div class="error-message" id="nameError"></div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="cropPrice" data-i18n="crops.price">Price (₹)</label>
+            <input type="number" id="cropPrice" placeholder="Price per kg" min="1" required data-i18n-placeholder="crops.price_placeholder">
+            <div class="error-message" id="priceError"></div>
+          </div>
+          
+          <div class="form-group">
+            <label for="cropQuantity" data-i18n="crops.quantity">Quantity (kg)</label>
+            <input type="number" id="cropQuantity" placeholder="Available quantity" min="1" required data-i18n-placeholder="crops.quantity_placeholder">
+            <div class="error-message" id="quantityError"></div>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="cropCategory" data-i18n="crops.category">Category</label>
+          <select id="cropCategory" required>
+            <option value="" data-i18n="select.category">Select category</option>
+            <option value="vegetables" data-i18n="category.vegetables">Vegetables</option>
+            <option value="fruits" data-i18n="category.fruits">Fruits</option>
+            <option value="grains" data-i18n="category.grains">Grains</option>
+            <option value="spices" data-i18n="category.spices">Spices</option>
+            <option value="other" data-i18n="category.other">Other</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="cropDescription" data-i18n="crops.description">Description</label>
+          <textarea id="cropDescription" placeholder="Add details about your crop (optional)" data-i18n-placeholder="crops.description_placeholder"></textarea>
+        </div>
+        
+        <div class="form-group">
+          <label for="cropImage" data-i18n="crops.image">Crop Image</label>
+          <div class="image-upload-container">
+            <input type="file" id="cropImage" accept="image/*" hidden>
+            <div class="upload-area" id="uploadArea">
+              <i class="fas fa-cloud-upload-alt"></i>
+              <p data-i18n="crops.upload_click">Click to upload image</p>
+              <img id="imagePreview" style="display:none;">
+            </div>
+            <button type="button" class="btn btn-small btn-secondary" id="removeImageBtn" style="display:none;">
+              <i class="fas fa-trash"></i> 
+              <span data-i18n="buttons.delete">Remove</span>
+            </button>
+          </div>
+          <div class="error-message" id="imageError"></div>
+        </div>
+        
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary" id="submitBtn">
+            <span id="submitText" data-i18n="crops.save_crop">Save Crop</span>
+            <i class="fas fa-spinner fa-spin" id="submitSpinner" style="display:none;"></i>
+          </button>
+        </div>
+      </form>
+    </main>
+  </div>
+
+  <!-- Confirmation Modal -->
+  <div class="modal" id="confirmationModal">
+    <div class="modal-content">
+      <h3 id="modalTitle" data-i18n="modal.confirm_action">Confirm Action</h3>
+      <p id="modalMessage" data-i18n="modal.confirm_message">Are you sure you want to perform this action?</p>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" id="modalCancelBtn" data-i18n="buttons.cancel">Cancel</button>
+        <button class="btn btn-danger" id="modalConfirmBtn" data-i18n="buttons.confirm">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notification Toast -->
+  <div class="toast" id="notificationToast"></div>
+
+  <!-- Footer Placeholder -->
+  <div id="footer-placeholder"></div>
+
+  <!-- Scripts -->
+</body>
+</html>

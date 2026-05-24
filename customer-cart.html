@@ -4,45 +4,35 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>My Cart - FarmerConnect</title>
-<!-- Favicons (Updated) -->
-<link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="192x192" href="/assets/android-chrome-192x192.png">
-<link rel="icon" type="image/png" sizes="512x512" href="/assets/android-chrome-512x512.png">
-<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
-<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
-<link rel="manifest" href="/assets/site.webmanifest">
+  
+  <!-- Favicons -->
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/assets/android-chrome-192x192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="/assets/android-chrome-512x512.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="manifest" href="/assets/site.webmanifest">
+  
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet"/>
+  <!-- Global Design System -->
+  <link rel="stylesheet" href="css/app.css">
+  <!-- Page-specific -->
   <link rel="stylesheet" href="css/customer-cart.css"/>
   <link rel="stylesheet" href="css/customer-darkmode.css">
 
+  <!-- Shared Layout System & Guard (Loaded early to prevent flash of content) -->
+  <script type="module" src="js/layout-loader.js"></script>
 </head>
 <body>
 
-  <header class="header">
-  <header class="top-nav">
-  <a href="customer-dashboard.html" class="back-btn">
-    <i class="fas fa-arrow-left"></i>
-  </a>
+  <!-- Layout Placeholders (Injected dynamically) -->
+  <div id="top-nav-placeholder"></div>
+  <div id="sidebar-placeholder" data-role="customer"></div>
+  <div id="logout-modal-placeholder"></div>
 
-  <a class="logo-text">🌾 Farmer Connect</a>
-
-  <button id="profileBtn" class="profile-circle" aria-label="Profile Menu">
-    <i class="fas fa-user-circle"></i>
-  </button>
-</header>
-    <div id="profileDropdown" class="profile-dropdown hidden">
-    <a href="customer-dashboard.html" id="homeBtn">Home</a>
-    <a href="customer-profile.html">Profile</a>
-    <a href="#" id="logoutBtn">Logout</a>
-    </div>
-</div>
-
-    </div>
-  </header>
-
-  <main class="main-content">
+  <main class="main-content" style="margin-top: 80px;">
     <div class="container">
       <div class="cart-items" id="cartItems">
         <!-- Cart items will be dynamically inserted here -->
@@ -148,8 +138,12 @@
 
   <div class="toast" id="toast"></div>
 
-  <script type="module" src="js/customer-cart.js"></script>
-  <script src="js/customer-darkmode.js"></script>
+  <!-- Footer Placeholder -->
+  <div id="footer-placeholder"></div>
 
+  <!-- Scripts -->
+  <script type="module" src="js/language-manager.js"></script>
+  <script type="module" src="js/auto-translate.js"></script>
+  <script type="module" src="js/customer-cart.js"></script>
 </body>
 </html>

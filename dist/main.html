@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Farmer Connect - Login</title>
+  <!-- Favicons (Updated) -->
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/assets/android-chrome-192x192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="/assets/android-chrome-512x512.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+  <!-- Preload the logo to prevent flash -->
+  <link rel="preload" href="assets/logo.png" as="image">
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="manifest" href="/assets/site.webmanifest">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  
+  <!-- ✅ Google Site Verification Tag -->
+  <meta name="google-site-verification" content="Ahge28oz5V2lBUez7qvh1vJHpduZ3O2gccesS7-8Pco" />
+
+  
+  <!-- Language CSS -->
+  <style>
+    .language-selector {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      z-index: 10;
+    }
+    
+    .language-selector select {
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: 1px solid #28a745;
+      background: white;
+      color: #28a745;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      min-width: 120px;
+    }
+    
+    .language-selector select:focus {
+      outline: none;
+      border-color: #1e7a1e;
+      box-shadow: 0 0 0 2px rgba(40, 167, 69, 0.2);
+    }
+    
+    /* RTL Support */
+    .rtl {
+      direction: rtl;
+      text-align: right;
+    }
+    
+    .rtl .language-selector {
+      right: auto;
+      left: 15px;
+    }
+    
+    .rtl .brand-logo {
+      text-align: right;
+    }
+    
+    .rtl footer {
+      text-align: right;
+    }
+  </style>
+  <script type="module" crossorigin src="/assets/auth-ChN0Mbwk.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/modulepreload-polyfill-B5Qt9EMX.js">
+  <link rel="modulepreload" crossorigin href="/assets/config--Onoqk_Z.js">
+  <link rel="modulepreload" crossorigin href="/assets/darkmode-DyrCZmKV.js">
+  <link rel="stylesheet" crossorigin href="/assets/auth-BDyTSDO1.css">
+</head>
+<body>
+  <div class="container" id="authContainer">
+    <div class="brand-logo">
+      <img src="assets/logo.png" alt="Farmer Connect Logo" />
+      <h1 data-i18n="app.title">Farmer Connect</h1>
+      <p class="tagline" data-i18n="app.tagline">Connecting Farmers & Customers</p>
+    </div>
+
+    <!-- Language Selector -->
+    <div class="language-selector">
+      <select id="languageSelect" aria-label="Select language">
+        <option value="en">English</option>
+        <option value="te">తెలుగు</option>
+        <option value="hi">हिन्दी</option>
+        <option value="ta">தமிழ்</option>
+      </select>
+    </div>
+    
+    <!-- Auth Forms will be inserted here by index.js -->
+  </div>
+  
+  <footer>
+    <span data-i18n="footer.copyright">© 2025 Mangadudla Pavan. All rights reserved.</span>
+    <a href="license.html" style="color: #a0d8a0;">License Terms</a>
+  </footer>
+
+  <!-- Language Manager -->
+  
+  <!-- Main Scripts -->
+</body>
+</html>

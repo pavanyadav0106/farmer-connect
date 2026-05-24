@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#28a745">
+  <meta name="mobile-web-app-capable" content="yes">
+  <title data-i18n="app.title">Farmer Connect</title>
+  
+  <!-- Favicons -->
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/assets/android-chrome-192x192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="/assets/android-chrome-512x512.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="manifest" href="/assets/site.webmanifest">
+
+  <!-- Fonts & Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&display=swap" rel="stylesheet">
+
+  <!-- CSS -->
+  <!-- Global Design System -->
+  <!-- Page-specific -->
+  
+  <!-- Shared Layout System & Guard (Loaded early to prevent flash of content) -->
+  <script type="module" crossorigin src="/assets/farmerDashboard-B5U3rvie.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/modulepreload-polyfill-B5Qt9EMX.js">
+  <link rel="modulepreload" crossorigin href="/assets/config--Onoqk_Z.js">
+  <link rel="modulepreload" crossorigin href="/assets/layout-loader-LuVZLwht.js">
+  <link rel="modulepreload" crossorigin href="/assets/market-DPUPZOAF.js">
+  <link rel="stylesheet" crossorigin href="/assets/farmerDashboard-Dh-4uZtA.css">
+  <link rel="stylesheet" crossorigin href="/assets/app-BMiSxBfN.css">
+</head>
+
+<body>
+  <a href="#main-content" class="skip-nav">Skip to main content</a>
+
+  <div id="loading" data-i18n="dashboard.loading">Loading...</div>
+
+  <!-- Layout Placeholders (Injected dynamically) -->
+  <div id="top-nav-placeholder"></div>
+  <div id="sidebar-placeholder" data-role="farmer"></div>
+  <div id="logout-modal-placeholder"></div>
+
+  <!-- Main Content Container -->
+  <div class="main-content" id="main-content" style="margin-top: 80px;">
+    <!-- Hero -->
+    <div class="hero">
+      <div class="hero-content">
+        <h1 data-i18n="dashboard.hero_title">Empowering Farmers with Real-Time Market Insights</h1>
+        <p data-i18n="dashboard.hero_subtitle">Connecting farmers directly with markets, real-time updates, and expert insights.</p>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <section class="stats">
+      <div class="stat-card">
+        <h2 id="statCrops">0</h2>
+        <p data-i18n="dashboard.total_crops">Total Crops</p>
+      </div>
+      <div class="stat-card">
+        <h2 id="statOrders">0</h2>
+        <p data-i18n="dashboard.orders_placed">Orders Placed</p>
+      </div>
+      <div class="stat-card">
+        <h2 id="statWeather">0</h2>
+        <p data-i18n="dashboard.weather_alerts">Weather Alerts</p>
+      </div>
+      <div class="stat-card">
+        <h2 id="statMessages">0</h2>
+        <p data-i18n="dashboard.messages">Messages</p>
+      </div>
+    </section>
+
+    <!-- Market Ticker -->
+    <div class="ticker-container">
+      <div class="ticker" id="market-ticker">Loading market prices...</div>
+    </div>
+
+    <!-- Features -->
+    <div class="features">
+      <div class="feature">
+        <i class="fas fa-chart-line"></i>
+        <h3 data-i18n="features.market_prices">Live Market Prices</h3>
+        <p data-i18n="features.market_desc">Stay updated with real-time crop rates.</p>
+      </div>
+      <div class="feature">
+        <i class="fas fa-cloud-sun"></i>
+        <h3 data-i18n="features.weather">Weather Forecast</h3>
+        <p data-i18n="features.weather_desc">Plan your farming with accurate weather data.</p>
+      </div>
+      <div class="feature">
+        <i class="fas fa-newspaper"></i>
+        <h3 data-i18n="features.news">Latest News</h3>
+        <p data-i18n="features.news_desc">Get farming tips & industry updates.</p>
+      </div>
+      <div class="feature">
+        <i class="fas fa-handshake"></i>
+        <h3 data-i18n="features.transactions">Seamless Transactions</h3>
+        <p data-i18n="features.transactions_desc">Sell crops easily with secure payments.</p>
+      </div>
+    </div>
+
+    <!-- Testimonials (Slider) -->
+    <div class="testimonials">
+      <h2 data-i18n="testimonials.title">Farmers' Success Stories</h2>
+
+      <div class="testimonial-slider">
+        <div class="testimonial active">
+          <p data-i18n="testimonials.testimonial1">"Farmer Connect helped me get better prices for my crops. Highly recommend!"</p>
+          <h4>- Ramesh Patel, Gujarat</h4>
+        </div>
+
+        <div class="testimonial">
+          <p data-i18n="testimonials.testimonial2">"With real-time weather updates, I planned my farming better and avoided losses."</p>
+          <h4>- Sita Devi, Maharashtra</h4>
+        </div>
+
+        <div class="testimonial">
+          <p data-i18n="testimonials.testimonial3">"Selling crops online has never been easier. The best platform for farmers!"</p>
+          <h4>- Arjun Kumar, Punjab</h4>
+        </div>
+      </div>
+    </div>
+
+    <!-- Weather Popup -->
+    <div id="weatherPopup" class="popup">
+      <div class="popup-content">
+        <span class="close-btn">&times;</span>
+        <h2 data-i18n="weather.title">Weather Forecast</h2>
+        <div style="position:relative;">
+          <input id="locationInput" placeholder="Enter city name" data-i18n-placeholder="weather.enter_city">
+          <div id="suggestionBox" class="suggestion-box"></div>
+        </div>
+        <button id="getWeatherBtn" data-i18n="weather.get_weather">Get Weather</button>
+        <div id="weatherData"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer Placeholder -->
+  <div id="footer-placeholder"></div>
+
+  <!-- Language System Scripts -->
+  
+  <!-- Custom Feature Scripts -->
+</body>
+</html>

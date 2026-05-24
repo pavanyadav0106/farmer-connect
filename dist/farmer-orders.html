@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title data-i18n="orders.management">Farmer Marketplace - Order Management</title>
+  
+  <!-- Favicons -->
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/assets/android-chrome-192x192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="/assets/android-chrome-512x512.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="manifest" href="/assets/site.webmanifest">
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <!-- Global Design System -->
+  <!-- Page-specific -->
+  
+  <!-- PDF Generation -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+  <!-- Shared Layout System & Guard (Loaded early to prevent flash of content) -->
+  <script type="module" crossorigin src="/assets/farmerOrders-HJVicR6Y.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/modulepreload-polyfill-B5Qt9EMX.js">
+  <link rel="modulepreload" crossorigin href="/assets/config--Onoqk_Z.js">
+  <link rel="modulepreload" crossorigin href="/assets/layout-loader-LuVZLwht.js">
+  <link rel="stylesheet" crossorigin href="/assets/farmerOrders-CWJ_te5w.css">
+  <link rel="stylesheet" crossorigin href="/assets/app-BMiSxBfN.css">
+</head>
+<body>
+
+  <!-- Layout Placeholders (Injected dynamically) -->
+  <div id="top-nav-placeholder"></div>
+  <div id="sidebar-placeholder" data-role="farmer"></div>
+  <div id="logout-modal-placeholder"></div>
+
+  <div class="dashboard-container" style="margin-top: 80px; padding: 20px;">
+    <!-- Dashboard Header -->
+    <header class="dashboard-header">
+      <h1><i class="fas fa-clipboard-list"></i> <span data-i18n="orders.management">Order Management</span></h1>
+      
+      <!-- Quick Stats -->
+      <div class="quick-stats">
+        <div class="stat-card">
+          <div class="stat-value" id="totalOrders">0</div>
+          <div class="stat-label" data-i18n="orders.total_orders">Total Orders</div>
+        </div>
+        <div class="stat-card accent">
+          <div class="stat-value" id="pendingCount">0</div>
+          <div class="stat-label" data-i18n="orders.pending">Pending</div>
+        </div>
+        <div class="stat-card warning">
+          <div class="stat-value" id="acceptedCount">0</div>
+          <div class="stat-label" data-i18n="orders.processing">Processing</div>
+        </div>
+        <div class="stat-card success">
+          <div class="stat-value" id="completedCount">0</div>
+          <div class="stat-label" data-i18n="orders.completed">Completed</div>
+        </div>
+        <div class="stat-card earnings">
+          <div class="stat-value">₹<span id="totalEarnings">0.00</span></div>
+          <div class="stat-label" data-i18n="orders.earnings">Total Earnings</div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main content area -->
+    <main class="content-area">
+      <!-- Action toolbar -->
+      <section class="action-toolbar">
+        <div class="search-filter">
+          <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="search" id="orderSearch" placeholder="Search orders, customers, or crops..." 
+                   aria-label="Search orders" data-i18n-placeholder="orders.search" />
+          </div>
+          
+          <div class="filter-group">
+            <label for="statusFilter" data-i18n="filter.status">Status:</label>
+            <select id="statusFilter" aria-label="Filter by order status">
+              <option value="all" data-i18n="filter.all_orders">All Orders</option>
+              <option value="pending" data-i18n="filter.pending">Pending</option>
+              <option value="accepted" data-i18n="filter.processing">Processing</option>
+              <option value="shipped" data-i18n="filter.shipped">Shipped</option>
+              <option value="completed" data-i18n="filter.completed">Completed</option>
+              <option value="cancelled" data-i18n="filter.cancelled">Cancelled</option>
+            </select>
+          </div>
+          
+          <div class="filter-group">
+            <label for="dateFilter" data-i18n="filter.date_range">Date Range:</label>
+            <select id="dateFilter" aria-label="Filter by date range">
+              <option value="all" data-i18n="filter.all_time">All Time</option>
+              <option value="today" data-i18n="filter.today">Today</option>
+              <option value="week" data-i18n="filter.this_week">This Week</option>
+              <option value="month" data-i18n="filter.this_month">This Month</option>
+              <option value="custom" data-i18n="filter.custom">Custom Range</option>
+            </select>
+          </div>
+
+          <!-- Custom Date Range -->
+          <div id="customDateRange" class="custom-date-range" style="display: none;">
+            <input type="date" id="startDate" aria-label="Start date">
+            <span data-i18n="filter.to">to</span>
+            <input type="date" id="endDate" aria-label="End date">
+            <button id="applyDateRange" class="btn btn-primary" data-i18n="buttons.apply">Apply</button>
+          </div>
+        </div>
+        
+        <div class="action-buttons">
+          <button id="exportBtn" class="btn-secondary">
+            <i class="fas fa-file-export"></i> 
+            <span data-i18n="buttons.export">Export</span>
+          </button>
+          <div class="bulk-actions">
+            <button id="bulkUpdateBtn" class="btn-primary" disabled>
+              <i class="fas fa-check-double"></i> 
+              <span data-i18n="buttons.update_selected">Update Selected</span>
+            </button>
+            <div id="bulkStatusDropdown" class="status-dropdown">
+              <ul>
+                <li><button class="bulk-status-option" data-status="accepted" data-i18n="orders.accept_selected">Accept Selected</button></li>
+                <li><button class="bulk-status-option" data-status="cancelled" data-i18n="orders.cancel_selected">Cancel Selected</button></li>
+                <li><button class="bulk-status-option" data-status="shipped" data-i18n="orders.mark_shipped">Mark as Shipped</button></li>
+                <li><button class="bulk-status-option" data-status="completed" data-i18n="orders.mark_completed">Mark as Completed</button></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Orders table -->
+      <section class="orders-table-container">
+        <div class="table-responsive">
+          <table class="orders-table" aria-label="List of orders">
+            <thead>
+              <tr>
+                <th><input type="checkbox" id="selectAll" aria-label="Select all orders" /></th>
+                <th data-i18n="table.order_id">Order ID <i class="fas fa-sort" data-sort="id"></i></th>
+                <th data-i18n="table.customer">Customer <i class="fas fa-sort" data-sort="customerName"></i></th>
+                <th data-i18n="table.crops">Crops <i class="fas fa-sort" data-sort="items"></i></th>
+                <th data-i18n="table.quantity">Quantity <i class="fas fa-sort" data-sort="quantity"></i></th>
+                <th data-i18n="table.amount">Amount <i class="fas fa-sort" data-sort="amount"></i></th>
+                <th data-i18n="table.date">Date <i class="fas fa-sort" data-sort="createdAt"></i></th>
+                <th data-i18n="table.status">Status</th>
+                <th data-i18n="table.actions">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="ordersList">
+              <!-- Loading skeleton -->
+              <tr class="loading-skeleton">
+                <td colspan="9">
+                  <div class="skeleton-line"></div>
+                  <div class="skeleton-line"></div>
+                  <div class="skeleton-line"></div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        
+        <!-- Empty state -->
+        <div id="emptyState" class="empty-state" hidden>
+          <i class="fas fa-clipboard-list"></i>
+          <h3 data-i18n="orders.no_orders">No orders found</h3>
+          <p data-i18n="orders.try_filters">Try adjusting your filters or check back later</p>
+          <button class="btn-text" id="resetFilters" data-i18n="buttons.reset_filters">Reset Filters</button>
+        </div>
+      </section>
+
+      <!-- Pagination and view options -->
+      <section class="table-footer">
+        <div class="rows-per-page">
+          <label for="rowsPerPage" data-i18n="table.rows_per_page">Rows per page:</label>
+          <select id="rowsPerPage" aria-label="Rows per page">
+            <option value="10">10</option>
+            <option value="25">25</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+          </select>
+        </div>
+        
+        <div class="pagination-info" id="pageInfo" data-i18n="table.showing">Showing 1-10 of 0 orders</div>
+        
+        <div class="pagination-controls">
+          <button id="firstPageBtn" class="pagination-btn" aria-label="First page" disabled>
+            <i class="fas fa-angle-double-left"></i>
+          </button>
+          <button id="prevPageBtn" class="pagination-btn" aria-label="Previous page" disabled>
+            <i class="fas fa-angle-left"></i>
+          </button>
+          <div class="page-numbers" id="pageNumbers"></div>
+          <button id="nextPageBtn" class="pagination-btn" aria-label="Next page" disabled>
+            <i class="fas fa-angle-right"></i>
+          </button>
+          <button id="lastPageBtn" class="pagination-btn" aria-label="Last page" disabled>
+            <i class="fas fa-angle-double-right"></i>
+          </button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Order Detail Modal -->
+  <div id="orderModal" class="modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-overlay"></div>
+    <div class="modal-container">
+      <div class="modal-header">
+        <h2 id="modalTitle" data-i18n="orders.order_details">Order Details</h2>
+        <button class="close-btn" aria-label="Close modal">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      
+      <div class="modal-body" id="modalBody">
+        <!-- Dynamic content will be inserted here -->
+      </div>
+      
+      <div class="modal-footer">
+        <button id="printReceiptBtn" class="btn-secondary">
+          <i class="fas fa-print"></i> 
+          <span data-i18n="buttons.print_receipt">Print Receipt</span>
+        </button>
+        <button id="downloadReceiptBtn" class="btn-secondary">
+          <i class="fas fa-download"></i> 
+          <span data-i18n="buttons.download_pdf">Download PDF</span>
+        </button>
+        <div class="status-actions">
+          <button id="cancelOrderBtn" class="btn-danger">
+            <i class="fas fa-times-circle"></i> 
+            <span data-i18n="buttons.cancel_order">Cancel Order</span>
+          </button>
+          <button id="acceptOrderBtn" class="btn-success">
+            <i class="fas fa-check-circle"></i> 
+            <span data-i18n="buttons.accept_order">Accept Order</span>
+          </button>
+          <button id="completeOrderBtn" class="btn-primary">
+            <i class="fas fa-truck"></i> 
+            <span data-i18n="buttons.mark_shipped">Mark as Shipped</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stock Warning Modal -->
+  <div id="stockWarningModal" class="modal" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="modal-overlay"></div>
+    <div class="modal-container">
+      <div class="modal-header">
+        <h2 data-i18n="orders.insufficient_stock">Insufficient Stock</h2>
+        <button class="close-btn" aria-label="Close modal">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      
+      <div class="modal-body">
+        <div class="warning-content">
+          <i class="fas fa-exclamation-triangle warning-icon"></i>
+          <p id="stockWarningMessage" data-i18n="orders.stock_warning">You don't have enough stock to fulfill this order.</p>
+          <div class="stock-details" id="stockDetails"></div>
+        </div>
+      </div>
+      
+      <div class="modal-footer">
+        <button id="cancelOrderDueToStock" class="btn-danger">
+          <i class="fas fa-ban"></i> 
+          <span data-i18n="buttons.cancel_order">Cancel Order</span>
+        </button>
+        <button id="updateStockBtn" class="btn-primary">
+          <i class="fas fa-edit"></i> 
+          <span data-i18n="buttons.update_stock">Update Stock</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notification Panel -->
+  <div id="notificationPanel" class="notification-panel">
+    <div class="notification-header">
+      <h3 data-i18n="orders.notifications">Notifications</h3>
+      <button id="closeNotifications" class="close-btn">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="notification-list" id="notificationList">
+      <!-- Notifications will be inserted here -->
+    </div>
+  </div>
+
+  <!-- Status Update Toast -->
+  <div id="toast" class="toast" aria-live="polite" role="status"></div>
+
+  <!-- Footer Placeholder -->
+  <div id="footer-placeholder"></div>
+
+  <!-- Scripts -->
+</body>
+</html>

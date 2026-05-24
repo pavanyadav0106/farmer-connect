@@ -10,7 +10,6 @@ import {
   doc,
   setDoc,
   updateDoc,
-  arrayUnion,
   getDoc
 } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
@@ -48,15 +47,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function initDashboard() {
     // Check authentication state
-    auth.onAuthStateChanged(user => {
-      if (user) {
-        // User is signed in
-        loadUserData(user);
-        loadDashboardData(user.uid);
-        loadCartItems(user.uid);
-        hideLoading();
-      } else {
-        // User is signed out
+    auth.onAuthStateChanged(async (user) => {
+      try {
+        if (user) {
+          // User is signed in
+          try {
+            loadUserData(user);
+          } catch (err) {
+            console.error('Error loading user data:', err);
+          }
+
+          try {
+            loadDashboardData(user.uid);
+          } catch (err) {
+            console.error('Error loading dashboard data:', err);
+          }
+
+          try {
+            await loadCartItems(user.uid);
+          } catch (err) {
+            console.error('Error loading cart items:', err);
+          }
+        }
+      } catch (err) {
+        console.error('Error in auth state change listener:', err);
+      } finally {
         hideLoading();
       }
     });
@@ -66,12 +81,12 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function loadUserData(user) {
-    if (user.displayName) {
-      welcomeName.textContent = user.displayName;
-      userName.textContent = user.displayName;
+    if (user && user.displayName) {
+      if (welcomeName) welcomeName.textContent = user.displayName;
+      if (userName) userName.textContent = user.displayName;
     }
     
-    if (user.photoURL) {
+    if (user && user.photoURL && userAvatar) {
       userAvatar.src = user.photoURL;
     }
   }
@@ -206,7 +221,13 @@ async function loadCartItems(userId) {
     // Try to get cart from localStorage first
     const savedCart = localStorage.getItem('cart');
     if (savedCart) {
-      cartItems = JSON.parse(savedCart);
+      try {
+        cartItems = JSON.parse(savedCart) || [];
+      } catch (parseErr) {
+        console.error('Error parsing cart JSON from localStorage:', parseErr);
+        cartItems = [];
+        localStorage.removeItem('cart');
+      }
     } else {
       // If no localStorage, try Firestore
       const userDocRef = doc(db, 'users', userId);
@@ -228,19 +249,14 @@ async function loadCartItems(userId) {
     // Try to get from localStorage as fallback
     const savedCart = localStorage.getItem('cart');
     if (savedCart) {
-      cartItems = JSON.parse(savedCart);
-      updateCartBadge();
+      try {
+        cartItems = JSON.parse(savedCart) || [];
+        updateCartBadge();
+      } catch (parseErr) {
+        console.error('Error parsing cart JSON in fallback:', parseErr);
+        cartItems = [];
+      }
     }
-  }
-}
-
-// Update updateCartBadge function
-function updateCartBadge() {
-  const cartBadge = document.querySelector('.badge');
-  if (cartBadge) {
-    const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0);
-    cartBadge.textContent = totalItems;
-    cartBadge.style.display = totalItems > 0 ? 'flex' : 'none';
   }
 }
 
@@ -308,19 +324,11 @@ document.addEventListener('click', (e) => {
   }
 
   function setupEventListeners() {
-    // Menu toggle for mobile
-    if (menuToggle) {
-      menuToggle.addEventListener('click', () => {
-        sidebar.classList.toggle('show');
-        overlay.classList.toggle('show');
-      });
-    }
+    // Menu toggle logic is handled globally by layout-loader.js to avoid double-toggle conflicts
 
-    // Overlay click to close sidebar
+    // Overlay click: customer-specific notifications dropdown handling
     if (overlay) {
       overlay.addEventListener('click', () => {
-        sidebar.classList.remove('show');
-        overlay.classList.remove('show');
         if (notificationDropdown) notificationDropdown.classList.remove('show');
       });
     }
@@ -359,37 +367,6 @@ document.addEventListener('click', (e) => {
         }
       });
     });
-
-    // Logout functionality
-    if (logoutBtn) {
-      logoutBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        if (logoutModal) logoutModal.style.display = 'flex';
-      });
-    }
-
-    if (confirmLogout) {
-      confirmLogout.addEventListener('click', () => {
-        auth.signOut().then(() => {
-          window.location.href = 'main.html';
-        }).catch((error) => {
-          console.error('Logout error:', error);
-          showToast('Error logging out. Please try again.', 'error');
-        });
-      });
-    }
-
-    if (cancelLogout) {
-      cancelLogout.addEventListener('click', () => {
-        if (logoutModal) logoutModal.style.display = 'none';
-      });
-    }
-
-    if (closeModal) {
-      closeModal.addEventListener('click', () => {
-        if (logoutModal) logoutModal.style.display = 'none';
-      });
-    }
 
     // Add to cart buttons - Event delegation
     document.addEventListener('click', (e) => {

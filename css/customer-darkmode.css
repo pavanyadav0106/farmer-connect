@@ -10,31 +10,7 @@ body.customer-dark-mode {
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Top Navigation */
-body.customer-dark-mode .top-nav {
-    background: linear-gradient(135deg, #1a1a1a, #2d2d2d) !important;
-    border-bottom: 1px solid #333 !important;
-}
 
-body.customer-dark-mode .logo-text {
-    color: #ffffff !important;
-}
-
-body.customer-dark-mode .logo-text:hover {
-    color: #4CAF50 !important;
-}
-
-/* Back Button */
-body.customer-dark-mode .back-button {
-    background: #2d2d2d !important;
-    color: #ffffff !important;
-    border: 1px solid #444 !important;
-}
-
-body.customer-dark-mode .back-button:hover {
-    background: #4CAF50 !important;
-    color: #ffffff !important;
-}
 
 /* Main Content Areas */
 body.customer-dark-mode .main-content,
@@ -1063,7 +1039,7 @@ body.customer-dark-mode .sidebar ul li:last-child a i {
 body.customer-dark-mode .main-content#main-content {
     background: 
         linear-gradient(rgba(18, 18, 18, 0.85), rgba(18, 18, 18, 0.9)),
-        url('assets/dashboard-bg.jpg') !important;
+        url('/assets/dashboard-bg.jpg') !important;
     background-size: cover !important;
     background-position: center !important;
     background-attachment: fixed !important;

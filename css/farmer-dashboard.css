@@ -1,0 +1,120 @@
+/* =====================================================================
+   FARMER DASHBOARD — PAGE-SPECIFIC STYLES
+   ===================================================================== */
+
+/* =====================================================================
+   1. HERO SECTION
+   ===================================================================== */
+.hero {
+  min-height: 55vh;
+  position: relative;
+  background: url("https://i.ibb.co/fdw6Y2Xr/IMG-farmermobileinhand-HERO-L2-HRO-02-1440x400px-3.jpg")
+    no-repeat center/cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.32);
+}
+
+.hero-content {
+  position: relative;
+  padding: 28px 24px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(4px);
+  border-radius: var(--fc-radius);
+  color: white;
+  max-width: 600px;
+}
+
+.hero-content h1 { font-size: 2.2rem; margin-bottom: 12px; color: white; }
+.hero-content p  { font-size: 1.05rem; opacity: 0.92; }
+
+/* =====================================================================
+   2. STATS SECTION
+   ===================================================================== */
+.stats {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  background: var(--fc-white);
+  padding: 36px 20px;
+  flex-wrap: wrap;
+}
+
+/* =====================================================================
+   3. FEATURES SECTION
+   ===================================================================== */
+.features {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 24px;
+  padding: 44px 20px;
+  background: var(--fc-white);
+}
+
+.feature {
+  flex: 1;
+  min-width: 220px;
+  max-width: 300px;
+  padding: 28px;
+  background: var(--fc-white);
+  border-radius: var(--fc-radius);
+  transition: var(--fc-transition);
+  cursor: pointer;
+  border: 1px solid var(--fc-border-light);
+}
+
+.feature:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--fc-shadow-hover);
+}
+
+.feature i {
+  font-size: 2.5rem;
+  color: var(--fc-green);
+  margin-bottom: 12px;
+}
+
+/* =====================================================================
+   4. TESTIMONIALS (Slider)
+   ===================================================================== */
+.testimonials {
+  background: var(--fc-white);
+  padding: 44px 20px;
+  text-align: center;
+}
+
+.testimonial-slider {
+  position: relative;
+  overflow: hidden;
+  min-height: 150px;
+}
+
+.testimonial {
+  position: absolute;
+  opacity: 0;
+  transition: all 0.6s ease;
+  width: 90%;
+  left: 50%;
+  transform: translateX(-50%) scale(0.95);
+  background: var(--fc-light);
+  padding: 24px;
+  border-radius: var(--fc-radius-sm);
+  font-size: 1rem;
+  color: var(--fc-text);
+  display: none;
+}
+
+.testimonial.active {
+  opacity: 1;
+  transform: translateX(-50%) scale(1);
+  display: block;
+}

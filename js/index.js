@@ -395,7 +395,7 @@ const googleAuth = async () => {
 
       // Redirect based on role
       if (role === "farmer") {
-        window.location.href = "farmer4.html";
+        window.location.href = "farmer-dashboard.html";
       } else {
         window.location.href = "customer-dashboard.html";
       }
@@ -472,7 +472,7 @@ const handleUserRedirect = async (uid) => {
     const userData = userDoc.data();
 
     if (userData.role === "farmer") {
-      window.location.href = "farmer4.html";
+      window.location.href = "farmer-dashboard.html";
     } else if (userData.role === "buyer") {
       window.location.href = "customer-dashboard.html";
     } else {

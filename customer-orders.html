@@ -13,44 +13,26 @@
   <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png" />
   <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
   <link rel="manifest" href="/assets/site.webmanifest" />
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <!-- Global Design System -->
+  <link rel="stylesheet" href="css/app.css">
+  <!-- Page-specific -->
+  <link rel="stylesheet" href="css/customer-orders.css" />
+  <link rel="stylesheet" href="css/customer-darkmode.css">
   <link rel="stylesheet" href="css/customer-review.css">
 
-  <!-- Styles -->
-  <link rel="stylesheet" href="css/customer-orders.css" />
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-  />
-  <link rel="stylesheet" href="css/customer-darkmode.css">
-
+  <!-- Shared Layout System & Guard (Loaded early to prevent flash of content) -->
+  <script type="module" src="js/layout-loader.js"></script>
 </head>
 <body>
-  <!-- Top Navigation -->
-<header class="top-nav">
-  <div class="top-nav-left">
-    <button id="backBtn" class="btn-back" title="Go Back">
-      <i class="fas fa-arrow-left"></i>
-    </button>
-  </div>
 
-  <!-- perfectly centered logo -->
-  <div class="logo-wrapper">
-    <a href="customer-dashboard.html" class="logo-text">🌾 FARMER CONNECT</a>
-  </div>
+  <!-- Layout Placeholders (Injected dynamically) -->
+  <div id="top-nav-placeholder"></div>
+  <div id="sidebar-placeholder" data-role="customer"></div>
+  <div id="logout-modal-placeholder"></div>
 
-  <div class="top-nav-right">
-    <div class="user-chip">
-      <div class="user-avatar">C</div>
-      <div class="user-meta">
-        <span class="user-name" id="customerName">Customer</span>
-        <span class="user-role">Customer</span>
-      </div>
-    </div>
-  </div>
-</header>
-
-
-  <main class="orders-page">
+  <main class="main-content orders-page" style="margin-top: 80px; padding: 20px;">
     <section class="orders-header">
       <div>
         <h1>My Orders</h1>
@@ -283,34 +265,28 @@
 
       <div id="modalBody" class="modal-body">
         <!-- Order details will be inserted here by JavaScript -->
-        <!-- Suggested structure:
-          - Order items list
-          - Pricing breakdown
-          - Farmer info
-          - Delivery address
-          - Payment method
-        -->
       </div>
 
-    <!-- In modal-footer section, add this button: -->
-    <div class="modal-footer">
-      <div class="modal-footer-left">
-        <button id="downloadInvoiceBtn" class="btn-outline">
-          <i class="fas fa-file-download"></i> Download Invoice
-        </button>
-        <button id="addReviewBtn" class="btn-outline">
-          <i class="fas fa-star"></i> Add Review
-        </button>
-      </div>
-      <div class="modal-footer-right">
-        <button id="cancelOrderBtn" class="btn-danger">
-          <i class="fas fa-times-circle"></i> Cancel Order
-        </button>
-        <button id="trackOrderBtn" class="btn-primary">
-          <i class="fas fa-route"></i> Track Order
-        </button>
+      <div class="modal-footer">
+        <div class="modal-footer-left">
+          <button id="downloadInvoiceBtn" class="btn-outline">
+            <i class="fas fa-file-download"></i> Download Invoice
+          </button>
+          <button id="addReviewBtn" class="btn-outline">
+            <i class="fas fa-star"></i> Add Review
+          </button>
+        </div>
+        <div class="modal-footer-right">
+          <button id="cancelOrderBtn" class="btn-danger">
+            <i class="fas fa-times-circle"></i> Cancel Order
+          </button>
+          <button id="trackOrderBtn" class="btn-primary">
+            <i class="fas fa-route"></i> Track Order
+          </button>
+        </div>
       </div>
     </div>
+  </div>
 
   <!-- Optional: Loading Overlay -->
   <div id="ordersLoadingOverlay" class="loading-overlay" aria-hidden="true">
@@ -319,76 +295,81 @@
   </div>
 
   <!-- Review Form Modal -->
-<div id="reviewModal" class="modal" aria-hidden="true" role="dialog" aria-modal="true">
-  <div class="modal-content">
-    <div class="modal-header">
-      <div>
-        <h2>Rate Your Purchase</h2>
-        <p class="modal-subtitle">Share your experience with this crop</p>
+  <div id="reviewModal" class="modal" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div>
+          <h2>Rate Your Purchase</h2>
+          <p class="modal-subtitle">Share your experience with this crop</p>
+        </div>
+        <span class="close-btn close-review-modal" aria-label="Close">&times;</span>
       </div>
-      <span class="close-btn close-review-modal" aria-label="Close">&times;</span>
-    </div>
-    
-    <div class="modal-body">
-      <form id="reviewForm" class="review-form">
-        <div class="form-group">
-          <label>Rating</label>
-          <div class="rating-input">
-            <span class="star-rating" data-value="5">★</span>
-            <span class="star-rating" data-value="4">★</span>
-            <span class="star-rating" data-value="3">★</span>
-            <span class="star-rating" data-value="2">★</span>
-            <span class="star-rating" data-value="1">★</span>
+      
+      <div class="modal-body">
+        <form id="reviewForm" class="review-form">
+          <div class="form-group">
+            <label>Rating</label>
+            <div class="rating-input">
+              <span class="star-rating" data-value="5">★</span>
+              <span class="star-rating" data-value="4">★</span>
+              <span class="star-rating" data-value="3">★</span>
+              <span class="star-rating" data-value="2">★</span>
+              <span class="star-rating" data-value="1">★</span>
+            </div>
+            <input type="hidden" id="reviewRating" name="rating" value="5" required>
           </div>
-          <input type="hidden" id="reviewRating" name="rating" value="5" required>
-        </div>
-        
-        <div class="form-group textarea-group">
-          <label for="reviewComment">Your Review (Optional)</label>
-          <textarea 
-            id="reviewComment" 
-            name="comment" 
-            placeholder="Share details about your experience with this crop. Was it fresh? Good quality? Fair price?" 
-            maxlength="500"
-          ></textarea>
-          <div class="char-count">
-            <span id="charCount">0</span>/500 characters
+          
+          <div class="form-group textarea-group">
+            <label for="reviewComment">Your Review (Optional)</label>
+            <textarea 
+              id="reviewComment" 
+              name="comment" 
+              placeholder="Share details about your experience with this crop. Was it fresh? Good quality? Fair price?" 
+              maxlength="500"
+            ></textarea>
+            <div class="char-count">
+              <span id="charCount">0</span>/500 characters
+            </div>
           </div>
-        </div>
-        
-        <div class="form-actions">
-          <button type="button" class="btn-outline close-review-modal">
-            Cancel
-          </button>
-          <button type="submit" class="btn-primary">
-            <i class="fas fa-paper-plane"></i> Submit Review
-          </button>
-        </div>
-      </form>
+          
+          <div class="form-actions">
+            <button type="button" class="btn-outline close-review-modal">
+              Cancel
+            </button>
+            <button type="submit" class="btn-primary">
+              <i class="fas fa-paper-plane"></i> Submit Review
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
-</div>
 
-<!-- Existing Reviews Modal -->
-<div id="existingReviewsModal" class="modal" aria-hidden="true" role="dialog" aria-modal="true">
-  <div class="modal-content">
-    <div class="modal-header">
-      <div>
-        <h2 id="reviewsModalTitle">Customer Reviews</h2>
-        <p class="modal-subtitle">What others are saying</p>
+  <!-- Existing Reviews Modal -->
+  <div id="existingReviewsModal" class="modal" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div>
+          <h2 id="reviewsModalTitle">Customer Reviews</h2>
+          <p class="modal-subtitle">What others are saying</p>
+        </div>
+        <span class="close-btn close-reviews-modal" aria-label="Close">&times;</span>
       </div>
-      <span class="close-btn close-reviews-modal" aria-label="Close">&times;</span>
-    </div>
-    
-    <div class="modal-body">
-      <div id="reviewsContainer" class="reviews-container">
-        <!-- Reviews will be loaded here -->
+      
+      <div class="modal-body">
+        <div id="reviewsContainer" class="reviews-container">
+          <!-- Reviews will be loaded here -->
+        </div>
       </div>
     </div>
   </div>
-</div>
+
+  <!-- Footer Placeholder -->
+  <div id="footer-placeholder"></div>
+
+  <!-- Scripts -->
+  <script type="module" src="js/language-manager.js"></script>
+  <script type="module" src="js/auto-translate.js"></script>
   <script type="module" src="js/customer-orders.js"></script>
-  <script src="js/customer-darkmode.js"></script>
-
 </body>
 </html>

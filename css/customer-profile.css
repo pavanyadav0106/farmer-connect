@@ -27,77 +27,7 @@
   box-sizing: border-box;
 }
 
-body {
-  font-family: "Poppins", system-ui, -apple-system, sans-serif;
-  background: var(--bg-light);
-  color: var(--text-dark);
-  padding-top: 80px;
-  -webkit-font-smoothing: antialiased;
-}
 
-/* Improve focus outlines for accessibility */
-:focus-visible {
-  outline: 2px solid var(--primary);
-  outline-offset: 2px;
-}
-
-/* =========================
-   TOP NAV & BACK BUTTON
-   ========================= */
-.top-nav {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 64px;
-  background: linear-gradient(135deg, #4CAF50, #66BB6A);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  box-shadow: var(--shadow-soft);
-  z-index: 1000;
-}
-
-.logo-text {
-  font-size: 24px;
-  font-weight: bold;
-  font-family: 'Poppins', sans-serif;
-  letter-spacing: 1px;
-  text-decoration: none;
-  color: white;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  user-select: none;
-}
-
-.logo-text:hover {
-  text-decoration: none;
-}
-
-.back-button {
-  position: fixed;
-  top: 72px;
-  left: 10px;
-  z-index: 1100;
-  background: var(--primary);
-  color: #fff;
-  border: none;
-  border-radius: 999px;
-  padding: 7px 13px;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  cursor: pointer;
-  box-shadow: var(--shadow-soft);
-  transition: var(--transition);
-  font-size: 0.9rem;
-}
-
-.back-button:hover {
-  background: var(--primary-dark);
-  transform: translateX(-2px);
-}
 
 /* =========================
    MAIN LAYOUT
@@ -703,9 +633,7 @@ body {
 }
 
 @media (max-width: 480px) {
-  .logo-text { font-size: 1.2rem; }
   .profile-pic-container { width: 120px; height: 120px; }
-  .back-button span { display: none; }
   .profile-content h1 { font-size: 1.5rem; }
   
   .skeleton-photo {

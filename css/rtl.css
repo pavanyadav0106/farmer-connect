@@ -1,0 +1,166 @@
+/* RTL Support */
+.rtl {
+  direction: rtl;
+  text-align: right;
+}
+
+/* Navigation */
+.rtl .top-nav {
+  text-align: right;
+}
+
+.rtl .logo-text {
+  margin-right: 0;
+  margin-left: auto;
+}
+
+.rtl .language-selector {
+  margin-left: 0;
+  margin-right: 10px;
+}
+
+/* Sidebar */
+.rtl .sidebar {
+  right: 0;
+  left: auto;
+  transform: translateX(100%);
+}
+
+.rtl .sidebar.active {
+  transform: translateX(0);
+}
+
+.rtl .menu-toggle {
+  right: auto;
+  left: 15px;
+}
+
+/* Forms */
+.rtl input,
+.rtl textarea,
+.rtl select {
+  text-align: right;
+}
+
+.rtl .input-wrapper label {
+  right: 10px;
+  left: auto;
+}
+
+.rtl .toggle-password {
+  left: 10px;
+  right: auto;
+}
+
+/* Buttons with icons */
+.rtl .btn i,
+.rtl .button i {
+  margin-right: 0;
+  margin-left: 8px;
+}
+
+/* Stats and Features */
+.rtl .stats,
+.rtl .features {
+  text-align: center;
+}
+
+/* Footer */
+.rtl .footer {
+  text-align: right;
+}
+
+/* Tables */
+.rtl table {
+  text-align: right;
+}
+
+.rtl th,
+.rtl td {
+  text-align: right;
+}
+
+/* Modal */
+.rtl .modal-content {
+  text-align: right;
+}
+
+/* Toast notifications */
+.rtl .toast {
+  right: auto;
+  left: 20px;
+}
+
+/* Market ticker */
+.rtl .ticker {
+  animation-direction: reverse;
+}
+
+/* Testimonials */
+.rtl .testimonials {
+  text-align: right;
+}
+
+/* Crop cards */
+.rtl .crop-card-header {
+  flex-direction: row-reverse;
+}
+
+.rtl .crop-card-details {
+  flex-direction: row-reverse;
+}
+
+/* Form actions */
+.rtl .form-actions {
+  justify-content: flex-start;
+}
+
+.rtl .modal-actions {
+  flex-direction: row-reverse;
+}
+
+/* Pagination */
+.rtl .pagination-controls {
+  flex-direction: row-reverse;
+}
+
+/* Weather widget */
+.rtl .weather-widget {
+  text-align: right;
+}
+
+/* Back button */
+.rtl .back-button {
+  left: auto;
+  right: 20px;
+}
+
+.rtl .back-button:hover {
+  transform: translateX(3px);
+}
+
+/* Profile section */
+.rtl .profile-field label {
+  text-align: right;
+}
+
+.rtl .form-row {
+  flex-direction: row-reverse;
+}
+
+/* Dark mode toggle */
+.rtl .dark-toggle {
+  right: auto;
+  left: 20px;
+}
+
+/* Search boxes */
+.rtl .search-box i {
+  right: 10px;
+  left: auto;
+}
+
+.rtl .search-box input {
+  padding-right: 40px;
+  padding-left: 10px;
+}

@@ -31,124 +31,7 @@
   box-sizing: border-box;
 }
 
-html,
-body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  font-family: var(--font-family);
-  background: radial-gradient(circle at top left, #f4fff7, #f6f7fb 55%, #eef4ff);
-  color: var(--gray-dark);
-}
 
-body {
-  padding: 0 16px 24px;
-  padding-top: 88px; /* space for fixed header */
-}
-
-/* Top Navigation */
-.top-nav {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 64px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 20px;
-  background: linear-gradient(90deg, #238a39, #2fbd55);
-  color: #ffffff;
-  z-index: 1000;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
-}
-
-.top-nav-left {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.top-nav-right {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-/* Back Button */
-.btn-back {
-  background: rgba(255, 255, 255, 0.08);
-  border: none;
-  color: #ffffff;
-  font-size: 20px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 6px 10px;
-  border-radius: 999px;
-  transition: background-color var(--transition-speed), transform var(--transition-speed);
-}
-.btn-back:hover {
-  background-color: rgba(0, 0, 0, 0.14);
-  transform: translateX(-1px);
-}
-
-/* Logo Text */
-.logo-text {
-  font-size: 22px;
-  font-weight: 700;
-  font-family: "Poppins", sans-serif;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: #fff;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  user-select: none;
-}
-.logo-text:hover {
-  opacity: 0.9;
-}
-
-/* User Chip */
-.user-chip {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: rgba(255, 255, 255, 0.12);
-  padding: 6px 10px;
-  border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.25);
-}
-
-.user-avatar {
-  width: 30px;
-  height: 30px;
-  border-radius: 999px;
-  background: #ffffff;
-  color: var(--primary-green);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: 16px;
-}
-
-.user-meta {
-  display: flex;
-  flex-direction: column;
-  line-height: 1.1;
-}
-.user-name {
-  font-size: 13px;
-  font-weight: 600;
-}
-.user-role {
-  font-size: 11px;
-  opacity: 0.85;
-}
 
 /* Page Layout */
 .orders-page {
@@ -837,18 +720,7 @@ body {
 }
 
 @media (max-width: 768px) {
-  body {
-    padding: 0 10px 18px;
-    padding-top: 80px;
-  }
 
-  .top-nav {
-    padding: 0 12px;
-  }
-
-  .logo-text {
-    font-size: 18px;
-  }
 
   .orders-table {
     min-width: 640px;
@@ -872,9 +744,7 @@ body {
     grid-template-columns: 1fr 1fr;
   }
 
-  .top-nav-right .user-chip {
-    display: none;
-  }
+
 
   .pagination {
     flex-direction: column;
