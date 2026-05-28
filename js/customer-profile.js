@@ -1,4 +1,5 @@
 import { auth, db } from '../config.js';
+import languageManager from './language-manager.js';
 import {
   doc, getDoc, updateDoc, setDoc, onSnapshot, serverTimestamp
 } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
@@ -67,6 +68,15 @@ function init() {
   
   // Check authentication state
   checkAuthState();
+
+  // Subscribe to language changes
+  languageManager.subscribe(() => {
+    if (editMode) {
+      if (elements.saveProfileBtn) {
+        elements.saveProfileBtn.innerHTML = `<i class="fas fa-save" aria-hidden="true"></i> ${languageManager.t('profile.save_changes', {}, 'Save Changes')}`;
+      }
+    }
+  });
 }
 
 // Debug function to check element availability
@@ -94,7 +104,7 @@ function initializeCloudinary() {
         handleImageUpload(result.info.secure_url);
       } else if (error) {
         console.error("❌ Cloudinary error:", error);
-        showMessage(elements.uploadStatus, 'Upload failed: ' + error.message, 'error');
+        showMessage(elements.uploadStatus, languageManager.t('profile.upload_failed', {}, 'Upload failed') + ': ' + error.message, 'error');
       }
     });
   } else {
@@ -195,17 +205,17 @@ function validateField(field) {
     case 'name':
       if (!value) {
         isValid = false;
-        errorMessage = 'Name is required';
+        errorMessage = languageManager.t('profile.name_required', {}, 'Name is required');
       } else if (value.length < 2) {
         isValid = false;
-        errorMessage = 'Name must be at least 2 characters';
+        errorMessage = languageManager.t('profile.name_min_length', {}, 'Name must be at least 2 characters');
       }
       break;
       
     case 'phone':
       if (value && !/^\+?\d{7,15}$/.test(value)) {
         isValid = false;
-        errorMessage = 'Please enter a valid phone number';
+        errorMessage = languageManager.t('profile.invalid_phone', {}, 'Please enter a valid phone number');
       }
       break;
       
@@ -214,7 +224,7 @@ function validateField(field) {
         const age = parseInt(value);
         if (isNaN(age) || age < 18 || age > 100) {
           isValid = false;
-          errorMessage = 'Age must be between 18 and 100';
+          errorMessage = languageManager.t('profile.invalid_age', {}, 'Age must be between 18 and 100');
         }
       }
       break;
@@ -277,14 +287,14 @@ function togglePasswordVisibility(toggleElement) {
 // Handle upload click
 function handleUploadClick() {
   if (!editMode) {
-    showMessage(elements.uploadStatus, 'Please click "Edit Profile" to change your photo', 'info');
+    showMessage(elements.uploadStatus, languageManager.t('profile.edit_first_msg', {}, 'Please click "Edit Profile" to change your photo'), 'info');
     return;
   }
   
   if (cloudinaryWidget) {
     cloudinaryWidget.open();
   } else {
-    showMessage(elements.uploadStatus, 'Upload service not available', 'error');
+    showMessage(elements.uploadStatus, languageManager.t('profile.upload_service_unavailable', {}, 'Upload service not available'), 'error');
   }
 }
 
@@ -305,7 +315,7 @@ function showPasswordChange() {
       if (isGoogleOnly) {
         showMessage(
           elements.passwordChangeMessage, 
-          '🔐 Your account uses Google Sign-in. Password management is handled by Google.', 
+          languageManager.t('profile.google_signin_msg', {}, '🔐 Your account uses Google Sign-in. Password management is handled by Google.'), 
           'info'
         );
         return;
@@ -391,7 +401,7 @@ function checkAuthState() {
         if (existingData.userType === 'farmer') {
           showMessage(
             elements.profileUpdateMessage, 
-            '⚠️ You are registered as a farmer. Redirecting to farmer profile...', 
+            languageManager.t('profile.farmer_redirect_msg', {}, '⚠️ You are registered as a farmer. Redirecting to farmer profile...'), 
             'warning'
           );
           setTimeout(() => {
@@ -420,14 +430,14 @@ function checkAuthState() {
         },
         (error) => {
           console.error("❌ Error fetching user data:", error);
-          showMessage(elements.profileUpdateMessage, 'Error loading profile data: ' + error.message, 'error');
+          showMessage(elements.profileUpdateMessage, languageManager.t('profile.load_failed', {}, 'Failed to load profile') + ': ' + error.message, 'error');
           setLoadingState(false);
         }
       );
 
     } catch (error) {
       console.error("❌ Error in profile setup:", error);
-      showMessage(elements.profileUpdateMessage, 'Error setting up profile: ' + error.message, 'error');
+      showMessage(elements.profileUpdateMessage, languageManager.t('profile.setup_failed', {error: error.message}, 'Error setting up profile: ' + error.message), 'error');
       setLoadingState(false);
     }
   });
@@ -538,17 +548,17 @@ async function saveProfile(e) {
 
   // Validation
   if (!updates.name) {
-    showMessage(elements.profileUpdateMessage, 'Name is required', 'error');
+    showMessage(elements.profileUpdateMessage, languageManager.t('profile.name_required', {}, 'Name is required'), 'error');
     return;
   }
 
   if (updates.phone && !/^\+?\d{7,15}$/.test(updates.phone)) {
-    showMessage(elements.profileUpdateMessage, 'Please enter a valid phone number', 'error');
+    showMessage(elements.profileUpdateMessage, languageManager.t('profile.invalid_phone', {}, 'Please enter a valid phone number'), 'error');
     return;
   }
 
   if (updates.age && (updates.age < 18 || updates.age > 100)) {
-    showMessage(elements.profileUpdateMessage, 'Age must be between 18 and 100', 'error');
+    showMessage(elements.profileUpdateMessage, languageManager.t('profile.invalid_age', {}, 'Age must be between 18 and 100'), 'error');
     return;
   }
 
@@ -556,7 +566,7 @@ async function saveProfile(e) {
     // Update save button state
     if (elements.saveProfileBtn) {
       elements.saveProfileBtn.disabled = true;
-      elements.saveProfileBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+      elements.saveProfileBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${languageManager.t('auth.loading', {}, 'Saving...')}`;
     }
     
     // Update Firebase Auth profile
@@ -569,18 +579,18 @@ async function saveProfile(e) {
     
     // Return to read-only mode
     disableAllFields();
-    showMessage(elements.profileUpdateMessage, 'Profile updated successfully!', 'success');
-    showToast('Profile updated successfully!', 'success');
+    showMessage(elements.profileUpdateMessage, languageManager.t('profile.update_success', {}, 'Profile updated successfully!'), 'success');
+    showToast(languageManager.t('profile.update_success', {}, 'Profile updated successfully!'), 'success');
     
   } catch (error) {
     console.error('❌ Profile update error:', error);
-    showMessage(elements.profileUpdateMessage, 'Failed to update profile: ' + error.message, 'error');
-    showToast('Failed to update profile', 'error');
+    showMessage(elements.profileUpdateMessage, languageManager.t('profile.update_failed', {}, 'Failed to update profile') + ': ' + error.message, 'error');
+    showToast(languageManager.t('profile.update_failed', {}, 'Failed to update profile'), 'error');
   } finally {
     // Re-enable save button
     if (elements.saveProfileBtn) {
       elements.saveProfileBtn.disabled = false;
-      elements.saveProfileBtn.innerHTML = '<i class="fas fa-save"></i> Save Changes';
+      elements.saveProfileBtn.innerHTML = `<i class="fas fa-save"></i> ${languageManager.t('profile.save_changes', {}, 'Save Changes')}`;
     }
   }
 }
@@ -596,22 +606,22 @@ async function changePassword() {
 
   // Validation
   if (!currentPassword || !newPassword || !confirmPassword) {
-    showMessage(elements.passwordChangeMessage, 'All fields are required', 'error');
+    showMessage(elements.passwordChangeMessage, languageManager.t('auth.error.fill_all', {}, 'All fields are required'), 'error');
     return;
   }
   
   if (newPassword !== confirmPassword) {
-    showMessage(elements.passwordChangeMessage, 'New passwords do not match', 'error');
+    showMessage(elements.passwordChangeMessage, languageManager.t('auth.error.password_mismatch', {}, 'New passwords do not match'), 'error');
     return;
   }
   
   if (newPassword.length < 8) {
-    showMessage(elements.passwordChangeMessage, 'Password must be at least 8 characters', 'error');
+    showMessage(elements.passwordChangeMessage, languageManager.t('auth.error.password_length', {}, 'Password must be at least 8 characters'), 'error');
     return;
   }
   
   if (!/\d/.test(newPassword)) {
-    showMessage(elements.passwordChangeMessage, 'Password must contain at least one number', 'error');
+    showMessage(elements.passwordChangeMessage, languageManager.t('profile.password_number_required', {}, 'Password must contain at least one number'), 'error');
     return;
   }
 
@@ -619,15 +629,15 @@ async function changePassword() {
     // Update button state
     if (elements.submitPasswordBtn) {
       elements.submitPasswordBtn.disabled = true;
-      elements.submitPasswordBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Updating...';
+      elements.submitPasswordBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${languageManager.t('auth.loading', {}, 'Updating...')}`;
     }
     
     const credential = EmailAuthProvider.credential(user.email, currentPassword);
     await reauthenticateWithCredential(user, credential);
     await updatePassword(user, newPassword);
     
-    showMessage(elements.passwordChangeMessage, 'Password updated successfully!', 'success');
-    showToast('Password updated successfully!', 'success');
+    showMessage(elements.passwordChangeMessage, languageManager.t('profile.password_update_success', {}, 'Password updated successfully!'), 'success');
+    showToast(languageManager.t('profile.password_update_success', {}, 'Password updated successfully!'), 'success');
     clearPasswordFields();
     
     setTimeout(() => { 
@@ -636,17 +646,17 @@ async function changePassword() {
     
   } catch (error) {
     console.error('❌ Password change error:', error);
-    let errorMessage = 'Password change failed: ' + error.message;
+    let errorMessage = languageManager.t('profile.password_update_failed', {}, 'Password change failed') + ': ' + error.message;
     
     // User-friendly error messages
     if (error.code === 'auth/wrong-password') {
-      errorMessage = 'Current password is incorrect';
+      errorMessage = languageManager.t('auth.error.wrong_password', {}, 'Current password is incorrect');
     } else if (error.code === 'auth/weak-password') {
-      errorMessage = 'New password is too weak';
+      errorMessage = languageManager.t('auth.error.weak_password', {}, 'New password is too weak');
     } else if (error.code === 'auth/invalid-login-credentials') {
-      errorMessage = 'You signed in with Google. Password management is handled by Google.';
+      errorMessage = languageManager.t('profile.google_signin_msg', {}, 'You signed in with Google. Password management is handled by Google.');
     } else if (error.code === 'auth/requires-recent-login') {
-      errorMessage = 'For security, please sign out and sign in again before changing password';
+      errorMessage = languageManager.t('profile.reauth_required', {}, 'For security, please sign out and sign in again before changing password');
     }
     
     showMessage(elements.passwordChangeMessage, errorMessage, 'error');
@@ -655,7 +665,7 @@ async function changePassword() {
     // Re-enable button
     if (elements.submitPasswordBtn) {
       elements.submitPasswordBtn.disabled = false;
-      elements.submitPasswordBtn.innerHTML = '<i class="fas fa-key"></i> Update Password';
+      elements.submitPasswordBtn.innerHTML = `<i class="fas fa-key"></i> ${languageManager.t('profile.update_password', {}, 'Update Password')}`;
     }
   }
 }
@@ -666,7 +676,7 @@ function handleImageUpload(imageUrl) {
   if (!user) return;
 
   if (elements.uploadStatus) {
-    elements.uploadStatus.textContent = 'Uploading...';
+    elements.uploadStatus.textContent = languageManager.t('profile.uploading', {}, 'Uploading...');
     elements.uploadStatus.className = 'upload-status';
   }
   
@@ -676,7 +686,7 @@ function handleImageUpload(imageUrl) {
   })
   .then(() => {
     if (elements.uploadStatus) {
-      elements.uploadStatus.textContent = 'Profile photo updated!';
+      elements.uploadStatus.textContent = languageManager.t('profile.upload_success', {}, 'Profile photo updated!');
       elements.uploadStatus.className = 'upload-status';
     }
     if (elements.profileAvatar) elements.profileAvatar.src = imageUrl;
@@ -684,7 +694,7 @@ function handleImageUpload(imageUrl) {
     // Also update auth profile
     updateProfile(user, { photoURL: imageUrl });
     
-    showToast('Profile photo updated!', 'success');
+    showToast(languageManager.t('profile.upload_success', {}, 'Profile photo updated!'), 'success');
     
     setTimeout(() => { 
       if (elements.uploadStatus) elements.uploadStatus.textContent = ''; 
@@ -693,10 +703,10 @@ function handleImageUpload(imageUrl) {
   .catch(error => {
     console.error('❌ Image upload error:', error);
     if (elements.uploadStatus) {
-      elements.uploadStatus.textContent = 'Upload failed: ' + error.message;
+      elements.uploadStatus.textContent = languageManager.t('profile.upload_failed', {}, 'Upload failed') + ': ' + error.message;
       elements.uploadStatus.className = 'upload-status';
     }
-    showToast('Upload failed', 'error');
+    showToast(languageManager.t('profile.upload_failed', {}, 'Upload failed'), 'error');
   });
 }
 

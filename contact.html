@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Contact Us - Farmer Connect</title>
-  
+
   <!-- Favicons -->
   <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="192x192" href="assets/android-chrome-192x192.png">
@@ -13,11 +14,11 @@
   <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
   <link rel="manifest" href="assets/site.webmanifest">
-  
+
   <!-- Global CSS -->
   <link rel="stylesheet" href="css/app.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  
+
   <style>
     /* Premium Contact Page Styles */
     .contact-wrapper {
@@ -30,7 +31,7 @@
       display: grid;
       grid-template-columns: 1fr;
     }
-    
+
     .contact-header {
       padding: 3rem 2rem;
       text-align: center;
@@ -38,40 +39,40 @@
       color: white;
       position: relative;
     }
-    
+
     .contact-header h1 {
       font-size: 2.5rem;
       font-weight: 700;
       margin-bottom: 0.5rem;
       color: white;
     }
-    
+
     .contact-header p {
       font-size: 1.1rem;
       opacity: 0.9;
       max-width: 600px;
       margin: 0 auto;
     }
-    
+
     .contact-content {
       display: grid;
       grid-template-columns: 1fr;
       gap: 3rem;
       padding: 3rem 2rem;
     }
-    
+
     @media (min-width: 992px) {
       .contact-content {
         grid-template-columns: 1fr 1.5fr;
       }
     }
-    
+
     .contact-info {
       display: flex;
       flex-direction: column;
       gap: 1.5rem;
     }
-    
+
     .info-card {
       padding: 1.5rem;
       border-radius: var(--radius-md);
@@ -82,13 +83,13 @@
       align-items: flex-start;
       gap: 1.5rem;
     }
-    
+
     .info-card:hover {
       transform: translateY(-5px);
       box-shadow: var(--shadow-sm);
       border-color: var(--fc-green-light);
     }
-    
+
     .icon-circle {
       width: 50px;
       height: 50px;
@@ -101,55 +102,55 @@
       justify-content: center;
       font-size: 1.25rem;
     }
-    
+
     .info-card-text h3 {
       font-size: 1.15rem;
       color: var(--fc-text);
       margin-bottom: 0.25rem;
       font-weight: 600;
     }
-    
+
     .info-card-text p {
       color: var(--fc-text-muted);
       margin: 0;
       font-size: 0.95rem;
       line-height: 1.5;
     }
-    
+
     .contact-form-container {
       background: var(--white);
     }
-    
+
     .contact-form {
       display: flex;
       flex-direction: column;
       gap: 1.5rem;
     }
-    
+
     .form-row {
       display: grid;
       grid-template-columns: 1fr;
       gap: 1.5rem;
     }
-    
+
     @media (min-width: 768px) {
       .form-row {
         grid-template-columns: 1fr 1fr;
       }
     }
-    
+
     .form-group {
       display: flex;
       flex-direction: column;
       gap: 0.5rem;
     }
-    
+
     .form-group label {
       font-weight: 500;
       color: var(--fc-text);
       font-size: 0.95rem;
     }
-    
+
     .form-group input,
     .form-group textarea {
       padding: 0.875rem 1.25rem;
@@ -161,19 +162,19 @@
       font-size: 1rem;
       transition: var(--transition-fast);
     }
-    
+
     .form-group input:focus,
     .form-group textarea:focus {
       outline: none;
       border-color: var(--fc-green);
       box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.15);
     }
-    
+
     .form-group textarea {
       resize: vertical;
       min-height: 150px;
     }
-    
+
     .submit-btn {
       padding: 1rem 2rem;
       background: var(--fc-green);
@@ -189,27 +190,27 @@
       align-items: center;
       gap: 0.5rem;
     }
-    
+
     .submit-btn:hover {
       background: var(--fc-green-dark);
       transform: translateY(-2px);
       box-shadow: 0 4px 12px rgba(76, 175, 80, 0.2);
     }
-    
+
     /* Dark mode adaptations */
     body.dark .contact-wrapper {
       background: var(--dark-surface);
     }
-    
+
     body.dark .info-card {
       background: var(--dark-bg);
       border-color: var(--dark-border);
     }
-    
+
     body.dark .info-card:hover {
       border-color: var(--fc-green);
     }
-    
+
     body.dark .form-group input,
     body.dark .form-group textarea {
       background: var(--dark-bg);
@@ -217,6 +218,7 @@
     }
   </style>
 </head>
+
 <body data-page="main">
   <!-- Layout Placeholders -->
   <div id="top-nav-placeholder"></div>
@@ -228,9 +230,10 @@
     <div class="contact-wrapper">
       <div class="contact-header">
         <h1 data-i18n="contact.title">Get in Touch</h1>
-        <p data-i18n="contact.subtitle">We'd love to hear from you. Please fill out this form or use our contact information below.</p>
+        <p data-i18n="contact.subtitle">We'd love to hear from you. Please fill out this form or use our contact
+          information below.</p>
       </div>
-      
+
       <div class="contact-content">
         <!-- Contact Information -->
         <div class="contact-info">
@@ -240,10 +243,10 @@
             </div>
             <div class="info-card-text">
               <h3 data-i18n="contact.address">Our Location</h3>
-              <p>MANGADUDLA PAVAN<br>Sankepalli, Kadapa<br>Andhra Pradesh, India</p>
+              <p>MANGADUDLA PAVAN<br>Nakrekal, Nalgonda<br>Telangana, India</p>
             </div>
           </div>
-          
+
           <div class="info-card">
             <div class="icon-circle">
               <i class="fas fa-phone"></i>
@@ -253,7 +256,7 @@
               <p>+91 95055 10127<br>Mon-Fri 9am-6pm</p>
             </div>
           </div>
-          
+
           <div class="info-card">
             <div class="icon-circle">
               <i class="fas fa-envelope"></i>
@@ -264,7 +267,7 @@
             </div>
           </div>
         </div>
-        
+
         <!-- Contact Form -->
         <div class="contact-form-container">
           <form class="contact-form" id="contactForm">
@@ -278,7 +281,7 @@
                 <input type="text" id="lastName" required placeholder="Doe">
               </div>
             </div>
-            
+
             <div class="form-row">
               <div class="form-group">
                 <label for="email" data-i18n="contact.email_address">Email Address</label>
@@ -289,17 +292,17 @@
                 <input type="tel" id="phone" placeholder="+91 98765 43210">
               </div>
             </div>
-            
+
             <div class="form-group">
               <label for="subject" data-i18n="contact.subject">Subject</label>
               <input type="text" id="subject" required placeholder="How can we help you?">
             </div>
-            
+
             <div class="form-group">
               <label for="message" data-i18n="contact.message">Message</label>
               <textarea id="message" required placeholder="Write your message here..."></textarea>
             </div>
-            
+
             <button type="submit" class="submit-btn">
               <span data-i18n="contact.send_message">Send Message</span>
               <i class="fas fa-paper-plane"></i>
@@ -309,7 +312,7 @@
       </div>
     </div>
   </main>
-  
+
   <div id="footer-placeholder"></div>
 
   <!-- Scripts -->
@@ -318,22 +321,22 @@
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const contactForm = document.getElementById('contactForm');
-      if(contactForm) {
+      if (contactForm) {
         contactForm.addEventListener('submit', (e) => {
           e.preventDefault();
           const btn = contactForm.querySelector('.submit-btn');
           const originalText = btn.innerHTML;
-          
+
           btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
           btn.style.opacity = '0.8';
           btn.disabled = true;
-          
+
           // Simulate sending
           setTimeout(() => {
             btn.innerHTML = '<i class="fas fa-check"></i> Message Sent!';
             btn.style.background = '#2E7D32';
             contactForm.reset();
-            
+
             setTimeout(() => {
               btn.innerHTML = originalText;
               btn.style.background = '';
@@ -346,4 +349,5 @@
     });
   </script>
 </body>
+
 </html>

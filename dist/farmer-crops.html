@@ -22,12 +22,12 @@
   <script src="https://upload-widget.cloudinary.com/global/all.js"></script>
 
   <!-- Shared Layout System & Guard (Loaded early to prevent flash of content) -->
-  <script type="module" crossorigin src="/assets/farmerCrops-BZzAHE7n.js"></script>
+  <script type="module" crossorigin src="/assets/farmerCrops-D4j48WnW.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/modulepreload-polyfill-B5Qt9EMX.js">
-  <link rel="modulepreload" crossorigin href="/assets/config--Onoqk_Z.js">
-  <link rel="modulepreload" crossorigin href="/assets/layout-loader-LuVZLwht.js">
-  <link rel="stylesheet" crossorigin href="/assets/farmerCrops-DKzpL6IA.css">
-  <link rel="stylesheet" crossorigin href="/assets/app-BMiSxBfN.css">
+  <link rel="modulepreload" crossorigin href="/assets/config-Cz4Z1kB5.js">
+  <link rel="modulepreload" crossorigin href="/assets/layout-loader-B6YrC-s6.js">
+  <link rel="stylesheet" crossorigin href="/assets/layout-loader-BGxI2RXH.css">
+  <link rel="stylesheet" crossorigin href="/assets/farmerCrops-C0a4GrBr.css">
 </head>
 <body>
 
@@ -36,8 +36,9 @@
   <div id="sidebar-placeholder" data-role="farmer"></div>
   <div id="logout-modal-placeholder"></div>
 
-  <div class="app-container" style="margin-top: 80px;">
-    <!-- Navigation Sidebar -->
+  <main class="main-content" style="margin-top: 80px; padding: 0;">
+    <div class="app-container">
+      <!-- Navigation Sidebar -->
     <aside class="crops-sidebar">
       <div class="crops-sidebar-header">
         <h2><i class="fas fa-leaf"></i> <span data-i18n="navigation.my_crops">My Crops</span></h2>
@@ -73,7 +74,7 @@
     </aside>
 
     <!-- Main Content Area -->
-    <main class="main-content">
+    <div class="crops-main-content">
       <div class="content-header">
         <h2 id="formTitle" data-i18n="crops.add_new">Add New Crop</h2>
         <div class="action-buttons">
@@ -146,8 +147,9 @@
           </button>
         </div>
       </form>
-    </main>
+    </div>
   </div>
+</main>
 
   <!-- Confirmation Modal -->
   <div class="modal" id="confirmationModal">

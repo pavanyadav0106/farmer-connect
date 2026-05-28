@@ -1,4 +1,6 @@
-/* customer-orders.css */
+/* =====================================================================
+   CUSTOMER ORDERS — PAGE-SPECIFIC STYLES
+   ===================================================================== */
 
 /* Root Variables */
 :root {
@@ -24,16 +26,8 @@
   --font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* Global */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
-
-
 /* Page Layout */
+
 .orders-page {
   max-width: 1180px;
   margin: 0 auto;

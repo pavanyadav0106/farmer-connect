@@ -110,6 +110,27 @@ h1, h2, h3, h4, h5, h6 {
 .fc-text-danger  { color: var(--fc-red); }
 .fc-text-center  { text-align: center; }
 
+/* Skip navigation link (accessibility) */
+.skip-nav {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--fc-green);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 0 0 var(--fc-radius-sm) 0;
+  z-index: 9999;
+  font-weight: 600;
+  text-decoration: none;
+  transition: top 0.2s ease;
+}
+
+.skip-nav:focus {
+  top: 0;
+  color: white;
+}
+
+
 /* =====================================================================
    4. TOP NAVIGATION
    ===================================================================== */

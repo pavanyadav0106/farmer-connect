@@ -3,7 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Customer Profile | Farmer Connect</title>
+  <meta name="theme-color" content="#28a745">
+  <meta name="mobile-web-app-capable" content="yes">
+  <title data-i18n="profile.title">Customer Profile | Farmer Connect</title>
 
   <!-- Favicons -->
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
@@ -11,7 +13,7 @@
   <link rel="icon" type="image/png" sizes="512x512" href="/assets/android-chrome-512x512.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
-  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="shortcut icon" href="/favicon.ico">
   <link rel="manifest" href="/assets/site.webmanifest">
 
   <!-- Icons & CSS -->
@@ -20,7 +22,6 @@
   <link rel="stylesheet" href="css/app.css">
   <!-- Page-specific -->
   <link rel="stylesheet" href="css/customer-profile.css" />
-  <link rel="stylesheet" href="css/customer-darkmode.css">
 
   <!-- Cloudinary Upload Widget -->
   <script src="https://widget.cloudinary.com/v2.0/global/all.js" type="text/javascript"></script>
@@ -29,6 +30,7 @@
   <script type="module" src="js/layout-loader.js"></script>
 </head>
 <body>
+  <a href="#main-content" class="skip-nav">Skip to main content</a>
 
   <!-- Layout Placeholders (Injected dynamically) -->
   <div id="top-nav-placeholder"></div>
@@ -38,7 +40,7 @@
   <!-- Loading Overlay -->
   <div id="loading-overlay" class="loading-overlay" aria-live="polite" aria-label="Loading" style="display: none;">
     <div class="loading-spinner"></div>
-    <p>Loading your profile...</p>
+    <p data-i18n="profile.loading">Loading your profile...</p>
   </div>
 
   <!-- Main content -->
@@ -102,7 +104,7 @@
       <div id="profile-content" class="profile-content">
         <h1>
           <i class="fas fa-user-circle" aria-hidden="true"></i>
-          Customer Profile
+          <span data-i18n="profile.title">Customer Profile</span>
         </h1>
 
         <!-- Profile Photo Section -->
@@ -126,7 +128,7 @@
 
           <button id="upload-btn" class="btn btn-primary" type="button">
             <i class="fas fa-cloud-upload-alt" aria-hidden="true"></i>
-            Change Photo
+            <span data-i18n="profile.change_photo">Change Photo</span>
           </button>
           <div id="upload-status" class="upload-status" role="status"></div>
         </section>
@@ -136,7 +138,7 @@
           <div class="profile-field">
             <label>
               <i class="fas fa-envelope" aria-hidden="true"></i>
-              Email:
+              <span data-i18n="auth.email">Email:</span>
             </label>
             <p id="user-email" class="read-only"></p>
           </div>
@@ -144,7 +146,7 @@
           <div class="profile-field">
             <label for="user-name">
               <i class="fas fa-user" aria-hidden="true"></i>
-              Full Name:
+              <span data-i18n="profile.full_name">Full Name:</span>
             </label>
             <input
               type="text"
@@ -157,7 +159,7 @@
           <div class="profile-field">
             <label for="user-phone">
               <i class="fas fa-phone" aria-hidden="true"></i>
-              Phone:
+              <span data-i18n="profile.phone">Phone:</span>
             </label>
             <input
               type="tel"
@@ -165,19 +167,21 @@
               name="user-phone"
               autocomplete="tel"
               placeholder="+91XXXXXXXXXX"
+              data-i18n-placeholder="profile.phone_placeholder"
               disabled />
           </div>
 
           <div class="profile-field">
             <label for="user-address">
               <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
-              Delivery Address:
+              <span data-i18n="profile.delivery_address">Delivery Address:</span>
             </label>
             <textarea
               id="user-address"
               name="user-address"
               autocomplete="street-address"
               placeholder="Enter your complete delivery address"
+              data-i18n-placeholder="profile.address_placeholder"
               disabled
               rows="3"></textarea>
           </div>
@@ -186,21 +190,21 @@
             <div class="profile-field">
               <label for="user-gender">
                 <i class="fas fa-venus-mars" aria-hidden="true"></i>
-                Gender:
+                <span data-i18n="profile.gender">Gender:</span>
               </label>
               <select id="user-gender" name="user-gender" disabled>
-                <option value="">Select</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-                <option value="Other">Other</option>
-                <option value="Prefer not to say">Prefer not to say</option>
+                <option value="" data-i18n="select.gender">Select</option>
+                <option value="Male" data-i18n="gender.male">Male</option>
+                <option value="Female" data-i18n="gender.female">Female</option>
+                <option value="Other" data-i18n="gender.other">Other</option>
+                <option value="Prefer not to say" data-i18n="gender.not_say">Prefer not to say</option>
               </select>
             </div>
 
             <div class="profile-field">
               <label for="user-age">
                 <i class="fas fa-birthday-cake" aria-hidden="true"></i>
-                Age:
+                <span data-i18n="profile.age">Age:</span>
               </label>
               <input
                 type="number"
@@ -216,15 +220,15 @@
           <div class="profile-actions">
             <button type="button" id="edit-profile" class="btn btn-secondary">
               <i class="fas fa-edit" aria-hidden="true"></i>
-              Edit Profile
+              <span data-i18n="profile.edit_profile">Edit Profile</span>
             </button>
             <button type="submit" id="save-profile" class="btn btn-primary" style="display:none;">
               <i class="fas fa-save" aria-hidden="true"></i>
-              Save Changes
+              <span data-i18n="profile.save_changes">Save Changes</span>
             </button>
             <button type="button" id="change-password" class="btn btn-warning">
               <i class="fas fa-key" aria-hidden="true"></i>
-              Change Password
+              <span data-i18n="profile.change_password">Change Password</span>
             </button>
           </div>
           
@@ -233,13 +237,13 @@
 
         <!-- Password Change Section -->
         <section id="password-change-box" class="password-change-box" style="display:none;" aria-label="Change password">
-          <h3>
+          <h3 data-i18n="profile.change_password">
             <i class="fas fa-lock" aria-hidden="true"></i>
             Change Password
           </h3>
           
           <div class="profile-field">
-            <label for="current-password">Current Password:</label>
+            <label for="current-password" data-i18n="profile.current_password">Current Password:</label>
             <div class="password-input">
               <input type="password" id="current-password" autocomplete="current-password" />
               <i class="fas fa-eye toggle-password" aria-hidden="true"></i>
@@ -247,18 +251,18 @@
           </div>
           
           <div class="profile-field">
-            <label for="new-password">New Password:</label>
+            <label for="new-password" data-i18n="profile.new_password">New Password:</label>
             <div class="password-input">
               <input type="password" id="new-password" autocomplete="new-password" />
               <i class="fas fa-eye toggle-password" aria-hidden="true"></i>
             </div>
-            <small class="password-hint">
+            <small class="password-hint" data-i18n="auth.password_hint">
               Minimum 8 characters with at least one number.
             </small>
           </div>
 
           <div class="profile-field">
-            <label for="confirm-password">Confirm New Password:</label>
+            <label for="confirm-password" data-i18n="profile.confirm_password">Confirm New Password:</label>
             <div class="password-input">
               <input type="password" id="confirm-password" autocomplete="new-password" />
               <i class="fas fa-eye toggle-password" aria-hidden="true"></i>
@@ -270,11 +274,11 @@
           <div class="form-actions">
             <button type="button" id="submit-password-change" class="btn btn-danger">
               <i class="fas fa-key" aria-hidden="true"></i>
-              Update Password
+              <span data-i18n="profile.update_password">Update Password</span>
             </button>
             <button type="button" id="cancel-password-change" class="btn btn-secondary">
               <i class="fas fa-times" aria-hidden="true"></i>
-              Cancel
+              <span data-i18n="buttons.cancel">Cancel</span>
             </button>
           </div>
         </section>

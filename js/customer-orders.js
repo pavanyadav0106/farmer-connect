@@ -1,4 +1,5 @@
 import { db, auth } from "../config.js";
+import languageManager from "./language-manager.js";
 import {
   collection,
   query,
@@ -102,13 +103,22 @@ document.addEventListener("DOMContentLoaded", () => {
   function init() {
     setupAuthListener();
     setupEventListeners();
+
+    languageManager.subscribe(() => {
+      applyFiltersAndRender();
+      updateSummaryCards();
+      updateLastUpdated();
+      if (selectedOrderId) {
+        showOrderDetails(selectedOrderId);
+      }
+    });
   }
 
   function setupAuthListener() {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         if (customerNameEl) {
-          customerNameEl.textContent = user.displayName || "Customer";
+          customerNameEl.textContent = user.displayName || languageManager.t('table.customer', {}, "Customer");
         }
         fetchOrders(user.uid);
       } else {
@@ -163,14 +173,14 @@ document.addEventListener("DOMContentLoaded", () => {
         },
         (error) => {
           console.error("Error loading orders:", error);
-          showToast("Failed to load orders", "error");
+          showToast(languageManager.t('orders.load_failed', {}, "Failed to load orders"), "error");
           showEmptyState();
           showLoadingOverlay(false);
         }
       );
     } catch (error) {
       console.error("Error loading orders:", error);
-      showToast("Failed to load orders", "error");
+      showToast(languageManager.t('orders.load_failed', {}, "Failed to load orders"), "error");
       showEmptyState();
       showLoadingOverlay(false);
     }
@@ -309,7 +319,7 @@ document.addEventListener("DOMContentLoaded", () => {
             class="actions-btn view-details-btn"
             data-order-id="${order.id}"
           >
-            View
+            ${languageManager.t('buttons.view', {}, 'View')}
           </button>
         </td>
       `;
@@ -350,17 +360,17 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="order-card-body">
           <p class="order-card-title">${firstItem}</p>
           <p class="order-card-meta">
-            <span>${items.length} item(s)</span> •
+            <span>${languageManager.t('orders.items_count', {count: items.length}, `${items.length} item(s)`)}</span> •
             <span>₹${total.toFixed(2)}</span>
           </p>
-          <p class="order-card-farmer">Farmer: ${farmerName}</p>
+          <p class="order-card-farmer">${languageManager.t('orders.farmer', {}, 'Farmer')}: ${farmerName}</p>
         </div>
         <div class="order-card-footer">
           <button
             class="actions-btn view-details-btn"
             data-order-id="${order.id}"
           >
-            View details
+            ${languageManager.t('buttons.view_details', {}, 'View details')}
           </button>
         </div>
       `;
@@ -388,7 +398,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Set modal header info
     if (modalOrderIdEl) {
-      modalOrderIdEl.textContent = `Order #${order.id}`;
+      modalOrderIdEl.textContent = `${languageManager.t('table.order_id', {}, 'Order')} #${order.id}`;
     }
     if (modalOrderStatusEl) {
       const label = getStatusLabel(order.status);
@@ -400,13 +410,13 @@ document.addEventListener("DOMContentLoaded", () => {
     modalBody.innerHTML = `
       <div class="order-details-grid">
         <div class="order-section">
-          <h3>Order Information</h3>
+          <h3>${languageManager.t('orders.order_info', {}, 'Order Information')}</h3>
           <div class="order-info">
-            <div class="order-info-label">Order ID</div>
+            <div class="order-info-label">${languageManager.t('table.order_id', {}, 'Order ID')}</div>
             <div class="order-info-value">${order.id}</div>
           </div>
           <div class="order-info">
-            <div class="order-info-label">Status</div>
+            <div class="order-info-label">${languageManager.t('table.status', {}, 'Status')}</div>
             <div class="order-info-value">
               <span class="status-badge ${getStatusClass(order.status)}">
                 ${getStatusLabel(order.status)}
@@ -414,58 +424,58 @@ document.addEventListener("DOMContentLoaded", () => {
             </div>
           </div>
           <div class="order-info">
-            <div class="order-info-label">Total</div>
+            <div class="order-info-label">${languageManager.t('orders.total', {}, 'Total')}</div>
             <div class="order-info-value">₹${total.toFixed(2)}</div>
           </div>
           <div class="order-info">
-            <div class="order-info-label">Payment</div>
+            <div class="order-info-label">${languageManager.t('orders.payment_method', {}, 'Payment')}</div>
             <div class="order-info-value">
-              ${order.paymentMethod || "Not specified"}
+              ${order.paymentMethod ? languageManager.t('filter.' + order.paymentMethod.toLowerCase(), {}, order.paymentMethod) : languageManager.t('orders.not_specified', {}, "Not specified")}
             </div>
           </div>
         </div>
 
         <div class="order-section">
-      <h3>Delivery Information</h3>
+      <h3>${languageManager.t('orders.delivery_info', {}, 'Delivery Information')}</h3>
       <div class="order-info">
-        <div class="order-info-label">Address</div>
+        <div class="order-info-label">${languageManager.t('profile.location', {}, 'Address')}</div>
         <div class="order-info-value">
           ${
             order.customerAddress ||
             order.deliveryAddress ||
             order.address ||
-            "Not specified"
+            languageManager.t('orders.not_specified', {}, "Not specified")
           }
         </div>
       </div>
       <div class="order-info">
-        <div class="order-info-label">Contact</div>
+        <div class="order-info-label">${languageManager.t('profile.phone', {}, 'Contact')}</div>
         <div class="order-info-value">
           ${
             order.customerPhone ||
             order.contactNumber ||
             order.phone ||
-            "Not specified"
+            languageManager.t('orders.not_specified', {}, "Not specified")
           }
         </div>
       </div>
       <div class="order-info">
-        <div class="order-info-label">Delivery Date</div>
+        <div class="order-info-label">${languageManager.t('orders.delivery_date', {}, 'Delivery Date')}</div>
         <div class="order-info-value">
-          ${order.deliveryDate || "Not specified"}
+          ${order.deliveryDate || languageManager.t('orders.not_specified', {}, "Not specified")}
         </div>
       </div>
     </div>
 
         <div class="order-section" style="grid-column: 1 / -1">
-          <h3>Order Items</h3>
+          <h3>${languageManager.t('orders.order_items', {}, 'Order Items')}</h3>
           <table class="order-items-table">
             <thead>
               <tr>
-                <th>Item</th>
-                <th>Quantity</th>
-                <th>Price</th>
-                <th>Total</th>
+                <th>${languageManager.t('table.crops', {}, 'Item')}</th>
+                <th>${languageManager.t('table.quantity', {}, 'Quantity')}</th>
+                <th>${languageManager.t('crops.price', {}, 'Price')}</th>
+                <th>${languageManager.t('orders.total', {}, 'Total')}</th>
               </tr>
             </thead>
             <tbody>
@@ -486,7 +496,7 @@ document.addEventListener("DOMContentLoaded", () => {
             </tbody>
             <tfoot>
               <tr>
-                <td colspan="3" class="text-right"><strong>Total:</strong></td>
+                <td colspan="3" class="text-right"><strong>${languageManager.t('orders.total', {}, 'Total')}:</strong></td>
                 <td>₹${total.toFixed(2)}</td>
               </tr>
             </tfoot>
@@ -520,7 +530,7 @@ document.addEventListener("DOMContentLoaded", () => {
           const crop = items[0];  // First item in the order
 
           if (alreadyReviewed) {
-            addReviewBtn.innerHTML = '<i class="fas fa-star"></i> View Review';
+            addReviewBtn.innerHTML = '<i class="fas fa-star"></i> ' + languageManager.t('orders.view_review', {}, 'View Review');
             addReviewBtn.onclick = () => {
               let cropId = crop.cropId || crop.id;
               if (!cropId) {
@@ -528,7 +538,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 findCropIdByNameAndFarmer(crop.name, order.farmerId || (order.farmer && order.farmer.id))
                   .then(foundId => {
                     if (!foundId) {
-                      showToast("Crop not found in database", "error");
+                      showToast(languageManager.t('marketplace.product_not_found', {}, "Crop not found in database"), "error");
                       return;
                     }
                     // Store crop data before showing reviews
@@ -557,7 +567,7 @@ document.addEventListener("DOMContentLoaded", () => {
               showExistingReviews(cropId);
             };
           } else {
-            addReviewBtn.innerHTML = '<i class="fas fa-star"></i> Add Review';
+            addReviewBtn.innerHTML = '<i class="fas fa-star"></i> ' + languageManager.t('orders.add_review', {}, 'Add Review');
             addReviewBtn.onclick = () => showReviewModal(orderId);
           }
         });
@@ -630,7 +640,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function showReviewModal(orderId) {
     const order = orders.find(o => o.id === orderId);
     if (!order || !order.items || order.items.length === 0) {
-      showToast("No items found in this order", "error");
+      showToast(languageManager.t('orders.load_failed', {}, "No items found in this order"), "error");
       return;
     }
     
@@ -678,7 +688,7 @@ document.addEventListener("DOMContentLoaded", () => {
       
       const querySnapshot = await getDocs(q);
       if (!querySnapshot.empty) {
-        showToast("You've already reviewed this purchase", "info");
+        showToast(languageManager.t('orders.already_reviewed', {}, "You've already reviewed this purchase"), "info");
         reviewModal.style.display = "none";
         return true;
       }
@@ -695,7 +705,7 @@ document.addEventListener("DOMContentLoaded", () => {
     
     const user = auth.currentUser;
     if (!user || !selectedCropForReview || !selectedCropData) {
-      showToast("Please select an item to review", "error");
+      showToast(languageManager.t('orders.select_item_review', {}, "Please select an item to review"), "error");
       return;
     }
     
@@ -703,7 +713,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const comment = reviewComment ? reviewComment.value.trim() : "";
     
     if (rating < 1 || rating > 5) {
-      showToast("Please select a rating between 1-5 stars", "error");
+      showToast(languageManager.t('orders.invalid_rating', {}, "Please select a rating between 1-5 stars"), "error");
       return;
     }
     
@@ -734,13 +744,13 @@ document.addEventListener("DOMContentLoaded", () => {
       // Update crop rating
       await updateCropRating(selectedCropForReview);
       
-      showToast("Thank you for your review!", "success");
+      showToast(languageManager.t('orders.review_success', {}, "Thank you for your review!"), "success");
       reviewModal.style.display = "none";
       showLoadingOverlay(false);
       
     } catch (error) {
       console.error("Error submitting review:", error);
-      showToast("Failed to submit review. Please try again.", "error");
+      showToast(languageManager.t('orders.review_failed', {}, "Failed to submit review. Please try again."), "error");
       showLoadingOverlay(false);
     }
   }
@@ -811,7 +821,7 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log("Looking for crop by name:", cropName, "farmer:", farmerId);
         
         if (!cropName) {
-          showToast("Could not find crop information", "error");
+          showToast(languageManager.t('marketplace.product_not_found', {}, "Could not find crop information"), "error");
           showLoadingOverlay(false);
           return;
         }
@@ -842,7 +852,7 @@ document.addEventListener("DOMContentLoaded", () => {
           const snap = await getDocs(q);
 
           if (snap.empty) {
-            showToast("Crop not found in database. It may have been removed.", "error");
+            showToast(languageManager.t('marketplace.product_not_found', {}, "Crop not found in database. It may have been removed."), "error");
             showLoadingOverlay(false);
             return;
           }
@@ -861,7 +871,7 @@ document.addEventListener("DOMContentLoaded", () => {
       // Update modal title
       const titleEl = document.getElementById("reviewsModalTitle");
       if (titleEl) {
-        titleEl.textContent = `Reviews for ${cropData.name}`;
+        titleEl.textContent = languageManager.t('orders.reviews_for_crop', {name: cropData.name}, `Reviews for ${cropData.name}`);
       }
 
       // Fetch all reviews for this crop
@@ -885,7 +895,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     } catch (err) {
       console.error("Error loading reviews:", err);
-      showToast("Failed to load reviews. Please try again.", "error");
+      showToast(languageManager.t('marketplace.failed_load_reviews', {}, "Failed to load reviews. Please try again."), "error");
       showLoadingOverlay(false);
     }
   }
@@ -898,8 +908,8 @@ document.addEventListener("DOMContentLoaded", () => {
       reviewsContainer.innerHTML = `
         <div class="empty-state" style="margin: 20px 0; text-align: center;">
           <i class="fas fa-comment-alt" style="font-size: 3rem; color: #ddd; margin-bottom: 10px;"></i>
-          <h3>No reviews yet</h3>
-          <p>Be the first to review this crop!</p>
+          <h3>${languageManager.t('orders.no_reviews', {}, 'No reviews yet')}</h3>
+          <p>${languageManager.t('orders.first_review', {}, 'Be the first to review this crop!')}</p>
         </div>
       `;
       return;
@@ -912,6 +922,10 @@ document.addEventListener("DOMContentLoaded", () => {
       return dateB - dateA;
     });
     
+    const countText = reviews.length === 1 
+      ? languageManager.t('orders.based_on_review', {count: reviews.length}, `Based on ${reviews.length} review`) 
+      : languageManager.t('orders.based_on_reviews', {count: reviews.length}, `Based on ${reviews.length} reviews`);
+
     let html = `
       <div class="average-rating">
         <div class="average-rating-value">${averageRating.toFixed(1)}</div>
@@ -919,7 +933,7 @@ document.addEventListener("DOMContentLoaded", () => {
           ${getStarRatingHTML(averageRating)}
         </div>
         <div class="average-rating-count">
-          Based on ${reviews.length} ${reviews.length === 1 ? 'review' : 'reviews'}
+          ${countText}
         </div>
       </div>
     `;
@@ -968,9 +982,11 @@ document.addEventListener("DOMContentLoaded", () => {
    * HELPERS
    * ------------------------------------------------------------------ */
   function formatDate(date) {
-    if (!date) return "N/A";
+    if (!date) return languageManager.t('orders.not_specified', {}, "N/A");
     try {
-      return date.toLocaleString("en-IN", {
+      const lang = languageManager.getCurrentLang();
+      const locale = lang === 'te' ? 'te-IN' : lang === 'hi' ? 'hi-IN' : lang === 'ta' ? 'ta-IN' : 'en-IN';
+      return date.toLocaleString(locale, {
         year: "numeric",
         month: "short",
         day: "numeric",
@@ -978,7 +994,7 @@ document.addEventListener("DOMContentLoaded", () => {
         minute: "2-digit",
       });
     } catch {
-      return "N/A";
+      return languageManager.t('orders.not_specified', {}, "N/A");
     }
   }
 
@@ -1003,7 +1019,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function updateLastUpdated() {
     if (!lastUpdatedEl) return;
-    lastUpdatedEl.textContent = new Date().toLocaleTimeString("en-IN", {
+    const lang = languageManager.getCurrentLang();
+    const locale = lang === 'te' ? 'te-IN' : lang === 'hi' ? 'hi-IN' : lang === 'ta' ? 'ta-IN' : 'en-IN';
+    lastUpdatedEl.textContent = new Date().toLocaleTimeString(locale, {
       hour: "2-digit",
       minute: "2-digit",
     });
@@ -1079,13 +1097,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const s = normalizeStatus(status);
     switch (s) {
       case "processing":
-        return "Pending";
+        return languageManager.t('filter.pending', {}, 'Pending');
       case "accepted":
-        return "Accepted";
+        return languageManager.t('filter.accepted', {}, 'Accepted');
       case "completed":
-        return "Completed";
+        return languageManager.t('filter.completed', {}, 'Completed');
       case "cancelled":
-        return "Cancelled";
+        return languageManager.t('filter.cancelled', {}, 'Cancelled');
       default:
         return status || "Unknown";
     }
@@ -1136,10 +1154,10 @@ document.addEventListener("DOMContentLoaded", () => {
   function updatePaginationInfo(start, end, total) {
     if (!paginationInfo) return;
     if (total === 0) {
-      paginationInfo.textContent = "0–0 of 0 orders";
+      paginationInfo.textContent = languageManager.t('table.showing', {start: 0, end: 0, total: 0}, "0–0 of 0 orders");
       return;
     }
-    paginationInfo.textContent = `${start}–${end} of ${total} orders`;
+    paginationInfo.textContent = languageManager.t('table.showing', {start: start, end: end, total: total}, `${start}–${end} of ${total} orders`);
   }
 
   // Get Star Rating HTML
@@ -1330,11 +1348,11 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!selectedOrderId) return;
         try {
           await updateOrderStatus(selectedOrderId, "cancelled");
-          showToast("Order cancelled successfully", "success");
+          showToast(languageManager.t('orders.cancelled_success', {}, "Order cancelled successfully"), "success");
           orderModal.style.display = "none";
         } catch (error) {
           console.error(error);
-          showToast("Failed to cancel order", "error");
+          showToast(languageManager.t('orders.cancelled_error', {}, "Failed to cancel order"), "error");
         }
       });
     }
@@ -1350,7 +1368,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Download invoice (placeholder)
     if (downloadInvoiceBtn) {
       downloadInvoiceBtn.addEventListener("click", () => {
-        showToast("Invoice download will be available soon.", "info");
+        showToast(languageManager.t('orders.download_feature', {}, "Invoice download will be available soon."), "info");
       });
     }
 

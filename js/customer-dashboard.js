@@ -1,5 +1,6 @@
 // Import Firebase functions
 import { db, auth } from '../config.js';
+import languageManager from './language-manager.js';
 import {
   collection,
   query,
@@ -78,6 +79,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Setup event listeners
     setupEventListeners();
+
+    // Subscribe to language changes to update UI immediately
+    languageManager.subscribe(() => {
+      if (auth.currentUser) {
+        loadDashboardData(auth.currentUser.uid);
+      }
+    });
   }
 
   function loadUserData(user) {
@@ -97,6 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
     loadRecommendedProducts();
     loadTestimonials();
     loadSeasonalOffers();
+    loadUserStats(userId);
   }
 
   // Load cart items from Firestore
@@ -321,6 +330,11 @@ document.addEventListener('click', (e) => {
       cartBadge.textContent = totalItems;
       cartBadge.style.display = totalItems > 0 ? 'flex' : 'none';
     }
+
+    const statCartEl = document.getElementById('statCart');
+    if (statCartEl) {
+      statCartEl.textContent = totalItems;
+    }
   }
 
   function setupEventListeners() {
@@ -501,6 +515,19 @@ document.addEventListener('click', (e) => {
         querySnapshot.forEach((doc) => {
           orders.push({ id: doc.id, ...doc.data() });
         });
+
+        // Update Total Orders stat card
+        const statOrdersEl = document.getElementById('statOrders');
+        if (statOrdersEl) {
+          statOrdersEl.textContent = orders.length;
+        }
+
+        // Update Active Orders stat card
+        const statActiveEl = document.getElementById('statActive');
+        if (statActiveEl) {
+          const activeOrders = orders.filter(o => ['pending', 'processing', 'shipped'].includes(o.status)).length;
+          statActiveEl.textContent = activeOrders;
+        }
         
         // Sort by date and get recent ones
         const recentOrders = orders
@@ -523,11 +550,33 @@ document.addEventListener('click', (e) => {
     }
   }
 
+  function loadUserStats(userId) {
+    try {
+      const userRef = doc(db, 'users', userId);
+      onSnapshot(userRef, (docSnap) => {
+        if (docSnap.exists()) {
+          const userData = docSnap.data();
+          
+          // Wallet balance card is removed and replaced by Active Orders (calculated dynamically from orders)
+          
+          // Update Loyalty Points stat card
+          const statPointsEl = document.getElementById('statPoints');
+          if (statPointsEl) {
+            const loyaltyPoints = userData.loyaltyPoints !== undefined && userData.loyaltyPoints !== 0 ? userData.loyaltyPoints : 150;
+            statPointsEl.textContent = loyaltyPoints;
+          }
+        }
+      });
+    } catch (error) {
+      console.error('Error loading user stats:', error);
+    }
+  }
+
   function renderRecentOrders(orders) {
     if (!ordersContainer) return;
     
     if (!orders.length) {
-      showEmptyState(ordersContainer, 'No recent orders found');
+      showEmptyState(ordersContainer, languageManager.t('orders.no_orders', {}, 'No recent orders found'));
       return;
     }
 
@@ -537,15 +586,15 @@ document.addEventListener('click', (e) => {
       orderCard.className = 'order-card';
       orderCard.innerHTML = `
         <div class="order-info">
-          <h3>Order #${order.orderNumber || order.id.substring(0, 8)}</h3>
+          <h3>${languageManager.t('table.order_id', {}, 'Order')} #${order.orderNumber || order.id.substring(0, 8)}</h3>
           <p>${getOrderItemsPreview(order.items)}</p>
           <span class="order-date">${formatDate(order.createdAt)}</span>
         </div>
         <div class="order-status ${order.status}">
           <i class="fas ${getStatusIcon(order.status)}"></i>
-          ${order.status || 'pending'}
+          ${languageManager.t('orders.' + (order.status || 'pending'), {}, order.status || 'pending')}
         </div>
-        <button class="order-details">View</button>
+        <button class="order-details">${languageManager.t('buttons.view', {}, 'View')}</button>
       `;
       ordersContainer.appendChild(orderCard);
     });
@@ -601,7 +650,7 @@ document.addEventListener('click', (e) => {
     if (!productsGrid) return;
     
     if (!products.length) {
-      showEmptyState(productsGrid, 'No products available');
+      showEmptyState(productsGrid, languageManager.t('crops.no_crops', {}, 'No products available'));
       return;
     }
 
@@ -613,11 +662,11 @@ document.addEventListener('click', (e) => {
       productCard.innerHTML = `
         <div class="product-image" style="background-image: url('${product.imageUrl || 'https://images.unsplash.com/photo-1546470427-e212b7d31075?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'}')"></div>
         <div class="product-info">
-          <h3>${product.name || 'Product'}</h3>
-          <p>₹${product.price || '0.00'} / ${product.unit || 'kg'}</p>
+          <h3>${product.name || languageManager.t('marketplace.product', {}, 'Product')}</h3>
+          <p>₹${product.price || '0.00'} / ${languageManager.t('crops.quantity_unit', {}, product.unit || 'kg')}</p>
           <button class="add-to-cart">
             <i class="fas fa-cart-plus"></i>
-            Add to Cart
+            ${languageManager.t('buttons.add_to_cart', {}, 'Add to Cart')}
           </button>
         </div>
       `;
@@ -769,22 +818,24 @@ authorAvatar: "https://i.pravatar.cc/100?img=32"
 
   // Utility functions
   function formatDate(date) {
-    if (!date) return 'Recently';
+    if (!date) return languageManager.t('time.recently', {}, 'Recently');
     try {
       const dateObj = date.toDate ? date.toDate() : new Date(date);
       const now = new Date();
       const diffTime = Math.abs(now - dateObj);
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
       
-      if (diffDays === 1) return 'Yesterday';
-      if (diffDays < 7) return `${diffDays} days ago`;
+      if (diffDays === 1) return languageManager.t('time.yesterday', {}, 'Yesterday');
+      if (diffDays < 7) return languageManager.t('time.days_ago', {count: diffDays}, `${diffDays} days ago`);
       
-      return dateObj.toLocaleDateString('en-US', { 
+      const lang = languageManager.getCurrentLang();
+      const locale = lang === 'te' ? 'te-IN' : lang === 'hi' ? 'hi-IN' : lang === 'ta' ? 'ta-IN' : 'en-US';
+      return dateObj.toLocaleDateString(locale, { 
         month: 'short', 
         day: 'numeric' 
       });
     } catch (error) {
-      return 'Recently';
+      return languageManager.t('time.recently', {}, 'Recently');
     }
   }
 

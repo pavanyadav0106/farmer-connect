@@ -3,7 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>My Orders | Farmer Connect</title>
+  <meta name="theme-color" content="#28a745">
+  <meta name="mobile-web-app-capable" content="yes">
+  <title data-i18n="orders.my_orders">My Orders | Farmer Connect</title>
 
   <!-- Favicons -->
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png" />
@@ -11,39 +13,39 @@
   <link rel="icon" type="image/png" sizes="512x512" href="/assets/android-chrome-512x512.png" />
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png" />
   <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png" />
-  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+  <link rel="shortcut icon" href="/favicon.ico" />
   <link rel="manifest" href="/assets/site.webmanifest" />
-  
+
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <!-- Global Design System -->
   <link rel="stylesheet" href="css/app.css">
   <!-- Page-specific -->
   <link rel="stylesheet" href="css/customer-orders.css" />
-  <link rel="stylesheet" href="css/customer-darkmode.css">
   <link rel="stylesheet" href="css/customer-review.css">
 
   <!-- Shared Layout System & Guard (Loaded early to prevent flash of content) -->
   <script type="module" src="js/layout-loader.js"></script>
 </head>
 <body>
+  <a href="#main-content" class="skip-nav">Skip to main content</a>
 
   <!-- Layout Placeholders (Injected dynamically) -->
   <div id="top-nav-placeholder"></div>
   <div id="sidebar-placeholder" data-role="customer"></div>
   <div id="logout-modal-placeholder"></div>
 
-  <main class="main-content orders-page" style="margin-top: 80px; padding: 20px;">
+  <main class="main-content orders-page" id="main-content" style="margin-top: 80px; padding: 20px;">
     <section class="orders-header">
       <div>
-        <h1>My Orders</h1>
-        <p class="subtitle">
+        <h1 data-i18n="orders.my_orders">My Orders</h1>
+        <p class="subtitle" data-i18n="orders.subtitle">
           View and track all your orders placed with farmers in real time.
         </p>
       </div>
       <div class="orders-header-meta">
         <span class="last-updated">
           <i class="fas fa-clock"></i>
-          Last updated: <span id="lastUpdated">just now</span>
+          <span data-i18n="orders.last_updated">Last updated:</span> <span id="lastUpdated">just now</span>
         </span>
       </div>
     </section>
@@ -51,38 +53,38 @@
     <!-- Summary Cards -->
     <section class="orders-summary">
       <div class="summary-card">
-        <div class="summary-label">Total Orders</div>
+        <div class="summary-label" data-i18n="orders.total_orders">Total Orders</div>
         <div class="summary-value" id="totalOrdersCount">0</div>
         <div class="summary-chip">
           <i class="fas fa-receipt"></i>
-          <span>All time</span>
+          <span data-i18n="filter.all_time">All time</span>
         </div>
       </div>
 
       <div class="summary-card">
-        <div class="summary-label">Active</div>
+        <div class="summary-label" data-i18n="orders.active">Active</div>
         <div class="summary-value" id="activeOrdersCount">0</div>
         <div class="summary-chip status-processing">
           <i class="fas fa-spinner"></i>
-          <span>Pending / Accepted</span>
+          <span data-i18n="orders.active_desc">Pending / Accepted</span>
         </div>
       </div>
 
       <div class="summary-card">
-        <div class="summary-label">Completed</div>
+        <div class="summary-label" data-i18n="orders.completed">Completed</div>
         <div class="summary-value" id="completedOrdersCount">0</div>
         <div class="summary-chip status-completed">
           <i class="fas fa-check-circle"></i>
-          <span>Delivered</span>
+          <span data-i18n="orders.delivered">Delivered</span>
         </div>
       </div>
 
       <div class="summary-card">
-        <div class="summary-label">Cancelled</div>
+        <div class="summary-label" data-i18n="orders.cancelled">Cancelled</div>
         <div class="summary-value" id="cancelledOrdersCount">0</div>
         <div class="summary-chip status-cancelled">
           <i class="fas fa-times-circle"></i>
-          <span>Cancelled</span>
+          <span data-i18n="orders.cancelled">Cancelled</span>
         </div>
       </div>
     </section>
@@ -92,29 +94,29 @@
       <div class="orders-toolbar">
         <div class="orders-toolbar-left">
           <div class="filter-group">
-            <label for="statusFilter">Status</label>
+            <label for="statusFilter" data-i18n="table.status">Status</label>
             <select id="statusFilter">
-              <option value="all">All Orders</option>
-              <option value="processing">Pending</option>
-              <option value="accepted">Accepted</option>
-              <option value="completed">Completed</option>
-              <option value="cancelled">Cancelled</option>
+              <option value="all" data-i18n="filter.all_orders">All Orders</option>
+              <option value="processing" data-i18n="orders.pending">Pending</option>
+              <option value="accepted" data-i18n="orders.accepted">Accepted</option>
+              <option value="completed" data-i18n="orders.completed">Completed</option>
+              <option value="cancelled" data-i18n="orders.cancelled">Cancelled</option>
             </select>
           </div>
 
           <div class="filter-group">
-            <label for="dateFilter">Date</label>
+            <label for="dateFilter" data-i18n="table.date">Date</label>
             <select id="dateFilter">
-              <option value="all">All Time</option>
-              <option value="today">Today</option>
-              <option value="week">This Week</option>
-              <option value="month">This Month</option>
+              <option value="all" data-i18n="filter.all_time">All Time</option>
+              <option value="today" data-i18n="filter.today">Today</option>
+              <option value="week" data-i18n="filter.this_week">This Week</option>
+              <option value="month" data-i18n="filter.this_month">This Month</option>
             </select>
           </div>
 
           <button id="resetFilters" class="btn-outline">
             <i class="fas fa-sync-alt"></i>
-            Reset
+            <span data-i18n="buttons.reset_filters">Reset</span>
           </button>
         </div>
 
@@ -127,18 +129,19 @@
                 type="text"
                 id="orderSearch"
                 placeholder="Search by Order ID, farmer, or crop..."
+                data-i18n-placeholder="orders.search_placeholder"
                 autocomplete="off"
               />
             </div>
           </div>
 
           <div class="filter-group">
-            <label for="sortFilter">Sort</label>
+            <label for="sortFilter" data-i18n="orders.sort">Sort</label>
             <select id="sortFilter">
-              <option value="latest">Latest first</option>
-              <option value="oldest">Oldest first</option>
-              <option value="amountHigh">Amount: High to Low</option>
-              <option value="amountLow">Amount: Low to High</option>
+              <option value="latest" data-i18n="filter.newest">Latest first</option>
+              <option value="oldest" data-i18n="filter.oldest">Oldest first</option>
+              <option value="amountHigh" data-i18n="filter.price_high">Amount: High to Low</option>
+              <option value="amountLow" data-i18n="filter.price_low">Amount: Low to High</option>
             </select>
           </div>
 
@@ -157,7 +160,7 @@
       <div class="orders-list-wrapper">
         <div class="orders-list-header">
           <div class="page-size-group">
-            <label for="pageSizeSelect">Rows per page</label>
+            <label for="pageSizeSelect" data-i18n="table.rows_per_page">Rows per page</label>
             <select id="pageSizeSelect">
               <option value="5">5</option>
               <option value="10" selected>10</option>
@@ -167,16 +170,16 @@
 
           <div class="legend">
             <span class="legend-item">
-              <span class="status-pill status-processing"></span> Pending
+              <span class="status-pill status-processing"></span> <span data-i18n="orders.pending">Pending</span>
             </span>
             <span class="legend-item">
-              <span class="status-pill status-accepted"></span> Accepted
+              <span class="status-pill status-accepted"></span> <span data-i18n="orders.accepted">Accepted</span>
             </span>
             <span class="legend-item">
-              <span class="status-pill status-completed"></span> Completed
+              <span class="status-pill status-completed"></span> <span data-i18n="orders.completed">Completed</span>
             </span>
             <span class="legend-item">
-              <span class="status-pill status-cancelled"></span> Cancelled
+              <span class="status-pill status-cancelled"></span> <span data-i18n="orders.cancelled">Cancelled</span>
             </span>
           </div>
         </div>
@@ -185,13 +188,13 @@
           <table class="orders-table">
             <thead>
               <tr>
-                <th>Order ID</th>
-                <th>Date</th>
-                <th>Items</th>
-                <th>Total</th>
-                <th>Status</th>
-                <th>Farmer</th>
-                <th>Actions</th>
+                <th data-i18n="table.order_id">Order ID</th>
+                <th data-i18n="table.date">Date</th>
+                <th data-i18n="table.crops">Items</th>
+                <th data-i18n="orders.total">Total</th>
+                <th data-i18n="table.status">Status</th>
+                <th data-i18n="orders.farmer">Farmer</th>
+                <th data-i18n="table.actions">Actions</th>
               </tr>
             </thead>
             <tbody id="ordersTableBody">
@@ -205,13 +208,13 @@
               src="https://cdn-icons-png.flaticon.com/512/4076/4076478.png"
               alt="No orders"
             />
-            <h3>No orders found</h3>
-            <p>Try adjusting your filters, search, or check back later.</p>
+            <h3 data-i18n="orders.no_orders">No orders found</h3>
+            <p data-i18n="orders.try_filters">Try adjusting your filters, search, or check back later.</p>
             <button id="refreshOrders" class="btn-primary">
-              <i class="fas fa-sync-alt"></i> Refresh
+              <i class="fas fa-sync-alt"></i> <span data-i18n="orders.refresh">Refresh</span>
             </button>
             <a href="customer-marketplace.html" class="btn-outline go-shop-btn">
-              <i class="fas fa-shopping-basket"></i> Go to Marketplace
+              <i class="fas fa-shopping-basket"></i> <span data-i18n="dashboard.browse_crops">Go to Marketplace</span>
             </a>
           </div>
 
@@ -254,7 +257,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <div>
-          <h2>Order Details</h2>
+          <h2 data-i18n="orders.order_details">Order Details</h2>
           <p class="modal-subtitle">
             <span id="modalOrderId">Order #—</span> ·
             <span id="modalOrderStatus" class="status-badge">Status</span>
@@ -270,18 +273,18 @@
       <div class="modal-footer">
         <div class="modal-footer-left">
           <button id="downloadInvoiceBtn" class="btn-outline">
-            <i class="fas fa-file-download"></i> Download Invoice
+            <i class="fas fa-file-download"></i> <span data-i18n="orders.download_invoice">Download Invoice</span>
           </button>
           <button id="addReviewBtn" class="btn-outline">
-            <i class="fas fa-star"></i> Add Review
+            <i class="fas fa-star"></i> <span data-i18n="orders.add_review">Add Review</span>
           </button>
         </div>
         <div class="modal-footer-right">
           <button id="cancelOrderBtn" class="btn-danger">
-            <i class="fas fa-times-circle"></i> Cancel Order
+            <i class="fas fa-times-circle"></i> <span data-i18n="buttons.cancel_order">Cancel Order</span>
           </button>
           <button id="trackOrderBtn" class="btn-primary">
-            <i class="fas fa-route"></i> Track Order
+            <i class="fas fa-route"></i> <span data-i18n="orders.track_order">Track Order</span>
           </button>
         </div>
       </div>
@@ -291,7 +294,7 @@
   <!-- Optional: Loading Overlay -->
   <div id="ordersLoadingOverlay" class="loading-overlay" aria-hidden="true">
     <div class="loading-spinner"></div>
-    <p>Loading your orders...</p>
+    <p data-i18n="orders.loading">Loading your orders...</p>
   </div>
 
   <!-- Review Form Modal -->
@@ -299,8 +302,8 @@
     <div class="modal-content">
       <div class="modal-header">
         <div>
-          <h2>Rate Your Purchase</h2>
-          <p class="modal-subtitle">Share your experience with this crop</p>
+          <h2 data-i18n="orders.rate_purchase">Rate Your Purchase</h2>
+          <p class="modal-subtitle" data-i18n="orders.share_experience">Share your experience with this crop</p>
         </div>
         <span class="close-btn close-review-modal" aria-label="Close">&times;</span>
       </div>
@@ -308,7 +311,7 @@
       <div class="modal-body">
         <form id="reviewForm" class="review-form">
           <div class="form-group">
-            <label>Rating</label>
+            <label data-i18n="orders.rating">Rating</label>
             <div class="rating-input">
               <span class="star-rating" data-value="5">★</span>
               <span class="star-rating" data-value="4">★</span>
@@ -320,24 +323,25 @@
           </div>
           
           <div class="form-group textarea-group">
-            <label for="reviewComment">Your Review (Optional)</label>
+            <label for="reviewComment" data-i18n="orders.comment_label">Your Review (Optional)</label>
             <textarea 
               id="reviewComment" 
               name="comment" 
               placeholder="Share details about your experience with this crop. Was it fresh? Good quality? Fair price?" 
+              data-i18n-placeholder="orders.comment_placeholder"
               maxlength="500"
             ></textarea>
             <div class="char-count">
-              <span id="charCount">0</span>/500 characters
+              <span id="charCount">0</span>/<span data-i18n="orders.char_limit">500 characters</span>
             </div>
           </div>
           
           <div class="form-actions">
-            <button type="button" class="btn-outline close-review-modal">
+            <button type="button" class="btn-outline close-review-modal" data-i18n="buttons.cancel">
               Cancel
             </button>
             <button type="submit" class="btn-primary">
-              <i class="fas fa-paper-plane"></i> Submit Review
+              <i class="fas fa-paper-plane"></i> <span data-i18n="orders.submit_review">Submit Review</span>
             </button>
           </div>
         </form>
@@ -350,8 +354,8 @@
     <div class="modal-content">
       <div class="modal-header">
         <div>
-          <h2 id="reviewsModalTitle">Customer Reviews</h2>
-          <p class="modal-subtitle">What others are saying</p>
+          <h2 id="reviewsModalTitle" data-i18n="orders.customer_reviews">Customer Reviews</h2>
+          <p class="modal-subtitle" data-i18n="orders.what_others_say">What others are saying</p>
         </div>
         <span class="close-btn close-reviews-modal" aria-label="Close">&times;</span>
       </div>

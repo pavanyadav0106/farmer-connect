@@ -1,51 +1,77 @@
 <!DOCTYPE html>
-<html lang="en">  
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Farmer Connect - Customer Dashboard</title>
-  
+  <meta name="theme-color" content="#28a745">
+  <meta name="mobile-web-app-capable" content="yes">
+  <title data-i18n="app.title">Farmer Connect - Customer Dashboard</title>
+
   <!-- Favicons -->
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="192x192" href="/assets/android-chrome-192x192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/assets/android-chrome-512x512.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
-  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="shortcut icon" href="/favicon.ico">
   <link rel="manifest" href="/assets/site.webmanifest">
-  
+
+  <!-- Fonts & Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&display=swap" rel="stylesheet">
+
+  <!-- CSS -->
   <!-- Global Design System -->
   <!-- Page-specific -->
 
   <!-- Shared Layout System & Guard (Loaded early to prevent flash of content) -->
-  <script type="module" crossorigin src="/assets/customerDashboard-v_2cdG4S.js"></script>
+  <script type="module" crossorigin src="/assets/customerDashboard-DRPM5JUv.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/modulepreload-polyfill-B5Qt9EMX.js">
-  <link rel="modulepreload" crossorigin href="/assets/config--Onoqk_Z.js">
-  <link rel="modulepreload" crossorigin href="/assets/layout-loader-LuVZLwht.js">
-  <link rel="modulepreload" crossorigin href="/assets/market-DPUPZOAF.js">
-  <link rel="stylesheet" crossorigin href="/assets/customerDashboard-BktbEE4y.css">
-  <link rel="stylesheet" crossorigin href="/assets/app-BMiSxBfN.css">
-  <link rel="stylesheet" crossorigin href="/assets/customer-darkmode-DJoXn9Xd.css">
+  <link rel="modulepreload" crossorigin href="/assets/config-Cz4Z1kB5.js">
+  <link rel="modulepreload" crossorigin href="/assets/layout-loader-B6YrC-s6.js">
+  <link rel="modulepreload" crossorigin href="/assets/testimonials-DCtlPqYd.js">
+  <link rel="stylesheet" crossorigin href="/assets/layout-loader-BGxI2RXH.css">
+  <link rel="stylesheet" crossorigin href="/assets/customerDashboard-jSqIcmRE.css">
 </head>
 <body>
-  <!-- Loading Indicator -->
-  <div id="loading">Loading...</div>
+  <a href="#main-content" class="skip-nav">Skip to main content</a>
+
+  <div id="loading" data-i18n="dashboard.loading">Loading...</div>
 
   <!-- Layout Placeholders (Injected dynamically) -->
   <div id="top-nav-placeholder"></div>
   <div id="sidebar-placeholder" data-role="customer"></div>
   <div id="logout-modal-placeholder"></div>
 
-  <!-- Main Content Area -->
+  <!-- Main Content Container -->
   <div class="main-content" id="main-content" style="margin-top: 80px;">
-    <!-- Hero Section -->
+    <!-- Hero -->
     <div class="hero">
       <div class="hero-content">
-        <h1>Welcome back, <span id="welcomeName">Customer</span>!</h1>
-        <p>Connecting you directly with trusted farmers, real-time crop availability, and seamless shopping experiences.</p>
+        <h1><span data-i18n="dashboard.welcome_back">Welcome back</span>, <span id="welcomeName">Customer</span>!</h1>
+        <p data-i18n="dashboard.customer_hero_subtitle">Connecting you directly with trusted farmers, real-time crop availability, and seamless shopping experiences.</p>
       </div>
     </div>
+
+    <!-- Stats -->
+    <section class="stats">
+      <div class="stat-card">
+        <h2 id="statOrders">0</h2>
+        <p data-i18n="dashboard.total_orders">Total Orders</p>
+      </div>
+      <div class="stat-card">
+        <h2 id="statCart">0</h2>
+        <p data-i18n="dashboard.items_in_cart">Items in Cart</p>
+      </div>
+      <div class="stat-card">
+        <h2 id="statActive">0</h2>
+        <p data-i18n="dashboard.active_orders">Active Orders</p>
+      </div>
+      <div class="stat-card">
+        <h2 id="statPoints">0</h2>
+        <p data-i18n="dashboard.loyalty_points">Loyalty Points</p>
+      </div>
+    </section>
 
     <!-- Market Ticker -->
     <div class="ticker-container">
@@ -53,99 +79,58 @@
     </div>
     
     <!-- Quick Actions -->
-    <section class="quick-actions">
-      <h2>Quick Actions</h2>
-      <div class="action-grid">
-        <div class="action-card" onclick="window.location.href='customer-marketplace.html'">
-          <i class="fas fa-store"></i>
-          <span>Browse Crops</span>
-        </div>
-        <div class="action-card" onclick="window.location.href='customer-cart.html'">
-          <i class="fas fa-shopping-cart"></i>
-          <span>View Cart</span>
-        </div>
-        <div class="action-card" onclick="window.location.href='customer-orders.html'">
-          <i class="fas fa-clipboard-list"></i>
-          <span>Track Orders</span>
-        </div>
-        <div class="action-card" onclick="window.location.href='customer-profile.html'">
-          <i class="fas fa-user"></i>
-          <span>My Profile</span>
-        </div>
+    <div class="features">
+      <div class="feature" onclick="window.location.href='customer-marketplace.html'" role="button" tabindex="0">
+        <i class="fas fa-store"></i>
+        <h3 data-i18n="dashboard.browse_crops">Browse Crops</h3>
+        <p data-i18n="dashboard.browse_crops_desc">Discover fresh produce directly from farmers.</p>
       </div>
-    </section>
-
-    <!-- Two Column Layout -->
-    <div class="dashboard-columns">
-      
-      <!-- Left Column -->
-      <div class="column">
-        
-        <!-- Recent Orders -->
-        <section class="recent-orders">
-          <div class="section-header">
-            <h2>Recent Orders</h2>
-            <a href="customer-orders.html" class="view-all">View All</a>
-          </div>
-          <div class="orders-container" id="ordersContainer">
-            <!-- Orders will be loaded dynamically -->
-          </div>
-        </section>
-
-        <!-- Recommended Products -->
-        <section class="recommended-products">
-          <div class="section-header">
-            <h2>Recommended For You</h2>
-            <a href="customer-marketplace.html" class="view-all">See More</a>
-          </div>
-          <div class="products-grid" id="productsGrid">
-            <!-- Products will be loaded dynamically -->
-          </div>
-        </section>
-
+      <div class="feature" onclick="window.location.href='customer-cart.html'" role="button" tabindex="0">
+        <i class="fas fa-shopping-cart"></i>
+        <h3 data-i18n="dashboard.view_cart">View Cart</h3>
+        <p data-i18n="dashboard.view_cart_desc">Review your selected items and checkout.</p>
       </div>
-
-      <!-- Right Column -->
-      <div class="column">
-
-        <!-- Seasonal Offers -->
-        <section class="seasonal-offers">
-          <div class="section-header">
-            <h2>Seasonal Offers</h2>
-          </div>
-          <div class="offers-container" id="offersContainer">
-            <!-- Offers will be loaded dynamically -->
-          </div>
-        </section>
-
-        <!-- Quick Tips -->
-        <section class="quick-tips">
-          <div class="section-header">
-            <h2>Farming Tips</h2>
-          </div>
-          <div class="tips-container">
-            <div class="tip-item">
-              <i class="fas fa-leaf"></i>
-              <span>Buy seasonal produce for best quality and prices</span>
-            </div>
-            <div class="tip-item">
-              <i class="fas fa-shipping-fast"></i>
-              <span>Order before 2 PM for same-day delivery</span>
-            </div>
-            <div class="tip-item">
-              <i class="fas fa-seedling"></i>
-              <span>Support local farmers for fresher produce</span>
-            </div>
-          </div>
-        </section>
-
+      <div class="feature" onclick="window.location.href='customer-orders.html'" role="button" tabindex="0">
+        <i class="fas fa-clipboard-list"></i>
+        <h3 data-i18n="dashboard.track_orders">Track Orders</h3>
+        <p data-i18n="dashboard.track_orders_desc">View the status of your recent purchases.</p>
+      </div>
+      <div class="feature" onclick="window.location.href='customer-profile.html'" role="button" tabindex="0">
+        <i class="fas fa-user-edit"></i>
+        <h3 data-i18n="dashboard.my_profile">My Profile</h3>
+        <p data-i18n="dashboard.my_profile_desc">Manage your delivery details and account.</p>
       </div>
     </div>
+
+    <!-- Testimonials (Slider) -->
+    <div class="testimonials">
+      <h2 data-i18n="testimonials.customer_title">Why Customers Love Farmer Connect</h2>
+
+      <div class="testimonial-slider">
+        <div class="testimonial active">
+          <p data-i18n="testimonials.customer_testimonial1">"The produce is incredibly fresh, and I love knowing my money goes directly to the farmer!"</p>
+          <h4>- Ananya Gupta, Mumbai</h4>
+        </div>
+
+        <div class="testimonial">
+          <p data-i18n="testimonials.customer_testimonial2">"Fast delivery and excellent quality every single time. Best decision I made for my family."</p>
+          <h4>- Vikram Singh, Delhi</h4>
+        </div>
+
+        <div class="testimonial">
+          <p data-i18n="testimonials.customer_testimonial3">"I finally know where my food comes from. The marketplace is so easy to use."</p>
+          <h4>- Priya Sharma, Bangalore</h4>
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <!-- Footer Placeholder -->
   <div id="footer-placeholder"></div>
 
-  <!-- Scripts -->
+  <!-- Language System Scripts -->
+
+  <!-- Custom Feature Scripts -->
 </body>
 </html>

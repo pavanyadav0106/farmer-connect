@@ -3,547 +3,344 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <link
-  rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-/>
-<!-- Favicons (Updated) -->
-<link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="192x192" href="/assets/android-chrome-192x192.png">
-<link rel="icon" type="image/png" sizes="512x512" href="/assets/android-chrome-512x512.png">
-<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
-<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
-<link rel="manifest" href="/assets/site.webmanifest">
-
   <title>FAQ - Farmer Connect</title>
+  
+  <!-- Favicons -->
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/android-chrome-192x192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="assets/android-chrome-512x512.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+  <link rel="manifest" href="assets/site.webmanifest">
+  
+  <!-- Global CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
   <style>
-    :root {
-      --primary-green: #28a745;
-      --primary-green-dark: #1e7e34;
-      --primary-green-light: #d4edda;
-      --gray-light: #f8f9fa;
-      --gray-medium: #6c757d;
-      --gray-dark: #343a40;
-      --border-radius: 8px;
-      --transition-speed: 0.3s;
-      --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-
-    body {
-      font-family: var(--font-family);
-      background-color: var(--gray-light);
-      margin: 0;
-      padding: 0;
-      color: var(--gray-dark);
-      line-height: 1.6;
-    }
-
-  /* Replace the existing .top-nav styles with your Farmer Connect style */
-.top-nav {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 20px;
-  position: fixed;
-  width: 100%;
-  top: 0;
-  left: 0;
-  background: #28a745;
-  color: white;
-  z-index: 1000;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-  font-size: 20px;
-  user-select: none;
-  font-family: 'Poppins', sans-serif;
-  letter-spacing: 1px;
-  height: 50px;
-}
-
-.logo-text {
-  font-family: 'Poppins', sans-serif;
-  font-weight: 700;
-  font-size: 24px;
-  color: white;
-  text-decoration: none;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  flex-grow: 1;
-  text-align: center;
-  user-select: none;
-  cursor:auto;
-}
-
-.btn-back {
-  background: none;
-  border: none;
-  color: white;
-  font-size: 1.4rem;
-  cursor: pointer;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;  /* keep consistent width */
-  height: 36px;
-  user-select: none;
-  transition: transform 0.3s ease;
-}
-
-.btn-back:hover {
-  transform: translateX(-3px);
-}
-
-    .faq-section {
-      padding: 40px 20px 60px;
-      display: flex;
-      justify-content: center;
-      min-height: calc(100vh - 130px);
-    }
-
-    .faq-container {
-      background: white;
+    /* Premium FAQ Styles */
+    .faq-wrapper {
       max-width: 900px;
-      width: 100%;
-      padding: 40px;
-      border-radius: var(--border-radius);
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      margin: 2rem auto;
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
     }
-
+    
     .faq-header {
+      padding: 4rem 2rem 3rem;
       text-align: center;
-      margin-bottom: 40px;
-    }
-
-    .faq-header h2 {
-      color: var(--primary-green);
-      margin-bottom: 10px;
-      font-size: 2.2rem;
-    }
-
-    .faq-header p {
-      color: var(--gray-medium);
-      max-width: 600px;
-      margin: 0 auto;
-    }
-
-    .search-container {
-      margin: 0 auto 30px;
-      max-width: 600px;
+      background: linear-gradient(135deg, var(--fc-green-light) 0%, #e8f5e9 100%);
       position: relative;
     }
-
-    .search-input {
+    
+    .faq-header h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--fc-green-dark);
+      margin-bottom: 1rem;
+    }
+    
+    .faq-header p {
+      font-size: 1.1rem;
+      color: var(--fc-text-muted);
+      max-width: 600px;
+      margin: 0 auto 2rem;
+    }
+    
+    .search-box {
+      max-width: 500px;
+      margin: 0 auto;
+      position: relative;
+    }
+    
+    .search-box input {
       width: 100%;
-      padding: 12px 20px;
-      border: 1px solid #ddd;
+      padding: 1rem 1.5rem 1rem 3rem;
+      border: 1px solid var(--gray-light);
       border-radius: 50px;
       font-size: 1rem;
-      padding-left: 45px;
-      transition: all var(--transition-speed);
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition-normal);
     }
-
-    .search-input:focus {
+    
+    .search-box input:focus {
       outline: none;
-      border-color: var(--primary-green);
-      box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.2);
+      border-color: var(--fc-green);
+      box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.15);
     }
-
-    .search-icon {
+    
+    .search-box i {
       position: absolute;
-      left: 15px;
+      left: 1.25rem;
       top: 50%;
       transform: translateY(-50%);
       color: var(--gray-medium);
-    }
-
-    .faq-categories {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 30px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-
-    .category-btn {
-      padding: 8px 16px;
-      background-color: var(--gray-light);
-      border: none;
-      border-radius: 50px;
-      cursor: pointer;
-      transition: all var(--transition-speed);
-      font-size: 0.9rem;
-    }
-
-    .category-btn.active, .category-btn:hover {
-      background-color: var(--primary-green);
-      color: white;
-    }
-
-    .faq-item {
-      border-bottom: 1px solid #eee;
-      margin-bottom: 5px;
-      transition: all var(--transition-speed);
-    }
-
-    .faq-question {
-      width: 100%;
-      background: none;
-      border: none;
-      padding: 18px 10px;
       font-size: 1.1rem;
+    }
+    
+    .faq-content {
+      padding: 2rem 2rem 4rem;
+    }
+    
+    .faq-category-title {
+      font-size: 1.25rem;
       font-weight: 600;
-      text-align: left;
-      color: var(--gray-dark);
-      cursor: pointer;
+      color: var(--fc-green-dark);
+      margin: 2rem 0 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--fc-green-light);
+    }
+    
+    .faq-category-title:first-child {
+      margin-top: 0;
+    }
+    
+    .accordion-item {
+      border: 1px solid var(--gray-light);
+      border-radius: var(--radius-sm);
+      margin-bottom: 1rem;
+      background: var(--white);
+      transition: var(--transition-normal);
+      overflow: hidden;
+    }
+    
+    .accordion-item:hover {
+      border-color: var(--fc-green-light);
+    }
+    
+    .accordion-header {
+      width: 100%;
+      padding: 1.25rem 1.5rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      transition: all var(--transition-speed);
+      background: none;
+      border: none;
+      text-align: left;
+      font-size: 1.05rem;
+      font-weight: 500;
+      color: var(--fc-text);
+      cursor: pointer;
+      transition: var(--transition-fast);
     }
-
-    .faq-question:hover {
-      color: var(--primary-green);
-      background-color: var(--primary-green-light);
+    
+    .accordion-header:hover {
+      color: var(--fc-green);
     }
-
-    .faq-question::after {
-      content: '+';
-      font-size: 1.5rem;
-      color: var(--gray-medium);
-      transition: transform var(--transition-speed);
+    
+    .accordion-header i {
+      color: var(--fc-green);
+      transition: transform 0.3s ease;
     }
-
-    .faq-item.active .faq-question::after {
-      content: '-';
+    
+    .accordion-item.active .accordion-header {
+      color: var(--fc-green);
+      background: rgba(76, 175, 80, 0.03);
     }
-
-    .faq-answer {
+    
+    .accordion-item.active .accordion-header i {
+      transform: rotate(180deg);
+    }
+    
+    .accordion-body {
+      padding: 0 1.5rem;
       max-height: 0;
       overflow: hidden;
-      padding: 0 10px;
-      transition: max-height var(--transition-speed), padding var(--transition-speed);
-      color: var(--gray-medium);
+      transition: max-height 0.3s ease, padding 0.3s ease;
+      color: var(--fc-text-muted);
+      line-height: 1.6;
     }
-
-    .faq-item.active .faq-answer {
+    
+    .accordion-item.active .accordion-body {
+      padding: 0 1.5rem 1.25rem;
       max-height: 500px;
-      padding: 0 10px 20px;
     }
-
-    .contact-card {
-      background-color: var(--primary-green-light);
-      border-left: 4px solid var(--primary-green);
-      padding: 20px;
-      border-radius: var(--border-radius);
-      margin-top: 40px;
+    
+    /* Dark mode adaptations */
+    body.dark .faq-wrapper,
+    body.dark .accordion-item {
+      background: var(--dark-surface);
+      border-color: var(--dark-border);
     }
-
-    .contact-card h3 {
-      margin-top: 0;
-      color: var(--primary-green-dark);
+    
+    body.dark .faq-header {
+      background: linear-gradient(135deg, rgba(76, 175, 80, 0.1) 0%, rgba(0, 0, 0, 0.2) 100%);
     }
-
-    .contact-methods {
-      display: flex;
-      gap: 20px;
-      flex-wrap: wrap;
+    
+    body.dark .search-box input {
+      background: var(--dark-bg);
+      border-color: var(--dark-border);
+      color: var(--dark-text);
     }
-
-    .contact-method {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      color: var(--gray-dark);
-      text-decoration: none;
-      transition: color var(--transition-speed);
+    
+    body.dark .accordion-header {
+      color: var(--dark-text);
     }
-
-    .contact-method:hover {
-      color: var(--primary-green);
+    
+    body.dark .accordion-item.active .accordion-header {
+      background: rgba(255, 255, 255, 0.02);
     }
-
-    @media (max-width: 768px) {
-      .top-nav {
-        padding: 15px 20px;
-      }
-      
-      .faq-container {
-        padding: 25px 20px;
-      }
-      
-      .faq-header h2 {
-        font-size: 1.8rem;
-      }
-      
-      .contact-methods {
-        flex-direction: column;
-        gap: 10px;
-      }
+    
+    body.dark .accordion-body {
+      color: #aaa;
     }
-    @media (max-width: 576px) {
-  .top-nav {
-    justify-content: space-between;
-    height: auto;
-  }
-
-  .logo-text {
-    font-size: 18px;
-    text-align: center;
-  }
-
-  .btn-back {
-    font-size: 1.2rem;
-    width: 32px;
-    height: 32px;
-  }
-
-  .faq-header h2 {
-    font-size: 1.6rem;
-  }
-
-  .faq-header p {
-    font-size: 0.95rem;
-  }
-
-  .category-btn {
-    font-size: 0.85rem;
-    padding: 6px 14px;
-  }
-
-  .search-input {
-    font-size: 0.9rem;
-    padding-left: 40px;
-  }
-
-  .search-icon {
-    left: 12px;
-    font-size: 0.9rem;
-  }
-}
-
   </style>
   <script type="module" crossorigin src="/assets/modulepreload-polyfill-B5Qt9EMX.js"></script>
-  <script type="module" crossorigin src="/assets/darkmode-DyrCZmKV.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/app-BMiSxBfN.css">
+  <script type="module" crossorigin src="/assets/config-Cz4Z1kB5.js"></script>
+  <script type="module" crossorigin src="/assets/layout-loader-B6YrC-s6.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/layout-loader-BGxI2RXH.css">
 </head>
-<body>
+<body data-page="main">
+  <!-- Layout Placeholders -->
+  <div id="top-nav-placeholder"></div>
+  <div id="sidebar-placeholder"></div>
+  <div id="logout-modal-placeholder"></div>
 
-  <nav class="top-nav">
-    <button class="btn-back" onclick="history.back()">
-      <i class="fas fa-arrow-left"></i>
-    </button>
-    <a class="logo-text">🌾 Farmer Connect</a>
-    <div style="width: 36px;"></div> <!-- spacer to balance flex space since btn-back is on left -->
-  </nav>
-
-
-  <section class="faq-section">
-    <div class="faq-container">
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="faq-wrapper">
       <div class="faq-header">
-        <h2>Frequently Asked Questions</h2>
-        <p>Find answers to common questions about using Farmer Connect</p>
-      </div>
-
-      <div class="search-container">
-        <i class="fas fa-search search-icon"></i>
-        <input type="text" class="search-input" placeholder="Search FAQs...">
-      </div>
-
-      <div class="faq-categories">
-        <button class="category-btn active" data-category="all">All</button>
-        <button class="category-btn" data-category="account">Account</button>
-        <button class="category-btn" data-category="orders">Orders</button>
-        <button class="category-btn" data-category="payments">Payments</button>
-        <button class="category-btn" data-category="technical">Technical</button>
-      </div>
-
-      <div class="faq-list">
-        <!-- Account FAQs -->
-        <div class="faq-item" data-categories="account">
-          <button class="faq-question">How do I create an account?</button>
-          <div class="faq-answer">
-            <p>To create an account, click on the "Sign Up" button on the login page. You'll need to provide your email address, create a password, and select whether you're a farmer or buyer. After email verification, your account will be activated.</p>
-          </div>
-        </div>
-
-        <div class="faq-item" data-categories="account">
-          <button class="faq-question">I forgot my password. How can I reset it?</button>
-          <div class="faq-answer">
-            <p>Click the "Forgot Password" link on the login page. Enter your registered email address and we'll send you a password reset link. The link will expire in 24 hours for security reasons.</p>
-          </div>
-        </div>
-
-        <!-- Orders FAQs -->
-        <div class="faq-item" data-categories="orders">
-          <button class="faq-question">How do I place an order?</button>
-          <div class="faq-answer">
-            <p>Browse available products in the marketplace. When you find what you want, click "Add to Cart". Review your cart and proceed to checkout where you'll enter shipping details and payment information.</p>
-            <ul>
-              <li>Minimum order: ₹500</li>
-              <li>Delivery within 3-5 business days</li>
-              <li>Free shipping on orders over ₹2000</li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="faq-item" data-categories="orders">
-          <button class="faq-question">Can I cancel or modify an order?</button>
-          <div class="faq-answer">
-            <p>You can cancel orders within 1 hour of placement from your Order History. For modifications, please contact our support team immediately. Once an order is processed for shipping, cancellations may not be possible.</p>
-          </div>
-        </div>
-
-        <!-- Payments FAQs -->
-        <div class="faq-item" data-categories="payments">
-          <button class="faq-question">What payment methods are accepted?</button>
-          <div class="faq-answer">
-            <p>We accept all major payment options:</p>
-            <ul>
-              <li>Credit/Debit Cards (Visa, MasterCard, RuPay)</li>
-              <li>UPI (PhonePe, Google Pay, Paytm)</li>
-              <li>Net Banking</li>
-              <li>Wallet Payments</li>
-              <li>Cash on Delivery (COD) - Additional ₹50 charge</li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="faq-item" data-categories="payments">
-          <button class="faq-question">When will I get my refund?</button>
-          <div class="faq-answer">
-            <p>Refunds are processed within 3-5 business days after we receive the returned items. The time it takes for the refund to reflect in your account depends on your bank:</p>
-            <ul>
-              <li>UPI/Wallets: 1-2 hours</li>
-              <li>Cards: 5-7 business days</li>
-              <li>Net Banking: 3-5 business days</li>
-            </ul>
-          </div>
-        </div>
-
-        <!-- Technical FAQs -->
-        <div class="faq-item" data-categories="technical">
-          <button class="faq-question">Is my data secure with Farmer Connect?</button>
-          <div class="faq-answer">
-            <p>Yes, we use industry-standard security measures:</p>
-            <ul>
-              <li>Firebase Authentication with email verification</li>
-              <li>Secure Firestore database with strict access rules</li>
-              <li>Payment processing through PCI-DSS compliant gateways</li>
-              <li>Regular security audits</li>
-            </ul>
-            <p>We never store your payment details on our servers.</p>
-          </div>
-        </div>
-
-        <div class="faq-item" data-categories="technical">
-          <button class="faq-question">The app isn't loading properly. What can I do?</button>
-          <div class="faq-answer">
-            <p>Try these troubleshooting steps:</p>
-            <ol>
-              <li>Refresh the page (Ctrl+F5 or Cmd+Shift+R)</li>
-              <li>Clear your browser cache and cookies</li>
-              <li>Check your internet connection</li>
-              <li>Try using a different browser (Chrome/Firefox recommended)</li>
-              <li>Disable any ad-blockers or extensions temporarily</li>
-            </ol>
-            <p>If problems persist, contact our technical support team.</p>
-          </div>
+        <h1 data-i18n="faq.title">How can we help?</h1>
+        <p data-i18n="faq.subtitle">Search our knowledge base or browse frequently asked questions below.</p>
+        
+        <div class="search-box">
+          <i class="fas fa-search"></i>
+          <input type="text" id="faqSearch" placeholder="Search for answers..." data-i18n-placeholder="faq.search_placeholder">
         </div>
       </div>
+      
+      <div class="faq-content">
+        <!-- General Questions -->
+        <h2 class="faq-category-title" data-i18n="faq.category_general">General Questions</h2>
+        
+        <div class="accordion-item">
+          <button class="accordion-header">
+            What is Farmer Connect?
+            <i class="fas fa-chevron-down"></i>
+          </button>
+          <div class="accordion-body">
+            <p>Farmer Connect is an integrated platform designed to bridge the gap between farmers and consumers. It allows farmers to list their crops directly, bypassing middlemen, while consumers can purchase fresh, local produce at fair prices. We also provide real-time weather updates and market insights.</p>
+          </div>
+        </div>
+        
+        <div class="accordion-item">
+          <button class="accordion-header">
+            Is Farmer Connect free to use?
+            <i class="fas fa-chevron-down"></i>
+          </button>
+          <div class="accordion-body">
+            <p>Yes, creating an account and browsing the platform is completely free. We charge a minimal, transparent transaction fee only when a successful sale is made, which helps cover platform maintenance.</p>
+          </div>
+        </div>
 
-      <div class="contact-card">
-        <h3>Still need help?</h3>
-        <p>Contact our support team through any of these methods:</p>
-        <div class="contact-methods">
-          <a href="mailto:farmerconnect30@gmail.com" class="contact-method">
-            <i class="fas fa-envelope"></i> farmerconnect30@gmail.com
-          </a>
-          <a href="tel:+919505510127" class="contact-method">
-            <i class="fas fa-phone-alt"></i> +91 95055 10127
-          </a>
-          <a href="https://wa.me/919505510127" class="contact-method">
-            <i class="fab fa-whatsapp"></i> WhatsApp Chat
-          </a>
+        <!-- For Farmers -->
+        <h2 class="faq-category-title" data-i18n="faq.category_farmers">For Farmers</h2>
+        
+        <div class="accordion-item">
+          <button class="accordion-header">
+            How do I add a new crop to sell?
+            <i class="fas fa-chevron-down"></i>
+          </button>
+          <div class="accordion-body">
+            <p>Once logged in as a farmer, go to your Dashboard and navigate to the 'My Crops' section. Click the '+ Add New Crop' button, fill in the details like name, price, quantity, and upload an image. Once saved, it will immediately be visible to customers.</p>
+          </div>
+        </div>
+        
+        <div class="accordion-item">
+          <button class="accordion-header">
+            How do I receive payments?
+            <i class="fas fa-chevron-down"></i>
+          </button>
+          <div class="accordion-body">
+            <p>Currently, you can coordinate payments directly with buyers upon delivery (Cash on Delivery) or through direct UPI transfers. Integrated secure platform payments are coming in the next update.</p>
+          </div>
+        </div>
+
+        <!-- For Customers -->
+        <h2 class="faq-category-title" data-i18n="faq.category_customers">For Customers</h2>
+        
+        <div class="accordion-item">
+          <button class="accordion-header">
+            How do I track my order?
+            <i class="fas fa-chevron-down"></i>
+          </button>
+          <div class="accordion-body">
+            <p>You can track all your orders by navigating to the 'My Orders' tab in your Customer Dashboard. There, you can see the real-time status (Pending, Processing, Completed) of each purchase.</p>
+          </div>
+        </div>
+        
+        <div class="accordion-item">
+          <button class="accordion-header">
+            Can I contact the farmer directly?
+            <i class="fas fa-chevron-down"></i>
+          </button>
+          <div class="accordion-body">
+            <p>Yes, once an order is placed, you will have access to the farmer's contact information to coordinate delivery times or ask specific questions about the produce.</p>
+          </div>
         </div>
       </div>
     </div>
-  </section>
+  </main>
+  
+  <div id="footer-placeholder"></div>
 
+  <!-- Scripts -->
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      // FAQ Accordion Functionality
-      const faqItems = document.querySelectorAll('.faq-item');
+    document.addEventListener('DOMContentLoaded', () => {
+      // Accordion functionality
+      const accordionHeaders = document.querySelectorAll('.accordion-header');
       
-      faqItems.forEach(item => {
-        const question = item.querySelector('.faq-question');
-        
-        question.addEventListener('click', () => {
-          // Close all other items first
-          faqItems.forEach(otherItem => {
-            if (otherItem !== item && otherItem.classList.contains('active')) {
-              otherItem.classList.remove('active');
-            }
+      accordionHeaders.forEach(header => {
+        header.addEventListener('click', () => {
+          const item = header.parentElement;
+          const isActive = item.classList.contains('active');
+          
+          // Close all
+          document.querySelectorAll('.accordion-item').forEach(el => {
+            el.classList.remove('active');
           });
           
-          // Toggle current item
-          item.classList.toggle('active');
-        });
-      });
-
-      // FAQ Search Functionality
-      const searchInput = document.querySelector('.search-input');
-      searchInput.addEventListener('input', function() {
-        const searchTerm = this.value.toLowerCase();
-        
-        faqItems.forEach(item => {
-          const question = item.querySelector('.faq-question').textContent.toLowerCase();
-          const answer = item.querySelector('.faq-answer').textContent.toLowerCase();
-          
-          if (question.includes(searchTerm) || answer.includes(searchTerm)) {
-            item.style.display = 'block';
-          } else {
-            item.style.display = 'none';
+          // Toggle current
+          if (!isActive) {
+            item.classList.add('active');
           }
         });
       });
-
-      // FAQ Category Filtering
-      const categoryBtns = document.querySelectorAll('.category-btn');
-      categoryBtns.forEach(btn => {
-        btn.addEventListener('click', function() {
-          // Update active category button
-          categoryBtns.forEach(b => b.classList.remove('active'));
-          this.classList.add('active');
+      
+      // Basic Search functionality
+      const searchInput = document.getElementById('faqSearch');
+      if(searchInput) {
+        searchInput.addEventListener('input', (e) => {
+          const term = e.target.value.toLowerCase();
+          const items = document.querySelectorAll('.accordion-item');
           
-          const category = this.dataset.category;
-          
-          // Filter FAQs
-          faqItems.forEach(item => {
-            if (category === 'all' || item.dataset.categories.includes(category)) {
+          items.forEach(item => {
+            const text = item.textContent.toLowerCase();
+            if(text.includes(term)) {
               item.style.display = 'block';
             } else {
               item.style.display = 'none';
             }
           });
+          
+          // Hide empty categories
+          document.querySelectorAll('.faq-category-title').forEach(title => {
+            let hasVisibleSiblings = false;
+            let next = title.nextElementSibling;
+            while(next && next.classList.contains('accordion-item')) {
+              if(next.style.display !== 'none') {
+                hasVisibleSiblings = true;
+                break;
+              }
+              next = next.nextElementSibling;
+            }
+            title.style.display = hasVisibleSiblings || term === '' ? 'block' : 'none';
+          });
         });
-      });
-
-      // Open FAQ from URL hash
-      if (window.location.hash) {
-        const targetId = window.location.hash.substring(1);
-        const targetItem = document.querySelector(`.faq-item[data-id="${targetId}"]`);
-        if (targetItem) {
-          targetItem.classList.add('active');
-          targetItem.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
       }
     });
-
-    // Print FAQ page
-    function printFAQs() {
-      window.print();
-    }
-  </script>
+  </script>
 </body>
 </html>

@@ -21,10 +21,6 @@ function animateCounter(id, target, duration = 1200) {
   update();
 }
 
-animateCounter("statCrops", 125);
-animateCounter("statOrders", 240);
-animateCounter("statWeather", 12);
-animateCounter("statMessages", 18);
 
 
 /* =======================

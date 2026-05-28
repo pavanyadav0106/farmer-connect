@@ -3,52 +3,55 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fresh Crops - FarmerConnect</title>
-  
+  <meta name="theme-color" content="#28a745">
+  <meta name="mobile-web-app-capable" content="yes">
+  <title data-i18n="marketplace.title">Fresh Crops - FarmerConnect</title>
+
   <!-- Favicons -->
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="192x192" href="/assets/android-chrome-192x192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/assets/android-chrome-512x512.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
-  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="shortcut icon" href="/favicon.ico">
   <link rel="manifest" href="/assets/site.webmanifest">
-  
+
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <!-- Global Design System -->
   <!-- Page-specific -->
 
   <!-- Shared Layout System & Guard (Loaded early to prevent flash of content) -->
-  <script type="module" crossorigin src="/assets/customerMarketplace-BYy_jeOB.js"></script>
+  <script type="module" crossorigin src="/assets/customerMarketplace-ClI8qzIE.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/modulepreload-polyfill-B5Qt9EMX.js">
-  <link rel="modulepreload" crossorigin href="/assets/config--Onoqk_Z.js">
-  <link rel="modulepreload" crossorigin href="/assets/layout-loader-LuVZLwht.js">
-  <link rel="stylesheet" crossorigin href="/assets/customerMarketplace-DWZK0_ww.css">
-  <link rel="stylesheet" crossorigin href="/assets/app-BMiSxBfN.css">
-  <link rel="stylesheet" crossorigin href="/assets/customer-darkmode-DJoXn9Xd.css">
+  <link rel="modulepreload" crossorigin href="/assets/config-Cz4Z1kB5.js">
+  <link rel="modulepreload" crossorigin href="/assets/layout-loader-B6YrC-s6.js">
+  <link rel="stylesheet" crossorigin href="/assets/layout-loader-BGxI2RXH.css">
+  <link rel="stylesheet" crossorigin href="/assets/customerMarketplace-B2GB-ggD.css">
   <link rel="stylesheet" crossorigin href="/assets/customer-review-DyVXwu8h.css">
 </head>
 
 <body>
+  <a href="#main-content" class="skip-nav">Skip to main content</a>
+
   <!-- Layout Placeholders (Injected dynamically) -->
   <div id="top-nav-placeholder"></div>
   <div id="sidebar-placeholder" data-role="customer"></div>
   <div id="logout-modal-placeholder"></div>
 
-  <main class="main-content" style="margin-top: 80px;">
+  <main class="main-content" id="main-content" style="margin-top: 80px;">
     <div class="container">
       <div class="marketplace-filters">
         <div class="search-box">
           <i class="fas fa-search"></i>
-          <input type="text" id="searchCrops" placeholder="Search crops...">
+          <input type="text" id="searchCrops" placeholder="Search crops..." data-i18n-placeholder="crops.search">
         </div>
         <select id="categoryFilter">
-          <option value="all">All Categories</option>
-          <option value="vegetables">Vegetables</option>
-          <option value="fruits">Fruits</option>
-          <option value="grains">Grains</option>
-          <option value="other">Others</option>
+          <option value="all" data-i18n="marketplace.all_categories">All Categories</option>
+          <option value="vegetables" data-i18n="category.vegetables">Vegetables</option>
+          <option value="fruits" data-i18n="category.fruits">Fruits</option>
+          <option value="grains" data-i18n="category.grains">Grains</option>
+          <option value="other" data-i18n="category.other">Others</option>
         </select>
       </div>
 
@@ -65,7 +68,7 @@
   <div class="modal" id="addToCartModal">
     <div class="modal-content">
       <div class="modal-header">
-        <h2 id="modalCropName">Add to Cart</h2>
+        <h2 id="modalCropName" data-i18n="marketplace.add_to_cart">Add to Cart</h2>
         <span class="close-btn">&times;</span>
       </div>
       <div class="modal-body">
@@ -75,6 +78,7 @@
         <div class="crop-modal-details">
           <p class="crop-price" id="modalCropPrice">₹50/kg</p>
           <p class="crop-stock" id="modalCropStock">10 kg available</p>
+          <p class="crop-modal-description" id="modalCropDescription"></p>
           
           <div class="quantity-selector">
             <button class="quantity-btn" id="decrementQty">-</button>
@@ -84,14 +88,14 @@
           </div>
           
           <div class="total-price">
-            <span>Total:</span>
+            <span data-i18n="marketplace.total">Total:</span>
             <span id="modalTotalPrice">₹50</span>
           </div>
         </div>
       </div>
       <div class="modal-footer">
         <button class="btn btn-primary" id="addToCartBtn">
-          <i class="fas fa-cart-plus"></i> Add to Cart
+          <i class="fas fa-cart-plus"></i> <span data-i18n="marketplace.add_to_cart">Add to Cart</span>
         </button>
       </div>
     </div>

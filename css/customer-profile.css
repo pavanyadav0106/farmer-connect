@@ -650,29 +650,29 @@
 /* =========================
    DARK MODE SUPPORT
    ========================= */
-body.dark-mode .profile-skeleton {
+body.customer-dark-mode .profile-skeleton {
   background: rgba(30, 30, 30, 0.95);
 }
 
-body.dark-mode .skeleton-avatar,
-body.dark-mode .skeleton-photo,
-body.dark-mode .skeleton-line,
-body.dark-mode .skeleton-input,
-body.dark-mode .skeleton-textarea,
-body.dark-mode .skeleton-button {
+body.customer-dark-mode .skeleton-avatar,
+body.customer-dark-mode .skeleton-photo,
+body.customer-dark-mode .skeleton-line,
+body.customer-dark-mode .skeleton-input,
+body.customer-dark-mode .skeleton-textarea,
+body.customer-dark-mode .skeleton-button {
   background: linear-gradient(90deg, #2a2a2a 25%, #3a3a3a 50%, #2a2a2a 75%);
   background-size: 200% 100%;
 }
 
-body.dark-mode .loading-overlay {
+body.customer-dark-mode .loading-overlay {
   background: rgba(0, 0, 0, 0.8);
 }
 
-body.dark-mode .loading-spinner {
+body.customer-dark-mode .loading-spinner {
   border-color: #444;
   border-top-color: var(--primary);
 }
 
-body.dark-mode .loading-overlay p {
+body.customer-dark-mode .loading-overlay p {
   color: #fff;
 }

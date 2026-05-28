@@ -1,4 +1,5 @@
 import { db, auth } from '../config.js';
+import languageManager from './language-manager.js';
 import { 
   collection, 
   query, 
@@ -44,6 +45,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Initialize the cart
   renderCart();
+
+  // Subscribe to language changes
+  languageManager.subscribe(() => {
+    renderCart();
+  });
 
   // Event Listeners
   checkoutBtn.addEventListener('click', openCheckoutModal);
@@ -134,7 +140,7 @@ document.addEventListener('DOMContentLoaded', function() {
       }
       
       renderCart();
-      showToast('Cart updated');
+      showToast(languageManager.t('cart.updated_msg', {}, 'Cart updated'));
     }
     
     // Handle quantity input changes
@@ -147,7 +153,7 @@ document.addEventListener('DOMContentLoaded', function() {
       if (itemIndex !== -1 && !isNaN(newQuantity) && newQuantity >= 1 && newQuantity <= 100) {
         cart[itemIndex].quantity = newQuantity;
         renderCart();
-        showToast('Quantity updated');
+        showToast(languageManager.t('cart.quantity_updated_msg', {}, 'Quantity updated'));
       } else {
         // Reset to previous value if invalid
         e.target.value = cart[itemIndex].quantity;
@@ -156,7 +162,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function openCheckoutModal() {
-    checkoutModal.style.display = 'block';
+    checkoutModal.style.display = 'flex';
     document.body.style.overflow = 'hidden';
   }
 
@@ -232,19 +238,27 @@ document.addEventListener('DOMContentLoaded', function() {
 
   } catch (error) {
     console.error("Error placing order:", error);
-    showToast('Failed to place order. Please try again.');
+    showToast(languageManager.t('cart.order_failed_msg', {}, 'Failed to place order. Please try again.'));
   }
 }
 
 
   function showOrderConfirmation(order) {
-    document.getElementById('orderConfirmationText').textContent = 
-      `Your order #${order.id} has been placed successfully. Expected delivery on ${new Date(order.deliveryDate).toLocaleDateString()}.`;
+    const successMsgPattern = languageManager.t('cart.success_msg_pattern', {}, 'Your order #{id} has been placed successfully. Expected delivery on {date}.');
+    const lang = languageManager.getCurrentLang();
+    const locale = lang === 'te' ? 'te-IN' : lang === 'hi' ? 'hi-IN' : lang === 'ta' ? 'ta-IN' : 'en-IN';
+    document.getElementById('orderConfirmationText').textContent = successMsgPattern
+        .replace('{id}', order.id)
+        .replace('{date}', new Date(order.deliveryDate).toLocaleDateString(locale, {
+             year: 'numeric',
+             month: 'short',
+             day: 'numeric'
+        }));
     
     // Set the view order button to link to the specific order
     document.getElementById('viewOrderBtn').href = `customer-orders.html?order_id=${order.id}`;
     
-    orderConfirmationModal.style.display = 'block';
+    orderConfirmationModal.style.display = 'flex';
     document.body.style.overflow = 'hidden';
     
     // Close confirmation modal when clicking outside
@@ -291,7 +305,7 @@ document.addEventListener('DOMContentLoaded', () => {
   logoutBtn.addEventListener('click', (e) => {
     e.preventDefault();
     profileDropdown.classList.add('hidden'); // close dropdown
-    const confirmed = confirm('Are you sure you want to logout?');
+    const confirmed = confirm(languageManager.t('logout.confirm', {}, 'Are you sure you want to logout?'));
     if (confirmed) {
       // Add your logout logic here (e.g., clearing auth tokens)
       window.location.href = 'main.html'; // redirect to login

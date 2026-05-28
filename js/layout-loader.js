@@ -130,12 +130,12 @@ function initLayout() {
       sidebarPlace.innerHTML = `
         <div class="sidebar" id="sidebar">
           <ul>
-            <li><a href="customer-dashboard.html" class="nav-link"><i class="fas fa-home"></i> Dashboard</a></li>
-            <li><a href="customer-marketplace.html" class="nav-link"><i class="fas fa-store"></i> Crops</a></li>
-            <li><a href="customer-cart.html" class="nav-link"><i class="fas fa-shopping-cart"></i> My Cart</a></li>
-            <li><a href="customer-orders.html" class="nav-link"><i class="fas fa-shopping-bag"></i> My Orders</a></li>
-            <li><a href="customer-profile.html" class="nav-link"><i class="fas fa-user"></i> Profile</a></li>
-            <li><a href="#" id="logoutBtn" class="nav-link"><i class="fas fa-sign-out-alt"></i> Log out</a></li>
+            <li><a href="customer-dashboard.html" class="nav-link" data-i18n="navigation.dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
+            <li><a href="customer-marketplace.html" class="nav-link" data-i18n="navigation.crops"><i class="fas fa-store"></i> Crops</a></li>
+            <li><a href="customer-cart.html" class="nav-link" data-i18n="navigation.cart"><i class="fas fa-shopping-cart"></i> My Cart</a></li>
+            <li><a href="customer-orders.html" class="nav-link" data-i18n="navigation.orders"><i class="fas fa-shopping-bag"></i> My Orders</a></li>
+            <li><a href="customer-profile.html" class="nav-link" data-i18n="navigation.profile"><i class="fas fa-user"></i> Profile</a></li>
+            <li><a href="#" id="logoutBtn" class="nav-link" data-i18n="navigation.logout"><i class="fas fa-sign-out-alt"></i> Log out</a></li>
           </ul>
         </div>
         <div class="overlay"></div>
@@ -170,9 +170,9 @@ function initLayout() {
           <p style="margin-bottom: 10px;">
             <a href="contact.html" style="color: inherit; text-decoration: none; margin: 0 10px;" data-i18n="footer.contact">Contact us</a> |
             <a href="faq.html" style="color: inherit; text-decoration: none; margin: 0 10px;" data-i18n="footer.faq">FAQs</a> |
-            <a href="license.html" style="color: inherit; text-decoration: none; margin: 0 10px;">License Terms</a>
+            <a href="license.html" style="color: inherit; text-decoration: none; margin: 0 10px;" data-i18n="license.nav_license">License Terms</a>
           </p>
-          <p style="font-size: 13px; color: var(--gray, #777);">&copy; 2025 FarmerConnect. All rights reserved.</p>
+          <p style="font-size: 13px; color:white;" data-i18n="footer.copyright">&copy; 2025 FarmerConnect. All rights reserved.</p>
         </div>
       </footer>
     `;
@@ -199,7 +199,7 @@ function initLayout() {
 function highlightActiveSidebarLink(filename) {
   const sidebar = document.getElementById('sidebar');
   if (!sidebar) return;
-  
+
   const links = sidebar.querySelectorAll('a.nav-link');
   let currentFile = filename.replace('.html', '');
   if (!currentFile || currentFile === 'index') {
@@ -210,7 +210,7 @@ function highlightActiveSidebarLink(filename) {
     const href = link.getAttribute('href');
     if (!href) return;
     const linkFile = href.replace('.html', '');
-    
+
     if (linkFile === currentFile) {
       link.classList.add('active-page');
     }
@@ -283,7 +283,7 @@ function setupThemeToggle(isCustomerPage) {
       const newDark = !currentDark;
       localStorage.setItem('customerDarkMode', newDark);
       updateCustomerDarkModeUI(newDark);
-      
+
       // Dispatch custom event for page specific scripts (like map elements etc.)
       window.dispatchEvent(new CustomEvent('customerDarkModeChanged', {
         detail: { isDarkMode: newDark }
@@ -317,7 +317,7 @@ function updateCustomerDarkModeUI(isDark) {
     body.classList.remove('customer-dark-mode');
     if (icon) icon.className = 'fas fa-moon';
   }
-  
+
   let metaThemeColor = document.querySelector('meta[name="theme-color"]');
   if (metaThemeColor) {
     metaThemeColor.content = isDark ? '#121212' : '#4CAF50';
@@ -383,7 +383,7 @@ function setupLogoutHandlers() {
 
   if (closeBtn) closeBtn.addEventListener('click', hideModal);
   if (cancelBtn) cancelBtn.addEventListener('click', hideModal);
-  
+
   if (confirmBtn) {
     confirmBtn.addEventListener('click', () => {
       signOut(auth).then(() => {
@@ -426,21 +426,21 @@ function initAuthGuard() {
       try {
         const userDocRef = doc(db, 'users', user.uid);
         const userDoc = await getDoc(userDocRef);
-        
+
         if (userDoc.exists()) {
           const userData = userDoc.data();
           const role = userData.role; // 'farmer' or 'buyer' (customer)
-          
+
           // Load Profile Data into layout if available
           const userNameEl = document.getElementById('userName');
           const userAvatarEl = document.getElementById('userAvatar');
-          
+
           const displayName = userData.fullName || userData.displayName || user.displayName || (role === 'farmer' ? 'Farmer' : 'Customer');
           const avatarUrl = userData.profilePic || userData.photoURL || user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=4CAF50&color=fff`;
 
           if (userNameEl) userNameEl.textContent = displayName;
           if (userAvatarEl) userAvatarEl.src = avatarUrl;
-          
+
           // Redirect if on main.html/auth page
           if (pageName === 'main') {
             if (role === 'farmer') {

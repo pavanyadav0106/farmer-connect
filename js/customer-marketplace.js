@@ -1,4 +1,5 @@
 import { db, auth } from '../config.js';
+import languageManager from './language-manager.js';
 import { 
     collection, 
     query, 
@@ -25,6 +26,8 @@ document.addEventListener('DOMContentLoaded', function () {
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
     const itemsPerPage = 8;
     let currentPage = 1;
+    const farmerCache = {}; // Cache farmer details fetch promises to avoid duplicate parallel reads
+    const loadingCropIds = new Set();
 
     init();
 
@@ -32,6 +35,9 @@ document.addEventListener('DOMContentLoaded', function () {
         checkAuthState();
         setupEventListeners();
         updateCartCount();
+        languageManager.subscribe(() => {
+            renderPage();
+        });
     }
 
     function checkAuthState() {
@@ -47,20 +53,30 @@ document.addEventListener('DOMContentLoaded', function () {
     function loadCrops() {
         const q = query(collection(db, 'products'), where('status', '==', 'available'));
 
-        onSnapshot(q, async snapshot => {
-            crops = snapshot.docs.map(doc => ({ 
+        onSnapshot(q, snapshot => {
+            const newCrops = snapshot.docs.map(doc => ({ 
                 id: doc.id, 
                 ...doc.data() 
             }));
             
-            // DEBUG: Check first crop's data structure
-            if (crops.length > 0) {
-            }
-            
-            // Enrich every crop with farmer details and reviews
-            for (let crop of crops) {
-                await enrichCropDetails(crop);
-            }
+            // Preserve enrichment fields from existing loaded crops
+            crops = newCrops.map(newCrop => {
+                const existing = crops.find(c => c.id === newCrop.id);
+                if (existing && existing.enriched) {
+                    return {
+                        ...newCrop,
+                        farmerName: existing.farmerName,
+                        farmerLocation: existing.farmerLocation,
+                        farmerPhoto: existing.farmerPhoto,
+                        farmerPhone: existing.farmerPhone,
+                        reviewCount: existing.reviewCount,
+                        avgRating: existing.avgRating,
+                        rating: existing.rating,
+                        enriched: true
+                    };
+                }
+                return newCrop;
+            });
 
             filteredCrops = crops;
             currentPage = 1;
@@ -70,22 +86,36 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     async function enrichCropDetails(crop) {
-        // Fetch farmer details
+        // Fetch farmer details using Promise-based caching to avoid redundant parallel calls
         if (crop.farmerId) {
             try {
-                const farmerSnap = await getDoc(doc(db, "users", crop.farmerId));
-                if (farmerSnap.exists()) {
-                    const farmer = farmerSnap.data();
-                    
-                    // Map all possible farmer fields
-                    crop.farmerName = farmer.name || farmer.fullName || farmer.displayName || "Unknown Farmer";
-                    crop.farmerLocation = farmer.location || farmer.address || farmer.city || farmer.village || farmer.area || "Location not specified";
-                    crop.farmerPhoto = farmer.photoURL || farmer.profileImage || farmer.avatar || null;
-                    crop.farmerPhone = farmer.phone || farmer.mobile || farmer.contact || null;
+                if (!farmerCache[crop.farmerId]) {
+                    farmerCache[crop.farmerId] = (async () => {
+                        const farmerSnap = await getDoc(doc(db, "users", crop.farmerId));
+                        if (farmerSnap.exists()) {
+                            const farmer = farmerSnap.data();
+                            return {
+                                name: farmer.name || farmer.fullName || farmer.displayName || "Unknown Farmer",
+                                location: farmer.location || farmer.address || farmer.city || farmer.village || farmer.area || "Location not specified",
+                                photo: farmer.photoURL || farmer.profileImage || farmer.avatar || null,
+                                phone: farmer.phone || farmer.mobile || farmer.contact || null
+                            };
+                        }
+                        return {
+                            name: "Unknown Farmer",
+                            location: "Location not specified",
+                            photo: null,
+                            phone: null
+                        };
+                    })();
                 }
+                const farmerData = await farmerCache[crop.farmerId];
+                crop.farmerName = farmerData.name;
+                crop.farmerLocation = farmerData.location;
+                crop.farmerPhoto = farmerData.photo;
+                crop.farmerPhone = farmerData.phone;
             } catch (error) {
                 console.error("Error fetching farmer details:", error);
-                // Set defaults if fetch fails
                 crop.farmerName = "Unknown Farmer";
                 crop.farmerLocation = "Location not available";
             }
@@ -148,7 +178,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const cropsToRender = filteredCrops.slice(start, end);
 
         if (cropsToRender.length === 0) {
-            cropsGrid.innerHTML = '<div class="empty-state">No crops available</div>';
+            cropsGrid.innerHTML = `<div class="empty-state">${languageManager.t('crops.no_crops', {}, 'No crops available')}</div>`;
             return;
         }
 
@@ -159,6 +189,14 @@ document.addEventListener('DOMContentLoaded', function () {
             // Generate star rating HTML
             const starRatingHTML = getStarRatingHTML(crop.rating || crop.avgRating || 0);
             
+            const reviewText = crop.reviewCount === 1 
+                ? languageManager.t('marketplace.review', {}, 'review') 
+                : languageManager.t('marketplace.reviews', {}, 'reviews');
+
+            const categoryName = crop.category 
+                ? languageManager.t('category.' + crop.category, {}, crop.category) 
+                : languageManager.t('marketplace.uncategorized', {}, 'Uncategorized');
+
             return `
             <div class="crop-card" data-id="${crop.id}">
                 ${crop.imageUrl 
@@ -178,31 +216,47 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     <!-- RATING SECTION WITH VIEW REVIEWS BUTTON -->
                     <div class="rating-container">
-                        <div class="rating-display">
-                            ${starRatingHTML}
-                            <span class="rating-text">
-                                ${crop.avgRating ? crop.avgRating.toFixed(1) : "0.0"} 
-                                (${crop.reviewCount || 0} ${crop.reviewCount === 1 ? 'review' : 'reviews'})
-                            </span>
-                        </div>
-                        ${(crop.reviewCount || 0) > 0 ? `
-                            <button class="view-reviews-btn" data-crop-id="${crop.id}">
-                                <i class="fas fa-comment-alt"></i> View Reviews
-                            </button>
-                        ` : ''}
+                        ${crop.enriched ? `
+                            <div class="rating-display">
+                                ${starRatingHTML}
+                                <span class="rating-text">
+                                    ${crop.avgRating ? crop.avgRating.toFixed(1) : "0.0"} 
+                                    (${crop.reviewCount || 0} ${reviewText})
+                                </span>
+                            </div>
+                            ${(crop.reviewCount || 0) > 0 ? `
+                                <button class="view-reviews-btn" data-crop-id="${crop.id}">
+                                    <i class="fas fa-comment-alt"></i> ${languageManager.t('marketplace.view_reviews', {}, 'View Reviews')}
+                                </button>
+                            ` : ''}
+                        ` : `
+                            <div class="rating-display">
+                                <span class="rating-text" style="color: #888;">
+                                    <i class="fas fa-spinner fa-spin" style="margin-right: 5px;"></i> ${languageManager.t('auth.loading', {}, 'Loading...')}
+                                </span>
+                            </div>
+                        `}
                     </div>
 
                     <!-- FARMER DETAILS -->
                     <div class="farmer-details">
-                        ${crop.farmerPhoto ? `<img src="${crop.farmerPhoto}" alt="${crop.farmerName}" class="farmer-avatar">` : ''}
-                        <div class="farmer-info">
-                            <p class="farmer-name">
-                                <i class="fas fa-user"></i> ${crop.farmerName || "Unknown Farmer"}
-                            </p>
-                            <p class="farmer-location">
-                                <i class="fas fa-map-marker-alt"></i> ${crop.farmerLocation || "Location not specified"}
-                            </p>
-                        </div>
+                        ${crop.enriched ? `
+                            ${crop.farmerPhoto ? `<img src="${crop.farmerPhoto}" alt="${crop.farmerName}" class="farmer-avatar">` : ''}
+                            <div class="farmer-info">
+                                <p class="farmer-name">
+                                    <i class="fas fa-user"></i> ${crop.farmerName || languageManager.t('marketplace.unknown_farmer', {}, 'Unknown Farmer')}
+                                </p>
+                                <p class="farmer-location">
+                                    <i class="fas fa-map-marker-alt"></i> ${crop.farmerLocation || languageManager.t('marketplace.no_location', {}, 'Location not specified')}
+                                </p>
+                            </div>
+                        ` : `
+                            <div class="farmer-info">
+                                <p class="farmer-name" style="color: #888;">
+                                    <i class="fas fa-spinner fa-spin" style="margin-right: 5px;"></i> ${languageManager.t('auth.loading', {}, 'Loading...')}
+                                </p>
+                            </div>
+                        `}
                     </div>
 
                     <!-- CROP META DATA -->
@@ -211,34 +265,75 @@ document.addEventListener('DOMContentLoaded', function () {
                             <i class="fas fa-weight-hanging"></i> ${crop.quantity} kg
                         </span>
                         <span class="category">
-                            <i class="fas fa-tag"></i> ${crop.category || 'Uncategorized'}
+                            <i class="fas fa-tag"></i> ${categoryName}
                         </span>
-                        ${crop.status === 'organic' ? '<span class="organic-badge"><i class="fas fa-leaf"></i> Organic</span>' : ''}
+                        ${crop.status === 'organic' ? `<span class="organic-badge"><i class="fas fa-leaf"></i> ${languageManager.t('marketplace.organic', {}, 'Organic')}</span>` : ''}
                     </div>
                 </div>
             </div>
             `;
         }).join("");
 
-        // Add click event listeners for crop cards
-        document.querySelectorAll('.crop-card').forEach(card => {
-            card.addEventListener('click', (e) => {
-                // Don't trigger if clicking on view reviews button
-                if (!e.target.closest('.view-reviews-btn')) {
-                    openAddToCartModal(card.dataset.id);
+        // Lazy-load details for currently visible crops
+        cropsToRender.forEach(async (crop) => {
+            if (!crop.enriched && !loadingCropIds.has(crop.id)) {
+                loadingCropIds.add(crop.id);
+                try {
+                    await enrichCropDetails(crop);
+                    crop.enriched = true;
+                    updateCropCardDOM(crop);
+                } catch (error) {
+                    console.error("Failed to enrich crop details:", crop.id, error);
+                } finally {
+                    loadingCropIds.delete(crop.id);
                 }
-            });
+            }
         });
+    }
 
-        // Add click event listeners for view reviews buttons
-        document.querySelectorAll('.view-reviews-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const cropId = btn.dataset.cropId;
-                console.log("View reviews clicked for crop:", cropId); // Debug log
-                showCropReviews(cropId);
-            });
-        });
+    function updateCropCardDOM(crop) {
+        const card = document.querySelector(`.crop-card[data-id="${crop.id}"]`);
+        if (!card) return;
+        
+        // Update rating display
+        const ratingContainer = card.querySelector('.rating-container');
+        if (ratingContainer) {
+            const starRatingHTML = getStarRatingHTML(crop.rating || crop.avgRating || 0);
+            const reviewText = crop.reviewCount === 1 
+                ? languageManager.t('marketplace.review', {}, 'review') 
+                : languageManager.t('marketplace.reviews', {}, 'reviews');
+                
+            ratingContainer.innerHTML = `
+                <div class="rating-display">
+                    ${starRatingHTML}
+                    <span class="rating-text">
+                        ${crop.avgRating ? crop.avgRating.toFixed(1) : "0.0"} 
+                        (${crop.reviewCount || 0} ${reviewText})
+                    </span>
+                </div>
+                ${(crop.reviewCount || 0) > 0 ? `
+                    <button class="view-reviews-btn" data-crop-id="${crop.id}">
+                        <i class="fas fa-comment-alt"></i> ${languageManager.t('marketplace.view_reviews', {}, 'View Reviews')}
+                    </button>
+                ` : ''}
+            `;
+        }
+        
+        // Update farmer details
+        const farmerDetails = card.querySelector('.farmer-details');
+        if (farmerDetails) {
+            farmerDetails.innerHTML = `
+                ${crop.farmerPhoto ? `<img src="${crop.farmerPhoto}" alt="${crop.farmerName}" class="farmer-avatar">` : ''}
+                <div class="farmer-info">
+                    <p class="farmer-name">
+                        <i class="fas fa-user"></i> ${crop.farmerName || languageManager.t('marketplace.unknown_farmer', {}, 'Unknown Farmer')}
+                    </p>
+                    <p class="farmer-location">
+                        <i class="fas fa-map-marker-alt"></i> ${crop.farmerLocation || languageManager.t('marketplace.no_location', {}, 'Location not specified')}
+                    </p>
+                </div>
+            `;
+        }
     }
 
     // Helper function to generate star rating HTML
@@ -270,7 +365,7 @@ document.addEventListener('DOMContentLoaded', function () {
     async function showCropReviews(cropId) {
     const crop = crops.find(c => c.id === cropId);
     if (!crop) {
-        showToast("Product not found", "error");
+        showToast(languageManager.t('marketplace.product_not_found', {}, "Product not found"), "error");
         return;
     }
     
@@ -318,11 +413,11 @@ document.addEventListener('DOMContentLoaded', function () {
         `;
         
         // Show modal
-        reviewsModal.style.display = 'block';
+        reviewsModal.style.display = 'flex';
         document.body.style.overflow = 'hidden';
         
         // Set title
-        document.getElementById('reviewsModalTitle').textContent = `Reviews for ${crop.name}`;
+        document.getElementById('reviewsModalTitle').textContent = languageManager.t('orders.reviews_for_crop', {name: crop.name}, `Reviews for ${crop.name}`);
         
         // Fetch reviews from both top-level and nested collections
         const reviews = await fetchCropReviews(cropId);
@@ -332,7 +427,7 @@ document.addEventListener('DOMContentLoaded', function () {
         
     } catch (error) {
         console.error("Error showing reviews:", error);
-        showToast("Failed to load reviews", "error");
+        showToast(languageManager.t('marketplace.failed_load_reviews', {}, "Failed to load reviews"), "error");
     }
 }
 
@@ -396,8 +491,8 @@ function renderCropReviews(reviews, crop) {
         reviewsContent.innerHTML = `
             <div class="empty-reviews">
                 <i class="fas fa-comment-slash" style="font-size: 48px; color: #ddd; margin-bottom: 15px;"></i>
-                <h3>No Reviews Yet</h3>
-                <p>Be the first to review this product!</p>
+                <h3>${languageManager.t('orders.no_reviews', {}, 'No Reviews Yet')}</h3>
+                <p>${languageManager.t('orders.first_review', {}, 'Be the first to review this product!')}</p>
             </div>
         `;
         return;
@@ -407,16 +502,20 @@ function renderCropReviews(reviews, crop) {
     const totalRating = reviews.reduce((sum, review) => sum + (review.rating || 0), 0);
     const averageRating = (totalRating / reviews.length).toFixed(1);
     
+    const countText = reviews.length === 1 
+      ? languageManager.t('orders.based_on_review', {count: reviews.length}, `Based on ${reviews.length} review`) 
+      : languageManager.t('orders.based_on_reviews', {count: reviews.length}, `Based on ${reviews.length} reviews`);
+
     let html = `
         <div class="average-rating-summary" style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
             <div style="display: flex; align-items: center; gap: 20px;">
                 <div style="text-align: center;">
                     <div style="font-size: 36px; font-weight: bold; color: #4CAF50;">${averageRating}</div>
-                    <div style="color: #666;">out of 5</div>
+                    <div style="color: #666;">${languageManager.t('marketplace.out_of_5', {}, 'out of 5')}</div>
                 </div>
                 <div>
                     <div style="margin-bottom: 5px;">${getStarRatingHTML(parseFloat(averageRating))}</div>
-                    <div style="color: #666;">Based on ${reviews.length} ${reviews.length === 1 ? 'review' : 'reviews'}</div>
+                    <div style="color: #666;">${countText}</div>
                 </div>
             </div>
         </div>
@@ -436,14 +535,16 @@ function renderCropReviews(reviews, crop) {
         let reviewDate = "Date not available";
         if (review.createdAt) {
             try {
+                const lang = languageManager.getCurrentLang();
+                const locale = lang === 'te' ? 'te-IN' : lang === 'hi' ? 'hi-IN' : lang === 'ta' ? 'ta-IN' : 'en-IN';
                 if (review.createdAt.toDate) {
-                    reviewDate = review.createdAt.toDate().toLocaleDateString('en-IN', {
+                    reviewDate = review.createdAt.toDate().toLocaleDateString(locale, {
                         year: 'numeric',
                         month: 'short',
                         day: 'numeric'
                     });
                 } else if (review.createdAt instanceof Date) {
-                    reviewDate = review.createdAt.toLocaleDateString('en-IN', {
+                    reviewDate = review.createdAt.toLocaleDateString(locale, {
                         year: 'numeric',
                         month: 'short',
                         day: 'numeric'
@@ -497,7 +598,7 @@ function renderCropReviews(reviews, crop) {
         if (totalPages <= 1) return;
 
         const prevBtn = document.createElement('button');
-        prevBtn.textContent = '« Prev';
+        prevBtn.textContent = languageManager.t('buttons.prev', {}, '« Prev');
         prevBtn.disabled = currentPage === 1;
         prevBtn.addEventListener('click', () => {
             if (currentPage > 1) {
@@ -522,7 +623,7 @@ function renderCropReviews(reviews, crop) {
         }
 
         const nextBtn = document.createElement('button');
-        nextBtn.textContent = 'Next »';
+        nextBtn.textContent = languageManager.t('buttons.next', {}, 'Next »');
         nextBtn.disabled = currentPage === totalPages;
         nextBtn.addEventListener('click', () => {
             if (currentPage < totalPages) {
@@ -574,6 +675,24 @@ function renderCropReviews(reviews, crop) {
             }
         });
 
+        // Crop card delegation clicks
+        if (cropsGrid) {
+            cropsGrid.addEventListener('click', (e) => {
+                const viewReviewsBtn = e.target.closest('.view-reviews-btn');
+                if (viewReviewsBtn) {
+                    e.stopPropagation();
+                    const cropId = viewReviewsBtn.dataset.cropId;
+                    showCropReviews(cropId);
+                    return;
+                }
+
+                const cropCard = e.target.closest('.crop-card');
+                if (cropCard) {
+                    openAddToCartModal(cropCard.dataset.id);
+                }
+            });
+        }
+
         // Setup profile dropdown
         setupProfileDropdown();
         
@@ -624,7 +743,7 @@ function renderCropReviews(reviews, crop) {
                     window.location.href = "main.html";
                 } catch (error) {
                     console.error("Logout error:", error);
-                    showToast("Error during logout. Please try again.", "error");
+                    showToast(languageManager.t('marketplace.logout_error', {}, "Error during logout. Please try again."), "error");
                 }
             });
         }
@@ -637,6 +756,13 @@ function renderCropReviews(reviews, crop) {
         document.getElementById('modalCropName').textContent = crop.name;
         document.getElementById('modalCropPrice').textContent = `₹${crop.price}/kg`;
         document.getElementById('modalCropStock').textContent = `${crop.quantity} kg available`;
+
+        const description = crop.description || crop.desc || crop.details || crop.info || '';
+        const modalDesc = document.getElementById('modalCropDescription');
+        if (modalDesc) {
+            modalDesc.textContent = description;
+            modalDesc.style.display = description ? 'block' : 'none';
+        }
 
         if (crop.imageUrl) {
             document.getElementById('modalCropImage').src = crop.imageUrl;
@@ -671,7 +797,7 @@ function renderCropReviews(reviews, crop) {
             document.body.style.overflow = '';
         };
 
-        document.getElementById('addToCartModal').style.display = 'block';
+        document.getElementById('addToCartModal').style.display = 'flex';
         document.body.style.overflow = 'hidden';
     }
 
@@ -699,7 +825,7 @@ function renderCropReviews(reviews, crop) {
 
         localStorage.setItem('cart', JSON.stringify(cart));
         updateCartCount();
-        showToast(`${quantity} kg ${crop.name} added to cart`, 'success');
+        showToast(languageManager.t('marketplace.added_to_cart', {quantity: quantity, name: crop.name}, `${quantity} kg ${crop.name} added to cart`), 'success');
     }
 
 

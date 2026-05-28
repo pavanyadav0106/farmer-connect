@@ -665,7 +665,7 @@
         }
         
         .footer-column ul li a {
-            color: #BDBDBD;
+            color: #fbf5f5;
             text-decoration: none;
             transition: var(--transition);
         }
